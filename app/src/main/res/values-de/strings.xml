@@ -285,7 +285,7 @@
   <!-- GitException messages -->
   <string name="git_unknown_error">Unbekannter Fehler</string>
   <string name="git_pull_rebase_fail_error">Pull fehlgeschlagen. Sie befinden sich in einem abgelösten Head. Speichern Sie die Änderungen in \"Einstellungen &gt; Lokale Git-Konfiguration &amp; Dienstprogramme\" auf das Remote-Repository in einem neuen Branch und lösen Sie den Konflikt auf Ihrem Computer auf.</string>
-  <string name="git_pull_merge_fail_error">Merge fehlgeschlagen, Sie befinden sich in einem Konflikt. TODO: Wiederherstellungsmethode hinzufügen.</string>
+  <string name="git_pull_merge_fail_error">Merge fehlgeschlagen, Sie befinden sich in einem Konflikt.</string>
   <string name="git_push_nff_error">Push wurde vom Remote abgelehnt. Führen Sie den Pull vor dem Push aus. Sie können \"Synchronisieren\" statt Pull/Push nutzen, da es beides implementiert</string>
   <string name="git_push_generic_error">Push wurde von Remote abgelehnt, Grund: %1$s</string>
   <string name="git_push_other_error">Remote hat den Push abgelehnt. Prüfen Sie die Variable receive.denyNonFastForwards in der Konfigurationsdatei des Ziel-Repositorys.</string>

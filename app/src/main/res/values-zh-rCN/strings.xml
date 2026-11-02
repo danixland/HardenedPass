@@ -286,7 +286,7 @@ personal.com</string>
   <string name="new_folder_set_gpg_key">为目录设置GPG密钥</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">未知错误</string>
-  <string name="git_pull_merge_fail_error">合并失败，你处于冲突状态。TODO：添加恢复方法。</string>
+  <string name="git_pull_merge_fail_error">合并失败，你处于冲突状态。</string>
   <string name="git_push_nff_error">推送被远端拒绝，在推送前运行拉取。您可以使用同步而不是拉取/推送，因为它实现了这两种功能。</string>
   <string name="git_push_generic_error">推送被远程拒绝,原因: %1$s</string>
   <string name="git_push_other_error">远端拒绝了非快进推送。检查目标仓库配置文件中的 receive.denyNonFastForwards 变量。</string>
