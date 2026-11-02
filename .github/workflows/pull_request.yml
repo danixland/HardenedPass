@@ -1,8 +1,11 @@
 on:
+  push:
+    branches:
+      - master
   pull_request:
   merge_group:
 
-name: Check pull request
+name: CI
 
 concurrency:
   group: ${{ github.head_ref || github.ref_name }}
