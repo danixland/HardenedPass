@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import app.passwordstore.R
 import app.passwordstore.crypto.PGPIdentifier
@@ -26,13 +27,13 @@ import app.passwordstore.ui.pgp.PGPKeyImportActivity
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.clipboard
 import app.passwordstore.util.extensions.getString
+import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.extensions.snackbar
 import app.passwordstore.util.extensions.unsafeLazy
 import app.passwordstore.util.services.ClipboardService
 import app.passwordstore.util.settings.Constants
 import app.passwordstore.util.settings.PreferenceKeys
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import javax.inject.Inject
@@ -84,25 +85,6 @@ open class BasePGPActivity : AppCompatActivity() {
   }
 
   /**
-   * Copies provided [text] to the clipboard. Shows a [Snackbar] which can be disabled by passing
-   * [showSnackbar] as false.
-   */
-  fun copyTextToClipboard(
-    text: String?,
-    showSnackbar: Boolean = true,
-    @StringRes snackbarTextRes: Int = R.string.clipboard_copied_text,
-  ) {
-    val clipboard = clipboard ?: return
-    val clip = ClipData.newPlainText("pgp_handler_result_pm", text)
-    clip.description.extras =
-      PersistableBundle().apply { putBoolean("android.content.extra.IS_SENSITIVE", true) }
-    clipboard.setPrimaryClip(clip)
-    if (showSnackbar && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-      snackbar(message = resources.getString(snackbarTextRes))
-    }
-  }
-
-  /**
    * Function to execute [onKeysExist] only if there are PGP keys imported in the app's key manager.
    */
   fun requireKeysExist(onKeysExist: () -> Unit) {
@@ -122,82 +104,6 @@ open class BasePGPActivity : AppCompatActivity() {
       } else {
         onKeysExist()
       }
-    }
-  }
-
-  /**
-   * Copies a provided [password] string to the clipboard. This wraps [copyTextToClipboard] to hide
-   * the default [Snackbar] and starts off an instance of [ClipboardService] to provide a way of
-   * clearing the clipboard.
-   */
-  fun copyPasswordToClipboard(password: String?) {
-    copyTextToClipboard(password)
-    val clearAfter =
-      settings.getString(PreferenceKeys.GENERAL_SHOW_TIME)?.toIntOrNull()
-        ?: Constants.DEFAULT_DECRYPTION_TIMEOUT
-
-    if (clearAfter != 0) {
-      val service =
-        Intent(this, ClipboardService::class.java).apply {
-          action = ClipboardService.ACTION_START
-          putExtra(ClipboardService.EXTRA_NOTIFICATION_TIME, clearAfter)
-        }
-      startForegroundService(service)
-    }
-  }
-
-  /**
-   * Get a list of available [PGPIdentifier]s for the current password repository. This method
-   * throws when no identifiers were able to be parsed. If this method returns null, it means that
-   * an invalid identifier was encountered and further execution must stop to let the user correct
-   * the problem.
-   */
-  fun getPGPIdentifiers(subDir: String): List<PGPIdentifier>? {
-    val repoRoot = PasswordRepository.getRepositoryDirectory()
-    val gpgIdentifierFile =
-      File(repoRoot, subDir).findTillRoot(".gpg-id", repoRoot)
-        ?: File(repoRoot, ".gpg-id").apply { createNewFile() }
-    val gpgIdentifiers =
-      gpgIdentifierFile
-        .readLines()
-        .filter { it.isNotBlank() }
-        .map { line ->
-          PGPIdentifier.fromString(line)
-            ?: run {
-              // The line being empty means this is most likely an empty `.gpg-id`
-              // file we created. Skip the validation so we can make the user add a
-              // real ID.
-              if (line.isEmpty()) return@run
-              // Apparently `gpg-id` being the first line is also acceptable?
-              if (line == "gpg-id") return@run
-              if (line.removePrefix("0x").matches("[a-fA-F0-9]{8}".toRegex())) {
-                snackbar(message = resources.getString(R.string.short_gpg_id))
-              } else {
-                snackbar(message = resources.getString(R.string.invalid_gpg_id))
-              }
-              return null
-            }
-        }
-        .filterIsInstance<PGPIdentifier>()
-    if (gpgIdentifiers.isEmpty()) {
-      error("Failed to parse identifiers from .gpg-id: ${gpgIdentifierFile.readText()}")
-    }
-    return gpgIdentifiers
-  }
-
-  @Suppress("ReturnCount")
-  private fun File.findTillRoot(fileName: String, rootPath: File): File? {
-    val gpgFile = File(this, fileName)
-    if (gpgFile.exists()) return gpgFile
-
-    if (this.absolutePath == rootPath.absolutePath) {
-      return null
-    }
-    val parent = parentFile
-    return if (parent != null && parent.exists()) {
-      parent.findTillRoot(fileName, rootPath)
-    } else {
-      null
     }
   }
 
@@ -234,5 +140,98 @@ open class BasePGPActivity : AppCompatActivity() {
         basename
       }
     }
+  }
+}
+
+/**
+ * Copies provided [text] to the clipboard, flagged sensitive. Below Android 11 it also shows a
+ * snackbar, which can be disabled by passing [showSnackbar] as false.
+ */
+fun FragmentActivity.copyTextToClipboard(
+  text: String?,
+  showSnackbar: Boolean = true,
+  @StringRes snackbarTextRes: Int = R.string.clipboard_copied_text,
+) {
+  val clipboard = clipboard ?: return
+  val clip = ClipData.newPlainText("pgp_handler_result_pm", text)
+  clip.description.extras =
+    PersistableBundle().apply { putBoolean("android.content.extra.IS_SENSITIVE", true) }
+  clipboard.setPrimaryClip(clip)
+  if (showSnackbar && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+    snackbar(message = resources.getString(snackbarTextRes))
+  }
+}
+
+/**
+ * Copies a provided [password] string to the clipboard. This wraps [copyTextToClipboard] and starts
+ * off an instance of [ClipboardService] to provide a way of clearing the clipboard.
+ */
+fun FragmentActivity.copyPasswordToClipboard(password: String?) {
+  copyTextToClipboard(password)
+  val clearAfter =
+    sharedPrefs.getString(PreferenceKeys.GENERAL_SHOW_TIME)?.toIntOrNull()
+      ?: Constants.DEFAULT_DECRYPTION_TIMEOUT
+
+  if (clearAfter != 0) {
+    val service =
+      Intent(this, ClipboardService::class.java).apply {
+        action = ClipboardService.ACTION_START
+        putExtra(ClipboardService.EXTRA_NOTIFICATION_TIME, clearAfter)
+      }
+    startForegroundService(service)
+  }
+}
+
+/**
+ * Get a list of available [PGPIdentifier]s for the current password repository. This method throws
+ * when no identifiers were able to be parsed. If this method returns null, it means that an invalid
+ * identifier was encountered and further execution must stop to let the user correct the problem.
+ */
+fun FragmentActivity.getPGPIdentifiers(subDir: String): List<PGPIdentifier>? {
+  val repoRoot = PasswordRepository.getRepositoryDirectory()
+  val gpgIdentifierFile =
+    File(repoRoot, subDir).findTillRoot(".gpg-id", repoRoot)
+      ?: File(repoRoot, ".gpg-id").apply { createNewFile() }
+  val gpgIdentifiers =
+    gpgIdentifierFile
+      .readLines()
+      .filter { it.isNotBlank() }
+      .map { line ->
+        PGPIdentifier.fromString(line)
+          ?: run {
+            // The line being empty means this is most likely an empty `.gpg-id`
+            // file we created. Skip the validation so we can make the user add a
+            // real ID.
+            if (line.isEmpty()) return@run
+            // Apparently `gpg-id` being the first line is also acceptable?
+            if (line == "gpg-id") return@run
+            if (line.removePrefix("0x").matches("[a-fA-F0-9]{8}".toRegex())) {
+              snackbar(message = resources.getString(R.string.short_gpg_id))
+            } else {
+              snackbar(message = resources.getString(R.string.invalid_gpg_id))
+            }
+            return null
+          }
+      }
+      .filterIsInstance<PGPIdentifier>()
+  if (gpgIdentifiers.isEmpty()) {
+    error("Failed to parse identifiers from .gpg-id: ${gpgIdentifierFile.readText()}")
+  }
+  return gpgIdentifiers
+}
+
+@Suppress("ReturnCount")
+private fun File.findTillRoot(fileName: String, rootPath: File): File? {
+  val gpgFile = File(this, fileName)
+  if (gpgFile.exists()) return gpgFile
+
+  if (this.absolutePath == rootPath.absolutePath) {
+    return null
+  }
+  val parent = parentFile
+  return if (parent != null && parent.exists()) {
+    parent.findTillRoot(fileName, rootPath)
+  } else {
+    null
   }
 }
