@@ -13,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.crypto.BasePGPActivity
-import app.passwordstore.ui.crypto.DecryptActivity
-import app.passwordstore.ui.passwords.PasswordStore
 import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result
 import app.passwordstore.util.extensions.sharedPrefs
@@ -50,22 +48,14 @@ class LaunchActivity : AppCompatActivity() {
     }
   }
 
-  private fun getDecryptIntent(): Intent {
-    return Intent(this, DecryptActivity::class.java)
-  }
-
   private fun startTargetActivity(noAuth: Boolean) {
-    // This activity is exported, so the file path is untrusted input: only forward it to
-    // DecryptActivity when it points at a file inside the password store.
+    // This activity is exported, so the file path is untrusted input: only forward it when it
+    // points at a file inside the password store. MainActivity is not exported and trusts it.
     val repoDir = PasswordRepository.getRepositoryDirectory()
     val filePath = intent.getStringExtra(BasePGPActivity.EXTRA_FILE_PATH)
-    val intentToStart =
-      if (intent.action == ACTION_DECRYPT_PASS && isFileInRepo(filePath, repoDir))
-        getDecryptIntent().apply {
-          putExtra(BasePGPActivity.EXTRA_FILE_PATH, filePath)
-          putExtra(BasePGPActivity.EXTRA_REPO_PATH, repoDir.absolutePath)
-        }
-      else Intent(this, PasswordStore::class.java).setAction(Intent.ACTION_VIEW)
+    val intentToStart = Intent(this, MainActivity::class.java)
+    if (intent.action == ACTION_DECRYPT_PASS && isFileInRepo(filePath, repoDir))
+      intentToStart.putExtra(BasePGPActivity.EXTRA_FILE_PATH, filePath)
     startActivity(intentToStart)
 
     Handler(Looper.getMainLooper()).postDelayed({ finish() }, if (noAuth) 0L else 500L)
