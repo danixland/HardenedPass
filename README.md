@@ -1,40 +1,52 @@
-> [!WARNING]
->
-> Android Password Store is no longer actively developed. You can find the announcement [here](https://github.com/android-password-store/Android-Password-Store/discussions/3260).
-
 # Password Store
 
-[![GitHub workflow](https://github.com/android-password-store/Android-Password-Store/workflows/Deploy%20snapshot%20builds/badge.svg)](https://github.com/android-password-store/Android-Password-Store/actions)
-![Backers on Open Collective](https://opencollective.com/Android-Password-Store/backers/badge.svg) ![Sponsors on Open Collective](https://opencollective.com/Android-Password-Store/sponsors/badge.svg)
+An Android client for [pass](https://www.passwordstore.org/), the standard Unix password manager.
+Passwords are stored as OpenPGP-encrypted files in a git repository, so the same store works with
+`pass` on the desktop and with this app on the phone.
 
-## Download
+This is a maintained fork of
+[android-password-store/Android-Password-Store](https://github.com/android-password-store/Android-Password-Store),
+which was archived in October 2024. All credit for the original work goes to the
+Android Password Store authors.
 
-See https://docs.passwordstore.app/docs/users/release-channels/
+## Changes from upstream
 
-## Documentation
+- Decrypts messages GnuPG 2.3+ writes by default (OCB / LibrePGP AEAD), which upstream rejected
+  as "non-standard AEAD".
+- Rejects keys without an encryption-capable subkey on import.
+- Bouncy Castle 1.86 and PGPainless 1.7.8, fixing known Bouncy Castle advisories.
+- Decrypt screen no longer reachable by other apps with arbitrary file paths.
+- No build scans uploaded to third-party services.
 
-We're in the process of rewriting our documentation from scratch, and the work-in-progress state can be seen [here](https://docs.passwordstore.app). See the [wiki](https://github.com/android-password-store/Android-Password-Store/wiki/) for the old documentation.
+## Building
 
-## Contributing
+Requires JDK 17 and the Android SDK command-line tools. Point Gradle at the SDK with a
+`local.properties` file (`sdk.dir=/path/to/Android/Sdk`), then:
 
-Want to contribute? See if you can [find an issue](https://github.com/android-password-store/Android-Password-Store/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) you are interested in, then send a PR. Consult the [contribution](CONTRIBUTING.md) docs 
+```
+./gradlew assembleFreeDebug      # APK in app/build/outputs/apk/free/debug/
+./gradlew test -PslimTests       # unit tests
+```
 
-Interested in helping to translate Password Store? Contribute [here](https://crowdin.com/project/android-password-store)!
+The `free` flavor has no proprietary dependencies. The `nonFree` flavor adds Sentry crash
+reporting and Google Play Services SMS OTP autofill.
 
-Wanna test development builds to find bugs and offer feedback? Read the [release channels](https://docs.passwordstore.app/docs/Users/release-channels) documentation to get access!
+## Issues
 
-## Community
+Report bugs and feature requests on the
+[issue tracker](https://github.com/danixland/Android-Password-Store/issues).
 
-Ways to get in touch:
+## License
 
-* [Github issues](https://github.com/android-password-store/Android-Password-Store/issues): Use it if you have a bug report, or you want to submit a feature request.
-* [GitHub Discussions](https://github.com/android-password-store/Android-Password-Store/discussions): Use it if you do not understand something, or want to discuss a feature request in more detail with all community members before pitching it to maintainers.
+GPL-3.0-only, see [LICENSE.txt](LICENSE.txt).
 
-## Donations
+Copyright © 2014-2024 The Android Password Store Authors.
+Modifications Copyright (C) 2026 Danilo M. <danix@danix.xyz>.
 
-The project accepts financial contributions through the following platforms
+## Development Approach
 
-- [GitHub Sponsors](https://github.com/sponsors/android-password-store)
-- [OpenCollective](https://opencollective.com/android-password-store)
+This project is developed using AI-assisted tools. Code is generated with the help of AI based on human-provided specifications, design decisions, and iterative feedback.
 
-<sub>Google Play and the Google Play logo are trademarks of Google LLC.</sub>
+All contributions are reviewed, tested, and curated by the maintainer before being included in the codebase. AI is used as a productivity and exploration tool, while human oversight remains central to all decisions.
+
+The goal is to combine the flexibility of AI-assisted development with standard open-source practices such as transparency, review, and accountability.
