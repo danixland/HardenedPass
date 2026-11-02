@@ -22,8 +22,10 @@ androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.2.2"
 androidx-core-ktx = "androidx.core:core-ktx:1.13.1"
 androidx-documentfile = "androidx.documentfile:documentfile:1.1.0"
 androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.8.4"
+androidx-hilt-navigation-compose = "androidx.hilt:hilt-navigation-compose:1.2.0"
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "lifecycle" }
 androidx-lifecycle-livedataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-navigation-compose = "androidx.navigation:navigation-compose:2.8.9"
