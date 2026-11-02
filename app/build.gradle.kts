@@ -12,6 +12,7 @@ plugins {
   alias(libs.plugins.hilt)
   alias(libs.plugins.ksp)
   alias(libs.plugins.kotlin.composeCompiler)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -66,6 +67,7 @@ dependencies {
   implementation(libs.bundles.androidxLifecycle)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.material)
+  implementation(libs.androidx.navigation.compose)
   implementation(libs.androidx.preference)
   implementation(libs.androidx.recyclerview)
   implementation(libs.androidx.recyclerviewSelection)
@@ -76,6 +78,7 @@ dependencies {
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.serialization.core)
 
   implementation(libs.aps.sublimeFuzzy)
   implementation(libs.aps.zxingAndroidEmbedded)
