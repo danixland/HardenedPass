@@ -352,4 +352,10 @@
   <string name="list_store_root">Archivio password</string>
   <string name="list_more_options">Altre opzioni</string>
   <string name="list_clear_search">Cancella ricerca</string>
+
+  <!-- Compose entry view -->
+  <string name="entry_back">Indietro</string>
+  <string name="entry_show_password">Mostra password</string>
+  <string name="entry_hide_password">Nascondi password</string>
+  <string name="entry_copy_name">Copia nome</string>
 </resources>

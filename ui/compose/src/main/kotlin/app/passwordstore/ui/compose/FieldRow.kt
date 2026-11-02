@@ -21,6 +21,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import app.passwordstore.ui.compose.preview.ThemePreviews
 import app.passwordstore.ui.compose.theme.APSTheme
 import app.passwordstore.ui.compose.theme.SpacingLarge
@@ -29,9 +31,12 @@ import app.passwordstore.ui.compose.theme.SpacingMedium
 /** Content descriptions for [FieldRow]'s buttons, supplied by the app's translated strings. */
 public data class FieldRowLabels(val copy: String, val show: String, val hide: String)
 
+/** Masked values (passwords) use a monospace face, so 0 and O, l and 1 stay apart. */
+private val Monospace = FontFamily(Font(R.font.jetbrainsmono_nl_regular))
+
 /**
  * A labelled value with an optional copy button. When [masked] is true the value is hidden behind
- * dots until the reveal toggle is pressed.
+ * dots until the reveal toggle is pressed, unless [initiallyRevealed] shows it from the start.
  */
 @Composable
 public fun FieldRow(
@@ -40,9 +45,10 @@ public fun FieldRow(
   labels: FieldRowLabels,
   modifier: Modifier = Modifier,
   masked: Boolean = false,
+  initiallyRevealed: Boolean = false,
   onCopy: (() -> Unit)? = null,
 ) {
-  var revealed by rememberSaveable { mutableStateOf(false) }
+  var revealed by rememberSaveable { mutableStateOf(initiallyRevealed) }
   Row(
     modifier
       .fillMaxWidth()
@@ -60,9 +66,10 @@ public fun FieldRow(
         style = MaterialTheme.typography.labelMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
+      val style = MaterialTheme.typography.bodyLarge
       Text(
         if (masked && !revealed) "•".repeat(10) else value,
-        style = MaterialTheme.typography.bodyLarge,
+        style = if (masked) style.copy(fontFamily = Monospace) else style,
       )
     }
     if (masked)
