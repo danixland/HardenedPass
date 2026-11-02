@@ -11,8 +11,8 @@ the maintainer's phone stays on 0.1.4 until then.
 
 ## Visual direction
 
-- Material 3 "Material You": dynamic color on Android 12+, a fixed purple scheme on Android 8 to
-  11 (minSdk 26). Light and dark follow the system.
+- Material 3 "Material You": dynamic color on Android 12+, the existing fixed `APSTheme` scheme
+  on Android 8 to 11 (minSdk 26). Light and dark follow the system.
 - Pill-shaped search bar at the top of the list, grouped rounded surfaces, letter avatars on
   entries, extended FAB ("New entry").
 - Folder location shown as breadcrumb chips (root, then each folder); the last chip is

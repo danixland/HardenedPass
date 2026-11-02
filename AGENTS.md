@@ -21,7 +21,11 @@ Keep "GrapheneOS" out of the app name: it is that project's trademark.
 
 ## Repository layout and remotes
 
-- `master` is the only branch. Upstream's `develop` was renamed; do not recreate it.
+- `master` is the only long-lived branch. Upstream's `develop` was renamed; do not recreate it.
+- Temporary exception: the Compose UI overhaul
+  (`docs/superpowers/specs/2026-11-02-compose-ui-overhaul-design.md`) lives on `compose` until
+  it is complete; nothing is released from it. `master` stays releasable (public suffix list,
+  hotfixes). Remove this bullet when `compose` merges.
 - `origin` fetches from the maintainer's own git server (the main repository) and pushes to it
   and to the GitHub fork (`danixland/HardenedPass`) in one `git push`.
   GitHub is a push mirror: never create commits on GitHub (bots, web edits), they would
