@@ -2,7 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.1.0] - 2026-11-02
+
+First release of HardenedPass, a maintained fork of the archived Android Password Store.
+It installs next to upstream's app (`app.passwordstore`) and never updates over it.
+Also includes upstream's unreleased 2.0 work, listed in the next section.
+
+### Changed
+
+-   **BREAKING**: The app is now HardenedPass, with application ID `xyz.danix.hardenedpass`, signed with the fork's own release key
+-   Removed Sentry crash reporting and every Google Play Services dependency; there is a single build with no proprietary code
+-   Updated Bouncy Castle to 1.86 (fixes GHSA-574f-3g2m-x479, GHSA-9pwp-9qqc-pr26, GHSA-c3fc-8qff-9hwx, GHSA-qp49-qgx5-5m26), PGPainless to 1.7.8 and JGit to 5.13.5
+-   Updated the build to Gradle 9, AGP 9 and Kotlin 2.4
+
+### Fixed
+
+-   Messages encrypted by GnuPG 2.3 or later (OCB/AEAD) can now be decrypted
+-   Importing a key without an encryption subkey was accepted instead of rejected
+-   Conflict recovery pushed to a branch named `conflicting-null-<time>` instead of the current branch
+-   `DecryptActivity` is no longer exported, and decrypt paths from outside the app must resolve inside the store
+
+## [Upstream unreleased 2.0 changes]
 
 ### Added
 
