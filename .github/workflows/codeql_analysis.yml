@@ -16,7 +16,7 @@ jobs:
       security-events: write
     steps:
     - name: Setup build environment
-      uses: danixland/Android-Password-Store/.github/reusable-workflows/setup-gradle@master
+      uses: danixland/HardenedPass/.github/reusable-workflows/setup-gradle@master
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@c36620d31ac7c881962c3d9dd939c40ec9434f2b # v3.26.12

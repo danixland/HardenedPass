@@ -37,7 +37,7 @@ Services.
 ## Issues
 
 Report bugs and feature requests on the
-[issue tracker](https://github.com/danixland/Android-Password-Store/issues).
+[issue tracker](https://github.com/danixland/HardenedPass/issues).
 
 ## License
 

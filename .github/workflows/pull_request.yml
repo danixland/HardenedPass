@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup build environment
-        uses: danixland/Android-Password-Store/.github/reusable-workflows/setup-gradle@master
+        uses: danixland/HardenedPass/.github/reusable-workflows/setup-gradle@master
 
       - name: Check codestyle
         shell: bash
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup build environment
-        uses: danixland/Android-Password-Store/.github/reusable-workflows/setup-gradle@master
+        uses: danixland/HardenedPass/.github/reusable-workflows/setup-gradle@master
 
       - name: Run unit tests
         shell: bash
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup build environment
-        uses: danixland/Android-Password-Store/.github/reusable-workflows/setup-gradle@master
+        uses: danixland/HardenedPass/.github/reusable-workflows/setup-gradle@master
 
       - name: Build debug APKs
         shell: bash
@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup build environment
-        uses: danixland/Android-Password-Store/.github/reusable-workflows/setup-gradle@master
+        uses: danixland/HardenedPass/.github/reusable-workflows/setup-gradle@master
 
       - name: Check library API
         shell: bash
@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup build environment
-        uses: danixland/Android-Password-Store/.github/reusable-workflows/setup-gradle@master
+        uses: danixland/HardenedPass/.github/reusable-workflows/setup-gradle@master
 
       - name: Run Lint
         shell: bash

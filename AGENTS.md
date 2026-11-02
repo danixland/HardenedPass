@@ -23,7 +23,7 @@ Keep "GrapheneOS" out of the app name: it is that project's trademark.
 
 - `master` is the only branch. Upstream's `develop` was renamed; do not recreate it.
 - `origin` fetches from the maintainer's own git server (the main repository) and pushes to it
-  and to the GitHub fork (`danixland/Android-Password-Store`) in one `git push`.
+  and to the GitHub fork (`danixland/HardenedPass`) in one `git push`.
   GitHub is a push mirror: never create commits on GitHub (bots, web edits), they would
   diverge from the main repository.
 - `upstream` is fetch-only (push URL disabled).

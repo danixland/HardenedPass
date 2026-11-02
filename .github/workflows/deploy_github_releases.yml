@@ -12,7 +12,7 @@ jobs:
       contents: write
     steps:
     - name: Setup build environment
-      uses: danixland/Android-Password-Store/.github/reusable-workflows/setup-gradle@master
+      uses: danixland/HardenedPass/.github/reusable-workflows/setup-gradle@master
 
     - name: Decrypt signing secrets
       shell: bash
