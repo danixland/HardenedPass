@@ -31,8 +31,8 @@
   <string name="password_move_error_title">Erro ao mover os contrasinais</string>
   <string name="password_move_error_message">Non se mudou %1$s por %2$s</string>
   <!-- git commits -->
-  <string name="git_commit_add_text">Engadir o contrasinal creado para %1$s usando Android Password Store.</string>
-  <string name="git_commit_edit_text">Editar contrasinal para %1$s usando Android Password Store.</string>
+  <string name="git_commit_add_text">Engadir o contrasinal creado para %1$s usando HardenedPass.</string>
+  <string name="git_commit_edit_text">Editar contrasinal para %1$s usando HardenedPass.</string>
   <string name="git_commit_remove_text">Eliminar %1$s da almacenaxe.</string>
   <string name="git_commit_move_text">Mudar nome %1$s a %2$s.</string>
   <string name="git_commit_move_multiple_text">Mover varios contrasinais a %1$s.</string>

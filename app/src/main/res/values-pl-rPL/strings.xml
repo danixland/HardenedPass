@@ -30,8 +30,8 @@
   <string name="password_move_error_title">Błąd podczas przenoszenia haseł</string>
   <string name="password_move_error_message">Nie udało się przenieść %1$s do %2$s</string>
   <!-- git commits -->
-  <string name="git_commit_add_text">Dodaj wygenerowane hasło dla %1$s przy użyciu Android Password Store.</string>
-  <string name="git_commit_edit_text">Edytuj hasło dla %1$s za pomocą Android Password Store.</string>
+  <string name="git_commit_add_text">Dodaj wygenerowane hasło dla %1$s przy użyciu HardenedPass.</string>
+  <string name="git_commit_edit_text">Edytuj hasło dla %1$s za pomocą HardenedPass.</string>
   <string name="git_commit_remove_text">Usuń %1$s z repozytorium.</string>
   <string name="git_commit_move_text">Zmień nazwę %1$s na %2$s.</string>
   <string name="git_commit_move_multiple_text">Przenieś hasła do %1$s.</string>

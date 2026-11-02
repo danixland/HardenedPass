@@ -31,8 +31,8 @@
   <string name="password_move_error_title">Erro ao mover senhas</string>
   <string name="password_move_error_message">Falha ao mover %1$s para %2$s</string>
   <!-- git commits -->
-  <string name="git_commit_add_text">Adicionar senha gerada para %1$s usando o Android Password Store.</string>
-  <string name="git_commit_edit_text">Editar a senha para %1$s usando o Android Password Store.</string>
+  <string name="git_commit_add_text">Adicionar senha gerada para %1$s usando o HardenedPass.</string>
+  <string name="git_commit_edit_text">Editar a senha para %1$s usando o HardenedPass.</string>
   <string name="git_commit_remove_text">Remova %1$s do armazenamento.</string>
   <string name="git_commit_move_text">Renomear %1$s para %2$s.</string>
   <string name="git_commit_move_multiple_text">Mova múltiplas senhas para %1$s.</string>

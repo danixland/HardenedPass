@@ -31,8 +31,8 @@
   <string name="password_move_error_title">Erreur lors du déplacement des mots de passe</string>
   <string name="password_move_error_message">Impossible de déplacer %1$s vers %2$s</string>
   <!-- git commits -->
-  <string name="git_commit_add_text">Ajout par Android Password Store d\'un mot de passe pour %1$s.</string>
-  <string name="git_commit_edit_text">Modification par Android Password Store du mot de passe pour %1$s.</string>
+  <string name="git_commit_add_text">Ajout par HardenedPass d\'un mot de passe pour %1$s.</string>
+  <string name="git_commit_edit_text">Modification par HardenedPass du mot de passe pour %1$s.</string>
   <string name="git_commit_remove_text">Suppression de %1$s.</string>
   <string name="git_commit_move_text">Renommer %1$sà %2$s. </string>
   <string name="git_commit_move_multiple_text">Déplacement de mots de passe vers %1$s.</string>

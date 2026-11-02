@@ -31,9 +31,9 @@
   <string name="password_move_error_title">Errore spostando le password</string>
   <string name="password_move_error_message">Impossibile spostare %1$s a %2$s</string>
   <!-- git commits -->
-  <string name="git_commit_add_text">Aggiungi password generata per %1$s usando Android Password Store.</string>
-  <string name="git_commit_edit_text">Modifica password per %1$s usando Android Password Store.</string>
-  <string name="git_commit_remove_text">Rimuovi %1$s dal negozio.</string>
+  <string name="git_commit_add_text">Aggiungi password generata per %1$s usando HardenedPass.</string>
+  <string name="git_commit_edit_text">Modifica password per %1$s usando HardenedPass.</string>
+  <string name="git_commit_remove_text">Rimuovi %1$s dall\'archivio.</string>
   <string name="git_commit_move_text">Rinomina %1$s in %2$s.</string>
   <string name="git_commit_move_multiple_text">Sposta più password in %1$s.</string>
   <!-- PGPHandler -->

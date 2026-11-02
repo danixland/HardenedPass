@@ -29,8 +29,8 @@
   <string name="password_move_error_title">비밀번호를 옮기는 중 문제가 발생하였습니다.</string>
   <string name="password_move_error_message">%1$s 를 %2$s 로 옮기는데 실패하였습니다.</string>
   <!-- git commits -->
-  <string name="git_commit_add_text">Android Password Store 를 이용해 %1$s 의 비밀번호를 생성하였습니다.</string>
-  <string name="git_commit_edit_text">Android Password Store 를 이용해 %1$s 의 비밀번호를 변경하였습니다.</string>
+  <string name="git_commit_add_text">HardenedPass 를 이용해 %1$s 의 비밀번호를 생성하였습니다.</string>
+  <string name="git_commit_edit_text">HardenedPass 를 이용해 %1$s 의 비밀번호를 변경하였습니다.</string>
   <string name="git_commit_remove_text">%1$s 을 저장소에서 삭제하였습니다.</string>
   <string name="git_commit_move_text">%1$s 의 이름을 %2$s 로 변경하였습니다.</string>
   <string name="git_commit_move_multiple_text">여러개의 비밀번호를 %1$s 로 옮겼습니다.</string>
