@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.passwordstore.data.password.PasswordItem
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.injection.prefs.SettingsPreferences
+import app.passwordstore.ui.list.listRows
 import app.passwordstore.util.autofill.AutofillPreferences
 import app.passwordstore.util.checkMainThread
 import app.passwordstore.util.coroutines.DispatcherProvider
@@ -301,6 +302,12 @@ constructor(
 
   private val _currentDir = MutableStateFlow(root)
   val currentDir = _currentDir.asStateFlow()
+
+  /** [searchResult] as folder and entry rows for the Compose list, built off the main thread. */
+  val rows =
+    searchResult
+      .map { result -> listRows(result.passwordItems.map { it.file }, currentDir.value) }
+      .flowOn(dispatcherProvider.io())
 
   data class NavigationStackEntry(val dir: File, val recyclerViewState: Parcelable?)
 
