@@ -110,7 +110,9 @@ constructor(filesDir: String, private val dispatcher: CoroutineDispatcher) :
               val userIdMatch =
                 keys
                   .map { key -> key to tryParseKeyring(key) }
-                  .firstOrNull { (_, keyRing) -> selector.firstMatch(keyRing) != null }
+                  .firstOrNull { (_, keyRing) ->
+                    keyRing?.publicKey?.userIDs?.asSequence()?.any(selector) == true
+                  }
               userIdMatch?.first
             }
           }

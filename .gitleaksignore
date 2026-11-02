@@ -1,0 +1,2 @@
+# Throwaway OpenPGP test key (passphrase "Password") used to decrypt a GnuPG OCB fixture.
+crypto/pgpainless/src/test/resources/gnupg_ocb_sec:private-key:1

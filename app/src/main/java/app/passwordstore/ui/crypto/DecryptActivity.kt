@@ -15,13 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import app.passwordstore.Application.Companion.screenWasOff
 import app.passwordstore.R
 import app.passwordstore.crypto.PGPIdentifier
-import app.passwordstore.crypto.errors.NonStandardAEAD
 import app.passwordstore.data.crypto.PGPPassphraseCache
 import app.passwordstore.data.passfile.PasswordEntry
 import app.passwordstore.data.password.FieldItem
 import app.passwordstore.databinding.DecryptLayoutBinding
 import app.passwordstore.ui.adapters.FieldItemAdapter
-import app.passwordstore.ui.dialogs.BasicBottomSheet
 import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result as BiometricResult
 import app.passwordstore.util.extensions.getString
@@ -255,24 +253,7 @@ class DecryptActivity : BasePGPActivity() {
       onSuccess()
     } else {
       logcat(ERROR) { result.error.stackTraceToString() }
-      when (result.error) {
-        is NonStandardAEAD -> {
-          BasicBottomSheet.Builder(this)
-            .setTitle(getString(R.string.aead_detect_title))
-            .setMessage(getString(R.string.aead_detect_message, result.error.message))
-            .setPositiveButtonClickListener(getString(R.string.dialog_ok)) {
-              setResult(RESULT_CANCELED)
-              finish()
-            }
-            .setOnDismissListener {
-              setResult(RESULT_CANCELED)
-              finish()
-            }
-            .build()
-            .show(supportFragmentManager, "AEAD_INFO_SHEET")
-        }
-        else -> decrypt(isError = true, authResult = authResult)
-      }
+      decrypt(isError = true, authResult = authResult)
     }
   }
 

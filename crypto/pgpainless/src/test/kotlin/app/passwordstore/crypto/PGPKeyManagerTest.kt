@@ -76,7 +76,7 @@ class PGPKeyManagerTest {
   @Test
   fun addKeyWithUnusableKey() =
     runTest(dispatcher) {
-      val error = keyManager.addKey(PGPKey(TestUtils.getAEADSecretKey())).unwrapError()
+      val error = keyManager.addKey(PGPKey(TestUtils.getSignOnlyPublicKey())).unwrapError()
       assertEquals(UnusableKeyException, error)
     }
 

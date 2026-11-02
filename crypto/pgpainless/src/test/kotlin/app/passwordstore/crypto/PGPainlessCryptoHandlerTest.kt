@@ -9,7 +9,6 @@ package app.passwordstore.crypto
 import app.passwordstore.crypto.CryptoConstants.KEY_PASSPHRASE
 import app.passwordstore.crypto.CryptoConstants.PLAIN_TEXT
 import app.passwordstore.crypto.errors.IncorrectPassphraseException
-import app.passwordstore.crypto.errors.NonStandardAEAD
 import com.github.michaelbull.result.getError
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
@@ -139,10 +138,10 @@ class PGPainlessCryptoHandlerTest {
   }
 
   @Test
-  fun aeadEncryptedMaterialIsSurfacedProperly() {
-    val secKey = PGPKey(TestUtils.getAEADSecretKey())
+  fun decryptsGnuPGOcbEncryptedMaterial() {
+    val secKey = PGPKey(TestUtils.getGnuPGOcbSecretKey())
     val plaintextStream = ByteArrayOutputStream()
-    val ciphertextStream = TestUtils.getAEADEncryptedFile().inputStream()
+    val ciphertextStream = TestUtils.getGnuPGOcbEncryptedFile().inputStream()
     val res =
       cryptoHandler.decrypt(
         listOf(secKey),
@@ -151,8 +150,8 @@ class PGPainlessCryptoHandlerTest {
         plaintextStream,
         PGPDecryptOptions.Builder().build(),
       )
-    assertTrue(res.isErr)
-    assertIs<NonStandardAEAD>(res.error, message = "${res.error.cause}")
+    assertTrue(res.isOk, "${res.component2()?.cause}")
+    assertEquals("hunter2", plaintextStream.toString(Charsets.UTF_8).trim())
   }
 
   @Test

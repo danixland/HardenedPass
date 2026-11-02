@@ -344,6 +344,4 @@
   <string name="no_keys_imported_dialog_title">Nenhuma chave importada</string>
   <string name="no_keys_imported_dialog_message">Não há chaves PGP importadas no aplicativo ainda, pressione o botão abaixo para escolher um arquivo de chave</string>
   <string name="biometric_prompt_title_gpg_passphrase_cache">Desbloquear cache da senha</string>
-  <string name="aead_detect_title">Criptografia AEAD detectada</string>
-  <string name="aead_detect_message">%1$s, consulte https://passwordstore.app/fix-aead para obter mais informações</string>
 </resources>

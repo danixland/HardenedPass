@@ -28,7 +28,11 @@ android {
 
   androidResources { generateLocaleConfig = true }
 
-  packaging { resources.excludes.add("META-INF/versions/**") }
+  packaging {
+    resources.excludes.add("META-INF/versions/**")
+    // Every Bouncy Castle jar ships the same license file; keep one copy in the APK.
+    resources.pickFirsts.add("META-INF/LICENSE.md")
+  }
 }
 
 dependencies {

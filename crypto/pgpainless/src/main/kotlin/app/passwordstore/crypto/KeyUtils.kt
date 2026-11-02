@@ -47,6 +47,6 @@ public object KeyUtils {
         val keyRing = tryParseKeyring(key) ?: return false
         PGPainless.inspectKeyRing(keyRing).isUsableForEncryption
       }
-      .get() != null
+      .get() == true
   }
 }

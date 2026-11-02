@@ -29,7 +29,7 @@ public data object InvalidKeyException :
 
 /** Key failed the [app.passwordstore.crypto.KeyUtils.isKeyUsable] test. */
 public data object UnusableKeyException :
-  KeyManagerException("Given key is not usable for encryption - is it using AEAD?")
+  KeyManagerException("Given key is not usable for encryption")
 
 /** No key matching `keyId` could be found. */
 public class KeyNotFoundException(keyId: String) :
@@ -45,10 +45,6 @@ public sealed class CryptoHandlerException(message: String? = null, cause: Throw
 
 /** The passphrase provided for decryption was incorrect. */
 public class IncorrectPassphraseException(cause: Throwable) : CryptoHandlerException(null, cause)
-
-/** The encrypted material is using an incompatible variant of PGP's AEAD standard. */
-public class NonStandardAEAD(cause: Throwable) :
-  CryptoHandlerException("GnuPG's AEAD implementation is non-standard and unsupported", cause)
 
 /** No keys were passed to the encrypt/decrypt operation. */
 public data object NoKeysProvidedException : CryptoHandlerException(null, null)
