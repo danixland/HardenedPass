@@ -5,13 +5,9 @@
 
 package app.passwordstore.ui.main
 
-import android.app.Activity
-import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,8 +16,8 @@ import app.passwordstore.data.password.PasswordItem
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.compose.theme.APSTheme
 import app.passwordstore.ui.crypto.BasePGPActivity
-import app.passwordstore.ui.crypto.DecryptActivity
 import app.passwordstore.ui.crypto.PasswordCreationActivity
+import app.passwordstore.ui.entry.EntryDestination
 import app.passwordstore.ui.git.base.BaseGitActivity
 import app.passwordstore.ui.list.ListDestination
 import app.passwordstore.ui.list.folderMoves
@@ -46,7 +42,10 @@ import kotlinx.serialization.Serializable
  */
 @Serializable data class ListRoute(val path: String = "")
 
-/** One entry. [filePath] was checked with [LaunchActivity.isFileInRepo] before routing here. */
+/**
+ * One entry, by absolute path. Paths from [LaunchActivity] passed [LaunchActivity.isFileInRepo];
+ * the entry destination checks again before decrypting.
+ */
 @Serializable data class EntryRoute(val filePath: String)
 
 /**
@@ -81,18 +80,32 @@ class MainActivity : BaseGitActivity() {
                   pushes.forEach { nav.navigate(ListRoute(it)) }
                 }
               },
+              onOpenEntry = { file ->
+                if (nav.currentBackStackEntry?.id == entry.id) {
+                  addShortcut(file)
+                  nav.navigate(EntryRoute(file.absolutePath))
+                }
+              },
             )
           }
           composable<EntryRoute> { entry ->
-            val route = entry.toRoute<EntryRoute>()
-            LegacyScreen(
-              this@MainActivity,
-              Intent(this@MainActivity, DecryptActivity::class.java)
-                .putExtra(BasePGPActivity.EXTRA_FILE_PATH, route.filePath)
-                .putExtra(
-                  BasePGPActivity.EXTRA_REPO_PATH,
-                  PasswordRepository.getRepositoryDirectory().absolutePath,
-                ),
+            EntryDestination(
+              activity = this@MainActivity,
+              file = File(entry.toRoute<EntryRoute>().filePath),
+              onClose = {
+                // Only the entry on top closes: the auto-close timer can race a back press.
+                if (nav.currentBackStackEntry?.id == entry.id) {
+                  if (nav.previousBackStackEntry == null) finish() else nav.popBackStack()
+                }
+              },
+              onSaved = {
+                // Back to the list, which re-reads the store on resume. Opened from a shortcut,
+                // the entry has no list below it: the list root replaces it.
+                if (nav.currentBackStackEntry?.id == entry.id) {
+                  if (nav.previousBackStackEntry != null) nav.popBackStack()
+                  else nav.navigate(ListRoute()) { popUpTo<EntryRoute> { inclusive = true } }
+                }
+              },
             )
           }
         }
@@ -121,13 +134,10 @@ class MainActivity : BaseGitActivity() {
     launchGitOperation(op).onFailure { promptOnErrorHandler(it) }
   }
 
-  // ponytail: the list still opens the legacy decrypt screen directly; step 3 navigates to
-  // EntryRoute instead (its trampoline would finish this activity and close the list).
-  fun openEntry(file: File) {
+  /** Adds [file] to the launcher's dynamic shortcuts, as opening it from the list always did. */
+  fun addShortcut(file: File) {
     val item = entryItem(file)
-    val authIntent = item.createAuthEnabledIntent(this)
-    startActivity(Intent(authIntent).setComponent(ComponentName(this, DecryptActivity::class.java)))
-    shortcutHandler.addDynamicShortcut(item, authIntent)
+    shortcutHandler.addDynamicShortcut(item, item.createAuthEnabledIntent(this))
   }
 
   fun pinEntry(file: File) {
@@ -152,14 +162,4 @@ class MainActivity : BaseGitActivity() {
 
   private fun entryItem(file: File) =
     PasswordItem.newPassword(file.name, file, PasswordRepository.getRepositoryDirectory())
-}
-
-// ponytail: trampoline to a screen not yet ported; each port replaces one call with the
-// real composable, and the last port deletes this function.
-@Composable
-private fun LegacyScreen(activity: Activity, intent: Intent) {
-  LaunchedEffect(Unit) {
-    activity.startActivity(intent)
-    activity.finish()
-  }
 }
