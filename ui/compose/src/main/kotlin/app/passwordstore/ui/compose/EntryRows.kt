@@ -24,6 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import app.passwordstore.ui.compose.preview.ThemePreviews
 import app.passwordstore.ui.compose.theme.APSTheme
@@ -41,7 +44,10 @@ public fun LetterAvatar(name: String, modifier: Modifier = Modifier) {
       scheme.tertiaryContainer to scheme.onTertiaryContainer,
     )
   val (bg, fg) = pairs[Math.floorMod(name.hashCode(), pairs.size)]
-  Box(modifier.size(36.dp).background(bg, CircleShape), contentAlignment = Alignment.Center) {
+  Box(
+    modifier.size(36.dp).background(bg, CircleShape).clearAndSetSemantics {},
+    contentAlignment = Alignment.Center,
+  ) {
     Text(name.take(1).uppercase(), color = fg, style = MaterialTheme.typography.titleMedium)
   }
 }
@@ -50,7 +56,7 @@ public fun LetterAvatar(name: String, modifier: Modifier = Modifier) {
 @Composable
 private fun RowShell(
   onClick: () -> Unit,
-  onLongClick: () -> Unit,
+  onLongClick: (() -> Unit)?,
   selected: Boolean,
   modifier: Modifier = Modifier,
   content: @Composable RowScope.() -> Unit,
@@ -62,6 +68,7 @@ private fun RowShell(
         .background(
           if (selected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent
         )
+        .semantics { this.selected = selected }
         .combinedClickable(onClick = onClick, onLongClick = onLongClick)
         .padding(horizontal = SpacingLarge, vertical = SpacingMedium + 2.dp),
     verticalAlignment = Alignment.CenterVertically,
@@ -78,11 +85,13 @@ public fun FolderRow(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   selected: Boolean = false,
-  onLongClick: () -> Unit = {},
+  onLongClick: (() -> Unit)? = null,
 ) {
   RowShell(onClick, onLongClick, selected, modifier) {
     Box(
-      Modifier.size(36.dp).background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
+      Modifier.size(36.dp)
+        .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+        .clearAndSetSemantics {},
       contentAlignment = Alignment.Center,
     ) {
       Icon(
@@ -108,7 +117,7 @@ public fun EntryRow(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   selected: Boolean = false,
-  onLongClick: () -> Unit = {},
+  onLongClick: (() -> Unit)? = null,
 ) {
   RowShell(onClick, onLongClick, selected, modifier) {
     LetterAvatar(name)
