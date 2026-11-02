@@ -33,10 +33,11 @@ fun File.contains(other: File): Boolean {
 
 /**
  * Checks if this [File] is in the password repository directory as given by
- * [PasswordRepository.getRepositoryDirectory]
+ * [PasswordRepository.getRepositoryDirectory]. Compares whole path components, so a sibling such as
+ * `store-evil` is not inside `store`.
  */
 fun File.isInsideRepository(): Boolean {
-  return canonicalPath.contains(PasswordRepository.getRepositoryDirectory().canonicalPath)
+  return canonicalFile.startsWith(PasswordRepository.getRepositoryDirectory().canonicalFile)
 }
 
 /** Recursively lists the files in this [File], skipping any directories it encounters. */
