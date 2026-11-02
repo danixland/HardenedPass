@@ -22,7 +22,10 @@ the maintainer's phone stays on 0.1.4 until then.
 
 - Breadcrumb chips under the search bar.
 - Folders in one grouped surface, entries in another below it. Folder rows show their entry
-  count; entry rows show the username, plus "OTP" when the entry has one.
+  count; in search results, entry rows show their folder. Username and OTP are not shown: both
+  live inside the encrypted file, and the list never decrypts.
+- One back stack entry per folder level (`ListRoute(path)`): system back goes up one folder and
+  leaves the app at the root.
 - Pull to sync. Long-press starts multi-select (move, delete). FAB opens the create sheet
   (entry or folder).
 
@@ -46,8 +49,9 @@ the maintainer's phone stays on 0.1.4 until then.
 
 ### Activities
 
-- `MainActivity` (new, not exported, extends `FragmentActivity` for `BiometricPrompt`, uses no
-  fragments) hosts a Compose `NavHost`. It replaces `PasswordStore`, `DecryptActivity`,
+- `MainActivity` (new, not exported, extends `BaseGitActivity`: an `AppCompatActivity`, as the
+  git operations require, and so a `FragmentActivity` for `BiometricPrompt`; uses no fragments)
+  hosts a Compose `NavHost`. It replaces `PasswordStore`, `DecryptActivity`,
   `PasswordCreationActivity`, `SelectFolderActivity`, `OnboardingActivity`, `SettingsActivity`,
   `GitServerConfigActivity`, `GitConfigActivity`, `GitLogActivity`, `ProxySelectorActivity`,
   `SshKeyGenActivity`, `SshKeyImportActivity`, `PGPKeyImportActivity` and `PGPKeyListActivity`.

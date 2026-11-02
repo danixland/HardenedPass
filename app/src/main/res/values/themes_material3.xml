@@ -14,6 +14,12 @@
     <item name="bottomSheetDialogTheme">@style/APSThemeM3.BottomSheetDialog</item>
   </style>
 
+  <!-- AppCompat activities whose whole UI is Compose -->
+  <style name="NoActionBarThemeM3" parent="AppThemeM3">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+
   <style name="NoBackgroundThemeM3" parent="@style/AppThemeM3">
     <item name="android:background">@android:color/transparent</item>
     <item name="android:backgroundDimEnabled">true</item>
