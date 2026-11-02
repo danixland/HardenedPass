@@ -64,8 +64,10 @@
       </intent-filter>
     </activity>
 
+    <!-- ponytail: rotation must not cancel store and git work in lifecycleScope; theme or locale changes still recreate. -->
     <activity
       android:name=".ui.main.MainActivity"
+      android:configChanges="orientation|screenSize"
       android:exported="false"
       android:theme="@style/NoActionBarThemeM3"
       android:windowSoftInputMode="adjustResize" />

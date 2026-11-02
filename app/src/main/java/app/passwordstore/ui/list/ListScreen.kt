@@ -94,7 +94,7 @@ fun ListScreen(
   onRename: () -> Unit,
   onPin: () -> Unit,
   modifier: Modifier = Modifier,
-  searchFocus: FocusRequester = remember { FocusRequester() },
+  focusSearch: Boolean = false,
 ) {
   val selecting = selected.isNotEmpty()
   val listState = rememberLazyListState()
@@ -108,7 +108,7 @@ fun ListScreen(
         SelectionBar(rows, selected, onClearSelection, onMove, onDelete, onRename, onPin)
       } else {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-          SearchField(query, gitOps, onQueryChange, onGitOp, onSettings, searchFocus)
+          SearchField(query, gitOps, onQueryChange, onGitOp, onSettings, focusSearch)
           BreadcrumbBar(
             crumbsFor(path),
             stringResource(R.string.list_store_root),
@@ -212,8 +212,10 @@ private fun SearchField(
   onQueryChange: (String) -> Unit,
   onGitOp: (GitOp) -> Unit,
   onSettings: () -> Unit,
-  focus: FocusRequester,
+  focusSearch: Boolean,
 ) {
+  val focus = remember { FocusRequester() }
+  LaunchedEffect(Unit) { if (focusSearch) focus.requestFocus() }
   val focusManager = LocalFocusManager.current
   var menu by remember { mutableStateOf(false) }
   SearchBar(

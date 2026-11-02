@@ -80,7 +80,6 @@ fun ListDestination(
   var deleteCount by rememberSaveable { mutableIntStateOf(0) }
   var refreshing by remember { mutableStateOf(false) }
   var resumes by remember { mutableIntStateOf(0) }
-  val searchFocus = remember { FocusRequester() }
 
   // Declared before the collection below on purpose: effects start in order, so the ViewModel
   // already points at this folder when the first rows are built (no flash of the store root).
@@ -92,14 +91,13 @@ fun ListDestination(
   val gitOps = remember(resumes) { activity.gitOps() }
   val canSync = remember(resumes) { !prefs.getBoolean(PreferenceKeys.DISABLE_SYNC_ACTION, false) }
 
-  LaunchedEffect(Unit) {
-    if (prefs.getBoolean(PreferenceKeys.SEARCH_ON_START, false)) searchFocus.requestFocus()
+  fun refresh() {
+    if (path.isNotEmpty() && !dir.isDirectory) onOpenFolder("") else viewModel.forceRefresh()
   }
+
   // Every return to this folder (back from a child, or from a legacy activity) re-reads it.
   LifecycleResumeEffect(Unit) {
-    if (activity.checkStore()) {
-      if (path.isNotEmpty() && !dir.isDirectory) onOpenFolder("") else viewModel.forceRefresh()
-    }
+    if (activity.checkStore()) refresh()
     resumes++
     onPauseOrDispose {}
   }
@@ -115,7 +113,7 @@ fun ListDestination(
         selected = emptyList()
         activity.lifecycleScope.launch {
           activity.moveItems(files, target)
-          viewModel.forceRefresh()
+          refresh()
         }
       }
     }
@@ -129,7 +127,7 @@ fun ListDestination(
     activity.lifecycleScope.launch {
       activity.runGit(op)
       refreshing = false
-      viewModel.forceRefresh()
+      refresh()
     }
   }
 
@@ -176,9 +174,9 @@ fun ListDestination(
         val files = selected.map(::File)
         val count = countFiles(files)
         if (count == 0) {
-          files.forEach { it.deleteRecursively() }
+          files.forEach { it.deleteWithoutFollowingLinks() }
           selected = emptyList()
-          viewModel.forceRefresh()
+          refresh()
         } else {
           deleteCount = count
           dialog = ListDialog.Delete
@@ -189,7 +187,7 @@ fun ListDestination(
         activity.pinEntry(File(selected.single()))
         selected = emptyList()
       },
-      searchFocus = searchFocus,
+      focusSearch = path.isEmpty() && prefs.getBoolean(PreferenceKeys.SEARCH_ON_START, false),
     )
 
     when (dialog) {
@@ -232,7 +230,7 @@ fun ListDestination(
             selected = emptyList()
             activity.lifecycleScope.launch {
               activity.renameFolder(folder, File(folder.parentFile, name))
-              viewModel.forceRefresh()
+              refresh()
             }
           },
           onDismiss = { dialog = ListDialog.None },
@@ -248,7 +246,7 @@ fun ListDestination(
             selected = emptyList()
             activity.lifecycleScope.launch {
               activity.deleteItems(files)
-              viewModel.forceRefresh()
+              refresh()
             }
           },
           onDismiss = { dialog = ListDialog.None },
