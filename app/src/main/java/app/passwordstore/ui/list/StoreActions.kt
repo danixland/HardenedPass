@@ -22,6 +22,7 @@ import app.passwordstore.util.settings.PasswordSortOrder
 import app.passwordstore.util.settings.PreferenceKeys
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
+import java.nio.file.Files
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -54,12 +55,24 @@ fun Context.recordUse(file: File) {
   }
 }
 
+/** Deletes this file or folder, never following symlinks; true when everything is gone. */
+internal fun File.deleteWithoutFollowingLinks(): Boolean {
+  if (isDirectory && !Files.isSymbolicLink(toPath())) {
+    // Evaluate every child, no short-circuit, so one failure leaves the rest deleted.
+    val children = listFiles().orEmpty().map { it.deleteWithoutFollowingLinks() }
+    if (!children.all { it }) return false
+  }
+  return delete()
+}
+
 /** Deletes [files] (entries or whole folders), drops their autofill matches and commits. */
 suspend fun BaseGitActivity.deleteItems(files: List<File>) {
   val root = PasswordRepository.getRepositoryDirectory()
-  val deleted = files.flatMap { if (it.isDirectory) it.listFilesRecursively() else listOf(it) }
-  files.forEach { it.deleteRecursively() }
-  AutofillMatcher.updateMatches(applicationContext, delete = deleted)
+  withContext(dispatcherProvider.io()) {
+    val deleted = files.flatMap { if (it.isDirectory) it.listFilesRecursively() else listOf(it) }
+    files.forEach { it.deleteWithoutFollowingLinks() }
+    AutofillMatcher.updateMatches(applicationContext, delete = deleted)
+  }
   commitChange(
     getString(
       R.string.git_commit_remove_text,
@@ -109,7 +122,7 @@ suspend fun BaseGitActivity.moveItems(files: List<File>, target: File) {
 
 /** Renames the folder [from] to [to], keeps its recently-used time, then commits. */
 suspend fun BaseGitActivity.renameFolder(from: File, to: File) {
-  moveFile(from, to)
+  if (!moveFile(from, to)) return
   val history = getSharedPreferences(HISTORY, Context.MODE_PRIVATE)
   val time = history.getString(from.absolutePath.base64())
   if (time != null)
@@ -120,7 +133,7 @@ suspend fun BaseGitActivity.renameFolder(from: File, to: File) {
   commitChange(getString(R.string.git_commit_move_text, from.name, to.name))
 }
 
-private suspend fun BaseGitActivity.moveFile(source: File, destination: File) {
+private suspend fun BaseGitActivity.moveFile(source: File, destination: File): Boolean {
   val moved =
     withContext(dispatcherProvider.io()) {
       val map =
@@ -143,17 +156,20 @@ private suspend fun BaseGitActivity.moveFile(source: File, destination: File) {
       .setPositiveButton(android.R.string.ok, null)
       .show()
   }
+  return moved
 }
 
 /** Shows [message] under [title] and suspends until answered; true when confirmed. */
 // ponytail: View dialog, see moveFile.
 private suspend fun Context.confirm(title: String, message: String): Boolean =
   suspendCancellableCoroutine { cont ->
-    MaterialAlertDialogBuilder(this)
-      .setTitle(title)
-      .setMessage(message)
-      .setPositiveButton(R.string.dialog_ok) { _, _ -> cont.resume(true) }
-      .setNegativeButton(R.string.dialog_cancel) { _, _ -> cont.resume(false) }
-      .setOnCancelListener { cont.resume(false) }
-      .show()
+    val dialog =
+      MaterialAlertDialogBuilder(this)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(R.string.dialog_ok) { _, _ -> cont.resume(true) }
+        .setNegativeButton(R.string.dialog_cancel) { _, _ -> cont.resume(false) }
+        .setOnCancelListener { cont.resume(false) }
+        .show()
+    cont.invokeOnCancellation { dialog.dismiss() }
   }
