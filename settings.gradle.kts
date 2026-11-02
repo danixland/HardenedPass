@@ -20,8 +20,6 @@ pluginManagement {
     exclusiveContent {
       forRepository { gradlePluginPortal() }
       filter {
-        includeModule("com.gradle", "develocity-gradle-plugin")
-        includeModule("com.gradle.develocity", "com.gradle.develocity.gradle.plugin")
         includeModule("me.tylerbwong.gradle.metalava", "plugin")
         includeModule(
           "org.gradle.toolchains.foojay-resolver-convention",
@@ -38,18 +36,7 @@ pluginManagement {
   }
 }
 
-plugins {
-  id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-  id("com.gradle.develocity") version "3.18.1"
-}
-
-develocity {
-  buildScan {
-    termsOfUseUrl = "https://gradle.com/help/legal-terms-of-use"
-    termsOfUseAgree = if (System.getenv("GITHUB_WORKFLOW").isNullOrEmpty()) "no" else "yes"
-    publishing.onlyIf { !System.getenv("GITHUB_WORKFLOW").isNullOrEmpty() }
-  }
-}
+plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0" }
 
 dependencyResolutionManagement {
   repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
