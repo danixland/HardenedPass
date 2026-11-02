@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - 2026-11-02
+
+### Fixed
+
+-   Saving an entry whose `.gpg-id` names a key the app does not have silently encrypted it to the remaining keys only, so the missing key's owner could no longer decrypt it. Saving now fails with an error naming the missing key; import that key (a public key is enough) to save
+-   A failed encryption no longer writes an empty file over the entry and commits it
+-   Commit messages name HardenedPass instead of Android Password Store, and the Italian "remove" message no longer calls the store a shop
+
 ## [0.1.1] - 2026-11-02
 
 ### Fixed
