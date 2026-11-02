@@ -5,8 +5,6 @@ on:
   schedule:
     - cron: '0 6 * * 1'
 
-env:
-  SENTRY_DSN: 'https://public_key@example.com/project_id'
 
 jobs:
   analyze:
@@ -29,7 +27,7 @@ jobs:
 
     - name: Build project
       shell: bash
-      run: ./gradlew assembleNonFreeRelease
+      run: ./gradlew :app:assembleRelease
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@c36620d31ac7c881962c3d9dd939c40ec9434f2b # v3.26.12

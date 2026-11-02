@@ -24,12 +24,12 @@ Requires JDK 17 and the Android SDK command-line tools. Point Gradle at the SDK 
 `local.properties` file (`sdk.dir=/path/to/Android/Sdk`), then:
 
 ```
-./gradlew assembleFreeDebug      # APK in app/build/outputs/apk/free/debug/
+./gradlew :app:assembleDebug     # APK in app/build/outputs/apk/debug/
 ./gradlew test -PslimTests       # unit tests
 ```
 
-The `free` flavor has no proprietary dependencies. The `nonFree` flavor adds Sentry crash
-reporting and Google Play Services SMS OTP autofill.
+The app has no proprietary dependencies: no crash reporting, no telemetry, no Google Play
+Services.
 
 ## Issues
 

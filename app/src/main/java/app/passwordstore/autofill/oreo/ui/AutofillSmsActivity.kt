@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.IntentSender
 import androidx.appcompat.app.AppCompatActivity
 
+// ponytail: filling OTPs from SMS needed Play Services (removed with the nonFree flavor), so
+// this stub keeps the feature off. Delete it together with the FillOtpFromSms autofill paths.
 @Suppress("UNUSED_PARAMETER")
 class AutofillSmsActivity : AppCompatActivity() {
 

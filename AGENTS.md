@@ -11,7 +11,7 @@ started in November 2026 from upstream's last commit. Kotlin, Gradle, about 18k 
 
 Modules: `app` (UI, git sync, autofill service), `autofill-parser`, `crypto:common`,
 `crypto:pgpainless`, `format:common`, `passgen:diceware`, `passgen:random`, `ui:compose`,
-`coroutine-utils`, `sentry-stub`. Build conventions live in `build-logic/`.
+`coroutine-utils`. Build conventions live in `build-logic/`.
 
 The app name and `applicationId` (`app.passwordstore`) are still upstream's on purpose. Do not
 rename them unless asked: it is tied to the release-signing decision (see Releases).
@@ -30,7 +30,7 @@ rename them unless asked: it is tied to the release-signing decision (see Releas
 
 Needs JDK 17 and the Android SDK. `local.properties` (gitignored) holds `sdk.dir`.
 
-    ./gradlew assembleFreeDebug                 # debug APK
+    ./gradlew :app:assembleDebug                # debug APK
     ./gradlew test -PslimTests                  # unit tests, as CI runs them
     ./gradlew spotlessApply                     # formatting (ktfmt); CI runs spotlessCheck
     ./gradlew lint                              # all modules and variants, as CI runs it
@@ -38,11 +38,13 @@ Needs JDK 17 and the Android SDK. `local.properties` (gitignored) holds `sdk.dir
 Prefix with `CI=1` to match CI: it turns Kotlin warnings into errors, so a deprecation warning
 that passes locally fails CI. Before committing, run:
 
-    CI=1 ./gradlew spotlessCheck test -PslimTests assembleFreeDebug assembleFreeRelease \
-      assembleNonFreeDebug assembleNonFreeRelease lint metalavaCheckCompatibilityRelease
+    CI=1 ./gradlew spotlessCheck test -PslimTests :app:assembleDebug :app:assembleRelease \
+      lint metalavaCheckCompatibilityRelease
 
-Flavors: `free` (no proprietary dependencies, Sentry replaced by `sentry-stub`) and `nonFree`
-(adds Sentry and Play Services SMS OTP).
+No product flavors: the app has no proprietary dependencies, no Sentry and no Play Services
+(the upstream `nonFree` flavor was removed). Scope `assemble*` to `:app`; a bare
+`assembleRelease` also verifies library modules in release mode, where `ui:compose` fails on a
+drawable using an AppCompat attribute it does not depend on.
 
 CI is `.github/workflows/pull_request.yml` (named "CI"), on push to `master`. Workflows use the
 `setup-gradle` composite action from this fork at `@master`. It checks the repository out
@@ -61,7 +63,7 @@ in `local.properties`:
 
     $ANDROID_HOME/emulator/emulator -avd aps-test -no-window -no-audio -no-boot-anim \
       -no-snapshot-save -gpu swiftshader_indirect &
-    ./gradlew installFreeDebug
+    ./gradlew installDebug
 
 Drive it with `adb shell input`, `uiautomator dump` and `screencap`. Decrypt screens set
 `FLAG_SECURE`, so screenshots of them are black; read them from the `uiautomator` dump.

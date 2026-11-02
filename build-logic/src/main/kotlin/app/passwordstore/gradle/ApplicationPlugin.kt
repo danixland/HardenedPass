@@ -7,8 +7,6 @@
 
 package app.passwordstore.gradle
 
-import app.passwordstore.gradle.flavors.FlavorDimensions
-import app.passwordstore.gradle.flavors.ProductFlavors
 import app.passwordstore.gradle.signing.configureBuildSigning
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.gradle.AppPlugin
@@ -53,12 +51,6 @@ class ApplicationPlugin : Plugin<Project> {
           isMinifyEnabled = false
           buildConfigField("boolean", "ENABLE_DEBUG_FEATURES", "true")
         }
-      }
-
-      flavorDimensions.add(FlavorDimensions.FREE)
-      productFlavors {
-        register(ProductFlavors.FREE) {}
-        register(ProductFlavors.NON_FREE) {}
       }
 
       project.configureBuildSigning()

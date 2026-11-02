@@ -28,7 +28,6 @@ The source code is split across 12 modules and 1 subproject.
 - `format/common` handles parsing the `pass` file format.
 - `passgen/diceware` is our new password generator that implements the [Diceware](https://theworld.com/~reinhold/diceware.html) algorithm.
 - `passgen/random` contains the default password generator.
-- `sentry-stub` contains no-op variants of [Sentry](https://sentry.io/) APIs that we use to ensure the FOSS-only, telemetry-free variant of APS continues to compile in absence of Sentry dependencies.
 - `ui/compose` has the theming code for building UI components in [Jetpack Compose](https://developer.android.com/jetpack/compose).
 - `app` is everything else that constitutes APS.
 
@@ -47,11 +46,10 @@ We bundle a [`ignore-revs-file`](https://git-scm.com/docs/git-blame#Documentatio
 
 This document assumes that you already have an Android development environment ready. If not, refer to Google's documentation on [installing Android Studio](https://developer.android.com/studio/preview). APS will build with all editions of Android Studio, but development typically happens with the Canary channel.
 
-The app comes in two 'flavors', a FOSS-only **free** variant and a **nonFree** variant that contains proprietary Google dependencies to facilitate some additional features as documented [here](https://android-password-store.github.io/docs/users/build-types). Decide what flavor you want to build, then run the following command to generate a debug APK.
+Run the following command to generate a debug APK.
 
 ```shell
-./gradlew collectFreeDebugApks # for 'free' flavor
-./gradlew collectNonFreeDebugApks # for 'nonFree' flavor
+./gradlew collectDebugApks
 ```
 
 You can find the generated APK at `app/outputs`.

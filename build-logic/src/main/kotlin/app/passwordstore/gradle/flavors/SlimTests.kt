@@ -12,12 +12,11 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.findByType
 
 /**
- * When the "slimTests" project property is provided, disable the unit test tasks on `release` build
- * type and `nonFree` product flavor to avoid running the same tests repeatedly in different build
- * variants.
+ * When the "slimTests" project property is provided, disable the unit test tasks on the `release`
+ * build type to avoid running the same tests twice.
  *
- * Examples: `./gradlew test -PslimTests` will run unit tests for `nonFreeDebug` and `debug` build
- * variants in Android App and Library projects, and all tests in JVM projects.
+ * Example: `./gradlew test -PslimTests` runs unit tests for the `debug` variant in Android App and
+ * Library projects, and all tests in JVM projects.
  */
 @Suppress("UnstableApiUsage")
 internal fun Project.configureSlimTests() {
@@ -30,15 +29,10 @@ internal fun Project.configureSlimTests() {
       }
     }
 
-    // Disable unit test tasks on the release build type and free flavor for Android Application
-    // projects.
+    // Disable unit test tasks on the release build type for Android Application projects.
     extensions.findByType<ApplicationAndroidComponentsExtension>()?.run {
       beforeVariants(selector().withBuildType(BUILD_TYPE_RELEASE)) {
         (it as HasUnitTestBuilder).enableUnitTest = false
-      }
-      beforeVariants(selector().withFlavor(FlavorDimensions.FREE to ProductFlavors.NON_FREE)) {
-        (it as HasUnitTestBuilder).enableUnitTest = false
-        it.androidTest.enable = false
       }
     }
   }
