@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+-   Updated sshj to 0.41.2, which drops the unmaintained `net.i2p.crypto:eddsa` library; Ed25519 keys now go through Bouncy Castle. Existing generated Ed25519 keys keep working
+
 ## [0.1.3] - 2026-11-02
 
 ### Changed

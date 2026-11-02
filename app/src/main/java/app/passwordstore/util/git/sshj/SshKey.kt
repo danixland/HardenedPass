@@ -30,23 +30,24 @@ import com.github.michaelbull.result.runCatching
 import java.io.File
 import java.io.IOException
 import java.security.KeyFactory
+import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.security.PrivateKey
 import java.security.PublicKey
+import java.security.SecureRandom
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import logcat.asLog
 import logcat.logcat
-import net.i2p.crypto.eddsa.EdDSAPrivateKey
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable
-import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec
 import net.schmizz.sshj.SSHClient
 import net.schmizz.sshj.common.Buffer
+import net.schmizz.sshj.common.Ed25519KeyFactory
 import net.schmizz.sshj.common.KeyType
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider
+import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters
 
 private const val PROVIDER_ANDROID_KEY_STORE = "AndroidKeyStore"
 private const val KEYSTORE_ALIAS = "sshkey"
@@ -73,6 +74,13 @@ fun toSshPublicKey(publicKey: PublicKey): String {
   val keyType = KeyType.fromKey(publicKey)
   return "$keyType ${Base64.encodeToString(rawPublicKey, Base64.NO_WRAP)}"
 }
+
+/** The Ed25519 key pair for a 32-byte RFC 8032 private key [seed]. */
+internal fun ed25519KeyPair(seed: ByteArray) =
+  KeyPair(
+    Ed25519KeyFactory.getPublicKey(Ed25519PrivateKeyParameters(seed).generatePublicKey().encoded),
+    Ed25519KeyFactory.getPrivateKey(seed),
+  )
 
 object SshKey {
 
@@ -246,10 +254,9 @@ object SshKey {
           if (requireAuthentication) requireUserAuthentication(15)
         }
       // Generate the ed25519 key pair and encrypt the private key.
-      val keyPair = net.i2p.crypto.eddsa.KeyPairGenerator().generateKeyPair()
-      privateKeyFile.writeBytes(
-        seal(wrappingKey, (keyPair.private as EdDSAPrivateKey).seed, WRAPPED_KEY_AAD)
-      )
+      val seed = ByteArray(32).also { SecureRandom().nextBytes(it) }
+      val keyPair = ed25519KeyPair(seed)
+      privateKeyFile.writeBytes(seal(wrappingKey, seed, WRAPPED_KEY_AAD))
 
       // Write public key in SSH format to .ssh_key.pub.
       publicKeyFile.writeText(toSshPublicKey(keyPair.public))
@@ -334,11 +341,9 @@ object SshKey {
 
     override fun getPrivate(): PrivateKey =
       runCatching {
-          val rawPrivateKey =
+          val seed =
             unseal(keystoreAesKey(KEYSTORE_ALIAS), privateKeyFile.readBytes(), WRAPPED_KEY_AAD)
-          EdDSAPrivateKey(
-            EdDSAPrivateKeySpec(rawPrivateKey, EdDSANamedCurveTable.ED_25519_CURVE_SPEC)
-          )
+          Ed25519KeyFactory.getPrivateKey(seed)
         }
         .getOrElse { error ->
           logcat { error.asLog() }

@@ -51,9 +51,11 @@ fun setUpBouncyCastleForSshj() {
   logcat("setUpBouncyCastleForSshj", priority = VERBOSE) {
     "JCE providers: ${Security.getProviders().joinToString { "${it.name} (${it.version})" }}"
   }
-  // Prevent sshj from forwarding all cryptographic operations to BC.
-  SecurityUtils.setRegisterBouncyCastle(false)
+  // Prevent sshj from forwarding all cryptographic operations to BC, which cannot sign with
+  // Android Keystore keys. Order matters: since sshj 0.40, setSecurityProvider(null) also resets
+  // the register flag, so setting the flag first would be undone.
   SecurityUtils.setSecurityProvider(null)
+  SecurityUtils.setRegisterBouncyCastle(false)
 }
 
 private object LogcatLoggerFactory : LoggerFactory {
