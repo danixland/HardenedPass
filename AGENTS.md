@@ -48,6 +48,25 @@ CI is `.github/workflows/pull_request.yml` (named "CI"), on push to `master`. Wo
 `setup-gradle` composite action from this fork at `@master`. It checks the repository out
 itself, so it cannot be referenced with a local `./` path.
 
+## End-to-end testing on an emulator
+
+`scripts/e2e-env.sh up` starts a disposable git-over-SSH server in Docker
+(`ssh://git@10.0.2.2:2222/srv/git/store.git` from the emulator) seeded with a small store
+encrypted to a throwaway OpenPGP key. Keys are generated into `.e2e/` (gitignored), never
+committed; `push-keys` copies them to the emulator's Download folder. `down` removes it.
+Never drive tests against a real password store or with real keys.
+
+Emulator: AVD `aps-test` (Pixel 6, AOSP Android 15 x86_64, no Google services), using the SDK
+in `local.properties`:
+
+    $ANDROID_HOME/emulator/emulator -avd aps-test -no-window -no-audio -no-boot-anim \
+      -no-snapshot-save -gpu swiftshader_indirect &
+    ./gradlew installFreeDebug
+
+Drive it with `adb shell input`, `uiautomator dump` and `screencap`. Decrypt screens set
+`FLAG_SECURE`, so screenshots of them are black; read them from the `uiautomator` dump.
+Fingerprint: `adb emu finger touch 1` after enrolling one in Settings.
+
 ## Verified facts and gotchas
 
 - Bouncy Castle: every `org.bouncycastle` module is forced to the catalog version by a

@@ -165,3 +165,6 @@ app/outputs
 
 # K2 generated directory
 .kotlin/
+
+# Disposable end-to-end test environment (scripts/e2e-env.sh)
+/.e2e/
