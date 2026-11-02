@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -104,6 +105,9 @@ fun EntryDestination(
     }
   }
 
+  // ponytail: after process death during key import or the editor, the unlock flow can start
+  // twice or a prompt can be left over the list; rare, no secret exposed. Fix by tracking
+  // whether the flow already started if it shows up.
   val keyImport =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
       if (result.resultCode == Activity.RESULT_OK) unlock() else onClose()
@@ -173,13 +177,15 @@ fun EntryDestination(
         )
       EntryPrompt.Passphrase,
       EntryPrompt.WrongPassphrase ->
-        PassphraseDialog(
-          wrong = viewModel.prompt == EntryPrompt.WrongPassphrase,
-          cacheEnabled = viewModel.cacheEnabled,
-          clearCache = viewModel.clearCache,
-          onSubmit = { passphrase, clear -> viewModel.submit(passphrase, clear, activity) },
-          onCancel = viewModel::cancel,
-        )
+        key(viewModel.retries) {
+          PassphraseDialog(
+            wrong = viewModel.prompt == EntryPrompt.WrongPassphrase,
+            cacheEnabled = viewModel.cacheEnabled,
+            clearCache = viewModel.clearCache,
+            onSubmit = { passphrase, clear -> viewModel.submit(passphrase, clear, activity) },
+            onCancel = viewModel::cancel,
+          )
+        }
     }
   }
 }

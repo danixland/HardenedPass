@@ -56,6 +56,8 @@ Spec: `docs/superpowers/specs/2026-11-02-compose-ui-overhaul-design.md`. Earlier
 | `DecryptActivity`, `decrypt_layout.xml`, `item_field.xml`, `menu/pgp_handler.xml`, `drawable/divider.xml`, `FieldItemAdapter`, `FieldItem`, upstream's unused `ViewPasswordScreen.kt` | Delete (Task 6) |
 | `BasePGPActivity`: `repoPath`, `fullPath`, key import, injected `settings`, `repository`, `dispatcherProvider`, `FLAG_SECURE`, path helpers in the companion | Keep for `PasswordCreationActivity` and `AutofillDecryptActivity` |
 | `BasePGPActivity.name` | Delete (only `DecryptActivity` used it) |
+| Text selection of field values (old `textIsSelectable`) | Dropped: the copy buttons set the sensitive clipboard flag, selection toolbar copies would not |
+| `TotpModule` | Also installed in `ViewModelComponent` (needed for `PasswordEntry.Factory` in the ViewModel) |
 
 Left for later steps because other legacy screens still use them: `PasswordDialog` and `dialog_password_entry.xml` (`AutofillDecryptActivity`, step 7), `EditPasswordScreen.kt`, `PasswordField.kt`/`CopyButton`, `APSAppBar.kt` and the ui:compose `PasswordItem.kt` (unused upstream WIP, step 4 or 8), `BasePGPActivity` (steps 4 and 7).
 
@@ -65,7 +67,7 @@ Left for later steps because other legacy screens still use them: `PasswordDialo
 - Slack compose-lint: no composable members on the activity (`EntryDestination` and `EntryScreen` are top-level and take the activity as a parameter, like `ListDestination`); every public composable has `modifier: Modifier = Modifier` as its first optional parameter; the only collection parameter is inside `EntryFields` (`ImmutableList`, class marked `@Immutable`); the ViewModel is not passed down.
 - Accessibility: every `IconButton` has a content description (back, edit, more options, show or hide password, copy); there is no FAB on this screen. `LetterAvatar` clears its own semantics, so the name is read once.
 - Focus: the entry screen has no text field; the passphrase dialog requests focus inside its own window, so nothing is left focused when the list comes back (the list's own return handling from step 2 then applies).
-- Decryption and file IO never run on the main thread.
+- Decryption and entry file IO never run on the main thread.
 
 **Conventions for every task**
 

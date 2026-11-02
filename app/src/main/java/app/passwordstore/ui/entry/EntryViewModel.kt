@@ -86,7 +86,10 @@ constructor(
 
   private var started = false
   private var copyOnDecrypt = false
-  private var retries = 0
+  /** Failed-or-asked passphrase prompts so far; keys the dialog so each attempt starts fresh. */
+  var retries = 0
+    private set
+
   private var auth: BiometricResult = BiometricResult.CanceledByUser
   private var ids: List<PGPIdentifier> = emptyList()
   private var file: File? = null
@@ -115,6 +118,7 @@ constructor(
   }
 
   fun submit(passphrase: String, clearCache: Boolean, context: Context) {
+    if (prompt == EntryPrompt.None) return
     prompt = EntryPrompt.None
     this.clearCache = clearCache
     val app = context.applicationContext
