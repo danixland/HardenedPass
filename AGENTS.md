@@ -75,7 +75,11 @@ Fingerprint: `adb emu finger touch 1` after enrolling one in Settings (needs a l
 (`settings put global animator_duration_scale 0`, same for `transition_` and `window_`)
 or `uiautomator dump` waits for an idle state that never comes. The OTP screen never goes idle
 anyway (live countdown), so its code can only be checked by eye. A windowed emulator needs the
-host's `libbsd`.
+host's `libbsd`. The `aps-test` AVD also has upstream's debug app as its autofill
+service, which grabs passphrase fields: `settings put secure autofill_service null` first. Debug
+builds from the main checkout are signed with the local release keystore, builds from a clean
+worktree with `~/.android/debug.keystore`, so an in-place upgrade between them needs `apksigner`
+re-signing.
 
 Autofill cannot be tested on the emulator image: Settings is denylisted in
 `OreoAutofillService`, and the only browser (WebView Shell) is not a trusted browser. Use a
@@ -119,8 +123,13 @@ passed.
   (see `passgen/diceware/build.gradle.kts`).
 - Hilt runs through KSP (no kapt; AGP 9's built-in Kotlin does not support it). Dagger compiler
   options are `ksp { arg(...) }` in `app/build.gradle.kts`.
-- JGit is pinned at 4.5.7 (2019). Newer JGit needs Java 11 APIs Android only partly desugars;
-  upgrading it is a large, separate job.
+- Secrets (Git and proxy credentials, the PGP passphrase cache, wrapped Ed25519 SSH keys) are
+  AES-GCM encrypted under Android Keystore keys by `util/crypto/KeystorePreferences.kt`.
+  androidx security-crypto was removed; `removeSecurityCryptoData` in `Migrations.kt` deleted
+  its data once on upgrade from 0.1.x.
+- JGit is on 5.13.x, the last line that needs only Java 8 APIs. JGit 6+ needs Java 11 APIs
+  Android only partly desugars; moving to it is a large, separate job. Window cache JMX is off
+  in `Application` and GC runs without JGit's PID lock, because Android has no JMX.
 
 ## Maintenance tasks
 
