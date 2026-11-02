@@ -130,7 +130,10 @@ object PasswordRepository {
     return repository
   }
 
-  /** Get the currently checked out branch. */
+  /**
+   * Get the currently checked out branch. While a rebase is stopped HEAD is detached, so this
+   * returns the branch being rebased instead.
+   */
   fun getCurrentBranch(): String? {
     val repository = repository ?: return null
     val headRef = repository.findRef(Constants.HEAD) ?: return null
@@ -138,9 +141,19 @@ object PasswordRepository {
       val branchName = headRef.target.name
       Repository.shortenRefName(branchName)
     } else {
-      null
+      rebasedBranch(repository.directory)
     }
   }
+
+  /** Branch recorded by an in-progress rebase in [gitDir], or null when no rebase is running. */
+  fun rebasedBranch(gitDir: File): String? =
+    listOf("rebase-merge", "rebase-apply")
+      .map { gitDir.resolve(it).resolve("head-name") }
+      .firstOrNull { it.isFile }
+      ?.readText()
+      ?.trim()
+      ?.takeIf { it.startsWith(Constants.R_HEADS) }
+      ?.let(Repository::shortenRefName)
 
   /**
    * Gets the .gpg files in a directory
