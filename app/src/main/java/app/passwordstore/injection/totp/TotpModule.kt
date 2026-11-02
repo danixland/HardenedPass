@@ -11,9 +11,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(ActivityComponent::class, ViewModelComponent::class)
 interface TotpModule {
   @Binds fun bindTotpFinder(impl: UriTotpFinder): TotpFinder
 }
