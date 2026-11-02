@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
   # push:
     # branches:
-      # - develop
+      # - master
   # pull_request:
     # branches:
-      # - develop
+      # - master
 
 env:
   SENTRY_DSN: 'https://public_key@example.com/project_id'
@@ -22,7 +22,7 @@ jobs:
       security-events: write
     steps:
     - name: Setup build environment
-      uses: android-password-store/android-password-store/.github/reusable-workflows/setup-gradle@develop
+      uses: danixland/Android-Password-Store/.github/reusable-workflows/setup-gradle@master
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@c36620d31ac7c881962c3d9dd939c40ec9434f2b # v3.26.12
