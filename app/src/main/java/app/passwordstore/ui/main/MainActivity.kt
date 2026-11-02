@@ -5,6 +5,7 @@
 
 package app.passwordstore.ui.main
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -46,32 +47,34 @@ class MainActivity : FragmentActivity() {
         NavHost(rememberNavController(), startDestination = start) {
           composable<ListRoute> {
             LegacyScreen(
-              Intent(this@MainActivity, PasswordStore::class.java).setAction(Intent.ACTION_VIEW)
+              this@MainActivity,
+              Intent(this@MainActivity, PasswordStore::class.java).setAction(Intent.ACTION_VIEW),
             )
           }
           composable<EntryRoute> { entry ->
             val route = entry.toRoute<EntryRoute>()
             LegacyScreen(
+              this@MainActivity,
               Intent(this@MainActivity, DecryptActivity::class.java)
                 .putExtra(BasePGPActivity.EXTRA_FILE_PATH, route.filePath)
                 .putExtra(
                   BasePGPActivity.EXTRA_REPO_PATH,
                   PasswordRepository.getRepositoryDirectory().absolutePath,
-                )
+                ),
             )
           }
         }
       }
     }
   }
+}
 
-  // ponytail: trampoline to a screen not yet ported; each port replaces one call with the
-  // real composable, and the last port deletes this function.
-  @Composable
-  private fun LegacyScreen(intent: Intent) {
-    LaunchedEffect(Unit) {
-      startActivity(intent)
-      finish()
-    }
+// ponytail: trampoline to a screen not yet ported; each port replaces one call with the
+// real composable, and the last port deletes this function.
+@Composable
+private fun LegacyScreen(activity: Activity, intent: Intent) {
+  LaunchedEffect(Unit) {
+    activity.startActivity(intent)
+    activity.finish()
   }
 }
