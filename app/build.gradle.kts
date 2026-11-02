@@ -101,5 +101,6 @@ dependencies {
 
   testImplementation(libs.testing.robolectric)
   testImplementation(libs.testing.sharedPrefsMock)
+  testImplementation(libs.thirdparty.pgpainless)
   testImplementation(libs.bundles.testDependencies)
 }

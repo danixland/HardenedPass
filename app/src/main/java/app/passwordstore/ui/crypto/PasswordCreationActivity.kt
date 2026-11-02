@@ -40,6 +40,7 @@ import app.passwordstore.util.extensions.unsafeLazy
 import app.passwordstore.util.extensions.viewBinding
 import app.passwordstore.util.settings.DirectoryStructure
 import app.passwordstore.util.settings.PreferenceKeys
+import com.github.michaelbull.result.getOrElse
 import com.github.michaelbull.result.onFailure
 import com.github.michaelbull.result.onSuccess
 import com.github.michaelbull.result.runCatching
@@ -378,10 +379,20 @@ class PasswordCreationActivity : BasePGPActivity() {
         runCatching {
             val result =
               withContext(dispatcherProvider.io()) {
-                val outputStream = ByteArrayOutputStream()
-                repository.encrypt(gpgIdentifiers, content.byteInputStream(), outputStream)
-                outputStream
-              }
+                  val outputStream = ByteArrayOutputStream()
+                  repository.encrypt(gpgIdentifiers, content.byteInputStream(), outputStream)
+                }
+                .getOrElse { e ->
+                  logcat(ERROR) { e.asLog("Failed to encrypt password file") }
+                  MaterialAlertDialogBuilder(this@PasswordCreationActivity)
+                    .setTitle(R.string.password_creation_file_fail_title)
+                    .setMessage(
+                      getString(R.string.password_creation_encrypt_fail_message, e.message)
+                    )
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+                  return@runCatching
+                }
             val passwordFile = Paths.get(path)
             // If we're not editing, this file should not already exist!
             // Additionally, if we were editing and the incoming and outgoing

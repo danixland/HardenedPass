@@ -14,6 +14,8 @@ import app.passwordstore.crypto.PGPainlessCryptoHandler
 import app.passwordstore.injection.prefs.SettingsPreferences
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.settings.PreferenceKeys
+import com.github.michaelbull.result.andThen
+import com.github.michaelbull.result.combine
 import com.github.michaelbull.result.filterValues
 import com.github.michaelbull.result.map
 import com.github.michaelbull.result.mapBoth
@@ -64,7 +66,12 @@ constructor(
         PGPEncryptOptions.Builder()
           .withAsciiArmor(settings.getBoolean(PreferenceKeys.ASCII_ARMOR, false))
           .build()
-      val keys = identities.map { id -> pgpKeyManager.getKeyById(id) }.filterValues()
-      pgpCryptoHandler.encrypt(keys, content, out, encryptionOptions).map { out }
+      // Every recipient in .gpg-id must be present: silently dropping one would write an entry
+      // that the missing key's owner can no longer decrypt.
+      identities
+        .map { id -> pgpKeyManager.getKeyById(id) }
+        .combine()
+        .andThen { keys -> pgpCryptoHandler.encrypt(keys, content, out, encryptionOptions) }
+        .map { out }
     }
 }
