@@ -143,7 +143,16 @@ Last run: 2026-11-02.
 
 ## Releases
 
-Not set up yet. Upstream's encrypted signing keystore was removed (only upstream could decrypt
-it). `deploy_github_releases.yml` needs a keystore of our own, encrypted with
-`scripts/encrypt-secret.sh` into `secrets/`, and the `ENCRYPT_KEY` secret. A different signing
-key means the APK cannot update over upstream's install while `applicationId` is unchanged.
+Signed with the maintainer's own key (certificate `CN=HardenedPass`, SHA-256
+`72:50:16:66:9E:48:2F:9A:C3:71:DE:E8:DF:19:A2:A1:B3:4F:A7:6D:1A:F0:5B:2A:23:78:47:25:B1:B4:9C:83`).
+The master copy lives outside the repo, never in it. Losing it means installed copies can never
+be updated again.
+
+- Local: `keystore.jks` and `keystore.properties` at the repo root (gitignored, `/keystore.*`)
+  make `./gradlew :app:assembleRelease` produce a signed `app-release.apk`.
+- CI: `secrets/keystore.cipher` and `secrets/props.cipher` are those two files encrypted with
+  `openssl enc -aes-256-cbc -md sha256 -pbkdf2`; the key is the `ENCRYPT_KEY` repository
+  secret. `scripts/signing-setup.sh` decrypts them, `signing-cleanup.sh` deletes them.
+- Pushing a `vX.Y.Z` tag runs `deploy_github_releases.yml`: it builds the signed APK and creates
+  a draft GitHub Release with `HardenedPass_vX.Y.Z.apk` and its `.sha256`.
+- Never print, log or commit the keystore password or `ENCRYPT_KEY`.
