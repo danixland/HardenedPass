@@ -31,9 +31,6 @@
   <issue id="PrivateResource">
     <ignore path="src/main/res/layout/map_preference_widget_switch.xml" />
   </issue>
-  <issue id="Deprecated">
-    <ignore path="src/main/res/layout/item_field.xml" />
-  </issue>
   <issue id="VectorPath">
     <ignore path="src/main/res/drawable/app_settings_alt_24px.xml" />
     <ignore path="src/main/res/drawable/ic_launcher_foreground_monochrome.xml" />

@@ -35,6 +35,9 @@ the maintainer's phone stays on 0.1.4 until then.
 - First group: password (masked, reveal toggle, copy), username (copy), one-time code with a
   countdown bar (copy).
 - Second group: remaining extra fields, copy where it makes sense.
+- Overflow: copy name, share as plaintext. The password starts masked or shown per the existing
+  "Show the password" setting. Saving in the editor returns to the list. Password and one-time
+  code copies are cleared from the clipboard after the timeout.
 
 ### Editor
 

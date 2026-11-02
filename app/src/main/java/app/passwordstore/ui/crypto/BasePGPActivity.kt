@@ -50,13 +50,6 @@ open class BasePGPActivity : AppCompatActivity() {
   /** Full path to the password file being worked on */
   val fullPath by unsafeLazy { intent.getStringExtra("FILE_PATH")!! }
 
-  /**
-   * Name of the password file
-   *
-   * Converts personal/auth.foo.org/john_doe@example.org.gpg to john_doe.example.org
-   */
-  val name: String by unsafeLazy { File(fullPath).nameWithoutExtension }
-
   /** Action to invoke if [keyImportAction] succeeds. */
   private var onKeyImport: (() -> Unit)? = null
   private val keyImportAction =

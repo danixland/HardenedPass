@@ -119,8 +119,9 @@ passed.
   (`<path>:private-key:<line>`). Never allowlist anything but generated test keys.
 - `app/lint-baseline.xml` entries for library jars are keyed on the jar's cache path, version
   and hash included. A dependency bump that moves a baselined jar needs the path updated.
-- `LaunchActivity` is exported and forwards `FILE_PATH` to `DecryptActivity` (not exported)
-  only after `isFileInRepo` checks it canonically resolves inside the store.
+- `LaunchActivity` is exported and forwards `FILE_PATH` to `MainActivity` (not exported) only
+  after `isFileInRepo` checks it canonically resolves inside the store; `MainActivity` opens it as
+  `EntryRoute`, whose destination checks it again before decrypting.
 - AGP 9 applies packaging excludes (`AndroidCommon`, e.g. `**/*.txt`) to unit-test java
   resources as well. A module whose tests load such a file must remove the exclude locally
   (see `passgen/diceware/build.gradle.kts`).
