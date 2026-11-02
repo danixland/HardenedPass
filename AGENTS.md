@@ -65,7 +65,34 @@ in `local.properties`:
 
 Drive it with `adb shell input`, `uiautomator dump` and `screencap`. Decrypt screens set
 `FLAG_SECURE`, so screenshots of them are black; read them from the `uiautomator` dump.
-Fingerprint: `adb emu finger touch 1` after enrolling one in Settings.
+Fingerprint: `adb emu finger touch 1` after enrolling one in Settings (needs a lock PIN:
+`adb shell locksettings set-pin 1234` on the emulator only). Disable animations
+(`settings put global animator_duration_scale 0`, same for `transition_` and `window_`)
+or `uiautomator dump` waits for an idle state that never comes. The OTP screen never goes idle
+anyway (live countdown), so its code can only be checked by eye. A windowed emulator needs the
+host's `libbsd`.
+
+Autofill cannot be tested on the emulator image: Settings is denylisted in
+`OreoAutofillService`, and the only browser (WebView Shell) is not a trusted browser. Use a
+real device with a trusted browser (e.g. Firefox) instead:
+
+- `adb reverse tcp:2222 tcp:2222` lets the device clone `ssh://git@127.0.0.1:2222/...` from the
+  e2e server over USB; serve a local login page the same way (`python3 -m http.server` on
+  127.0.0.1, `adb reverse` its port). Nothing is exposed on the network.
+- Record `settings get secure autofill_service` and `global stay_on_while_plugged_in` first,
+  restore both afterwards, then `adb uninstall app.passwordstore.debug`, delete the pushed
+  keys from Download and `adb reverse --remove-all`.
+- Set `svc power stayon usb` before driving: if the screen locks, taps land on the lock
+  screen's PIN pad. Check `dumpsys window | grep mCurrentFocus` (and `isKeyguardShowing`)
+  before tapping. Never type the owner's PIN.
+- On a device with Gboard, fill suggestions are inline chips in the keyboard bar, localized
+  (Italian: "Cerca la voce" is the app's "Search entry" chip).
+- Only read screens of the debug app, the test page and the autofill UI; the device holds the
+  owner's real data.
+
+Last full device run (2026-11-02): clone over SSH, PGP import, decrypt, TOTP, create and push,
+conflict recovery, hard reset, fingerprint unlock (emulator) and Firefox autofill (tablet) all
+passed.
 
 ## Verified facts and gotchas
 
