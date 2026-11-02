@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 8.6.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.6.0)" variant="all" version="8.6.0">
+<issues format="6" by="lint 9.5.0" type="baseline" client="gradle" dependencies="false" name="AGP (9.5.0)" variant="all" version="9.5.0">
 
     <issue
         id="InvalidPackage"
@@ -17,9 +17,16 @@
 
     <issue
         id="InvalidPackage"
-        message="Invalid package reference in org.eclipse.jgit:org.eclipse.jgit; not included in Android: `javax.xml.bind`. Referenced from `org.eclipse.jgit.transport.WalkEncryption.SymmetricEncryption`.">
+        message="Invalid package reference in org.eclipse.jgit:org.eclipse.jgit; not included in Android: `java.lang.management`. Referenced from `org.eclipse.jgit.internal.storage.file.GC.PidLock`.">
         <location
-            file="$GRADLE_USER_HOME/caches/modules-2/files-2.1/org.eclipse.jgit/org.eclipse.jgit/4.5.7.201904151645-r/e84008db495a7f48d65fb09afe53279b0df68c80/org.eclipse.jgit-4.5.7.201904151645-r.jar"/>
+            file="$GRADLE_USER_HOME/caches/modules-2/files-2.1/org.eclipse.jgit/org.eclipse.jgit/5.13.5.202508271544-r/166bc880beb891b201cd3216407fd4ffcd4930fd/org.eclipse.jgit-5.13.5.202508271544-r.jar"/>
+    </issue>
+
+    <issue
+        id="InvalidPackage"
+        message="Invalid package reference in org.eclipse.jgit:org.eclipse.jgit; not included in Android: `javax.management`. Referenced from `org.eclipse.jgit.util.Monitoring`.">
+        <location
+            file="$GRADLE_USER_HOME/caches/modules-2/files-2.1/org.eclipse.jgit/org.eclipse.jgit/5.13.5.202508271544-r/166bc880beb891b201cd3216407fd4ffcd4930fd/org.eclipse.jgit-5.13.5.202508271544-r.jar"/>
     </issue>
 
     <issue

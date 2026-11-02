@@ -17,9 +17,12 @@ import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode.TRACK
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.RebaseCommand
 import org.eclipse.jgit.api.ResetCommand
+import org.eclipse.jgit.internal.storage.file.FileRepository
+import org.eclipse.jgit.internal.storage.file.GC
 import org.eclipse.jgit.lib.PersonIdent
 import org.eclipse.jgit.lib.RepositoryState
 import org.eclipse.jgit.transport.RemoteRefUpdate
+import org.eclipse.jgit.util.FS
 
 /**
  * Runs the JGit command chains the git operations in `util/git/operation` use, against a local bare
@@ -33,6 +36,8 @@ class JGitBehaviourTest {
   private val identity = PersonIdent("test", "test@example.org")
 
   init {
+    // Ignore the developer's ~/.gitconfig (e.g. commit.gpgsign); the app has no global config.
+    FS.DETECTED.setUserHome(root)
     Git.init().setBare(true).setDirectory(remote).call().close()
     clone("seed").use { git ->
       git.write("example.org.gpg", "initial")
@@ -147,12 +152,33 @@ class JGitBehaviourTest {
     // ResetToRemoteOperation
     b.fetch().setRemote("origin").setRemoveDeletedRefs(true).call()
     b.branchCreate().setName("master").setForce(true).call()
-    b.checkout().setName("master").setForce(true).setUpstreamMode(TRACK).call()
+    b.checkout().setName("master").setForceRefUpdate(true).setUpstreamMode(TRACK).call()
     b.reset().setRef("origin/master").setMode(ResetCommand.ResetType.HARD).call()
 
     assertEquals("edited by a", b.read("example.org.gpg"))
     assertTrue(b.status().call().isClean)
     a.close()
     b.close()
+  }
+
+  @Test
+  fun gcStepsPackObjectsWithoutThePidLock() {
+    clone("a").use { a ->
+      repeat(3) {
+        a.write("e$it.gpg", "entry $it")
+        a.commitAll("e$it")
+      }
+      val repo = a.repository as FileRepository
+      // GcOperation
+      GC(repo).run {
+        setExpire(null)
+        packRefs()
+        repack()
+        prune(emptySet())
+      }
+      assertEquals(0, GC(repo).statistics.numberOfLooseObjects)
+      assertTrue(GC(repo).statistics.numberOfPackedObjects > 0)
+      assertEquals("entry 2", a.read("e2.gpg"))
+    }
   }
 }

@@ -35,6 +35,7 @@ import logcat.LogPriority.DEBUG
 import logcat.LogPriority.VERBOSE
 import logcat.LogcatLogger
 import logcat.logcat
+import org.eclipse.jgit.storage.file.WindowCacheConfig
 
 @Suppress("Unused")
 @HiltAndroidApp
@@ -51,6 +52,8 @@ class Application : android.app.Application(), SharedPreferences.OnSharedPrefere
   override fun onCreate() {
     super.onCreate()
     instance = this
+    // JGit registers its pack cache statistics with JMX by default; Android has no JMX.
+    WindowCacheConfig().apply { exposeStatsViaJmx = false }.install()
     if (
       BuildConfig.ENABLE_DEBUG_FEATURES ||
         prefs.getBoolean(PreferenceKeys.ENABLE_DEBUG_LOGGING, false)

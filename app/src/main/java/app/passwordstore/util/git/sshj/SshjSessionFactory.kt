@@ -75,6 +75,8 @@ class SshjSessionFactory(
 
   private var currentSession: SshjSession? = null
 
+  override fun getType() = "sshj"
+
   override fun getSession(
     uri: URIish,
     credentialsProvider: CredentialsProvider?,
