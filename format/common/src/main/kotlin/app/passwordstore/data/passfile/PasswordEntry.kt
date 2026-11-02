@@ -224,7 +224,7 @@ constructor(
         digits,
         issuer,
       )
-      .mapBoth({ code -> Ok(Totp(code, remainingTime)) }, ::Err)
+      .mapBoth({ code -> Ok(Totp(code, remainingTime, totpPeriod.seconds)) }, ::Err)
   }
 
   @AssistedFactory

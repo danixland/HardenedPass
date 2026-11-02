@@ -134,6 +134,7 @@ class PasswordEntryTest {
       val otp = expectMostRecentItem()
       assertEquals("818800", otp.value)
       assertEquals(30.seconds, otp.remainingTime)
+      assertEquals(30.seconds, otp.period)
       cancelAndIgnoreRemainingEvents()
     }
   }
