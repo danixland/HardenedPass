@@ -351,4 +351,10 @@
   <string name="no_keys_imported_dialog_message">Nell\'app non è ancora stata importata nessuna chiave PGP: premi il pulsante qui sotto per scegliere un file di chiave</string>
   <string name="biometric_prompt_title_gpg_passphrase_cache">Sblocca le frasi segrete memorizzate</string>
   <string name="clear_cached_password_on_screen_off">Cancella la password memorizzata allo spegnimento dello schermo</string>
+
+  <!-- Compose password list -->
+  <string name="list_new_entry">Nuova voce</string>
+  <string name="list_store_root">Archivio password</string>
+  <string name="list_more_options">Altre opzioni</string>
+  <string name="list_clear_search">Cancella ricerca</string>
 </resources>

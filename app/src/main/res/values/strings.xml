@@ -385,4 +385,10 @@
   <string name="no_keys_imported_dialog_message">There are no PGP keys imported in the app yet, press the button below to pick a key file</string>
   <string name="biometric_prompt_title_gpg_passphrase_cache">Unlock passphrase cache</string>
   <string name="clear_cached_password_on_screen_off">Clear cached password on screen-off</string>
+
+  <!-- Compose password list -->
+  <string name="list_new_entry">New entry</string>
+  <string name="list_store_root">Password store</string>
+  <string name="list_more_options">More options</string>
+  <string name="list_clear_search">Clear search</string>
 </resources>
