@@ -11,6 +11,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.crypto.BasePGPActivity
 import app.passwordstore.ui.crypto.DecryptActivity
 import app.passwordstore.ui.passwords.PasswordStore
@@ -18,6 +19,7 @@ import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result
 import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.settings.PreferenceKeys
+import java.io.File
 
 @SuppressLint("CustomSplashScreen")
 class LaunchActivity : AppCompatActivity() {
@@ -53,17 +55,15 @@ class LaunchActivity : AppCompatActivity() {
   }
 
   private fun startTargetActivity(noAuth: Boolean) {
+    // This activity is exported, so the file path is untrusted input: only forward it to
+    // DecryptActivity when it points at a file inside the password store.
+    val repoDir = PasswordRepository.getRepositoryDirectory()
+    val filePath = intent.getStringExtra(BasePGPActivity.EXTRA_FILE_PATH)
     val intentToStart =
-      if (intent.action == ACTION_DECRYPT_PASS)
+      if (intent.action == ACTION_DECRYPT_PASS && isFileInRepo(filePath, repoDir))
         getDecryptIntent().apply {
-          putExtra(
-            BasePGPActivity.EXTRA_FILE_PATH,
-            intent.getStringExtra(BasePGPActivity.EXTRA_FILE_PATH),
-          )
-          putExtra(
-            BasePGPActivity.EXTRA_REPO_PATH,
-            intent.getStringExtra(BasePGPActivity.EXTRA_REPO_PATH),
-          )
+          putExtra(BasePGPActivity.EXTRA_FILE_PATH, filePath)
+          putExtra(BasePGPActivity.EXTRA_REPO_PATH, repoDir.absolutePath)
         }
       else Intent(this, PasswordStore::class.java).setAction(Intent.ACTION_VIEW)
     startActivity(intentToStart)
@@ -74,5 +74,12 @@ class LaunchActivity : AppCompatActivity() {
   companion object {
 
     const val ACTION_DECRYPT_PASS = "DECRYPT_PASS"
+
+    /** True when [path] resolves, after following `..` and symlinks, to a file under [repoDir]. */
+    fun isFileInRepo(path: String?, repoDir: File): Boolean {
+      if (path.isNullOrEmpty()) return false
+      val file = File(path).canonicalFile
+      return file.isFile && file.startsWith(repoDir.canonicalFile)
+    }
   }
 }

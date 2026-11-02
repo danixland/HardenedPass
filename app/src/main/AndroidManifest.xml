@@ -51,7 +51,7 @@
 
     <activity
       android:name=".ui.crypto.DecryptActivity"
-      android:exported="true" />
+      android:exported="false" />
 
     <activity
       android:name=".ui.main.LaunchActivity"
