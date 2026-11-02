@@ -2,11 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.1.4] - 2026-11-02
 
 ### Changed
 
 -   New entries write `username: name` with a space after the colon, as `pass` users and other clients expect
+-   Revised the Italian translation: fixed mistranslated Git terms, the store called a "shop", a "/0" typo, and translated the strings that fell back to English
+-   Autofill and biometric texts name HardenedPass instead of Password Store
+-   The merge-failure message no longer shows a "TODO" to users
 -   Removed the inactive "fill OTP from SMS" autofill code, which needed Google Play Services
 -   Updated sshj to 0.41.2, which drops the unmaintained `net.i2p.crypto:eddsa` library; Ed25519 keys now go through Bouncy Castle. Existing generated Ed25519 keys keep working
 
