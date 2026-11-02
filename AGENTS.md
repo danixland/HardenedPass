@@ -4,17 +4,20 @@ Guidance for AI coding agents (Claude Code, opencode, etc) working in this repos
 
 ## What this is
 
-Maintained fork of Android Password Store, an Android client for `pass`
+HardenedPass: a maintained fork of Android Password Store, an Android client for `pass`
 (OpenPGP-encrypted files in a git repository). Upstream
 (`android-password-store/Android-Password-Store`) was archived in October 2024; the fork
-started in November 2026 from upstream's last commit. Kotlin, Gradle, about 18k lines.
+started in November 2026 from upstream's last commit. Kotlin, Gradle, about 18k lines. The
+goal is to work flawlessly on GrapheneOS: no Google Play Services, no telemetry.
 
 Modules: `app` (UI, git sync, autofill service), `autofill-parser`, `crypto:common`,
 `crypto:pgpainless`, `format:common`, `passgen:diceware`, `passgen:random`, `ui:compose`,
 `coroutine-utils`. Build conventions live in `build-logic/`.
 
-The app name and `applicationId` (`app.passwordstore`) are still upstream's on purpose. Do not
-rename them unless asked: it is tied to the release-signing decision (see Releases).
+`applicationId` is `xyz.danix.hardenedpass` (debug: `.debug` suffix, label "HardenedPass
+Debug"), so it installs next to upstream's `app.passwordstore` and never updates over it. The
+Kotlin package stays `app.passwordstore`; renaming it is churn with no user-visible effect.
+Keep "GrapheneOS" out of the app name: it is that project's trademark.
 
 ## Repository layout and remotes
 
@@ -82,7 +85,7 @@ real device with a trusted browser (e.g. Firefox) instead:
   e2e server over USB; serve a local login page the same way (`python3 -m http.server` on
   127.0.0.1, `adb reverse` its port). Nothing is exposed on the network.
 - Record `settings get secure autofill_service` and `global stay_on_while_plugged_in` first,
-  restore both afterwards, then `adb uninstall app.passwordstore.debug`, delete the pushed
+  restore both afterwards, then `adb uninstall xyz.danix.hardenedpass.debug`, delete the pushed
   keys from Download and `adb reverse --remove-all`.
 - Set `svc power stayon usb` before driving: if the screen locks, taps land on the lock
   screen's PIN pad. Check `dumpsys window | grep mCurrentFocus` (and `isKeyguardShowing`)

@@ -19,7 +19,7 @@ android {
   namespace = "app.passwordstore"
 
   defaultConfig {
-    applicationId = "app.passwordstore"
+    applicationId = "xyz.danix.hardenedpass"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 

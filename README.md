@@ -1,8 +1,9 @@
-# Password Store
+# HardenedPass
 
 An Android client for [pass](https://www.passwordstore.org/), the standard Unix password manager.
 Passwords are stored as OpenPGP-encrypted files in a git repository, so the same store works with
-`pass` on the desktop and with this app on the phone.
+`pass` on the desktop and with this app on the phone. HardenedPass aims to work flawlessly on
+GrapheneOS: it needs no Google Play Services and sends no telemetry.
 
 This is a maintained fork of
 [android-password-store/Android-Password-Store](https://github.com/android-password-store/Android-Password-Store),
@@ -17,6 +18,8 @@ Android Password Store authors.
 - Bouncy Castle 1.86 and PGPainless 1.7.8, fixing known Bouncy Castle advisories.
 - Decrypt screen no longer reachable by other apps with arbitrary file paths.
 - No build scans uploaded to third-party services.
+- No crash reporting (Sentry) and no Google Play Services; a single FOSS build.
+- Own application ID (`xyz.danix.hardenedpass`): installs next to upstream instead of over it.
 
 ## Building
 
