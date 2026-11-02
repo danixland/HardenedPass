@@ -33,13 +33,13 @@ Needs JDK 17 and the Android SDK. `local.properties` (gitignored) holds `sdk.dir
     ./gradlew assembleFreeDebug                 # debug APK
     ./gradlew test -PslimTests                  # unit tests, as CI runs them
     ./gradlew spotlessApply                     # formatting (ktfmt); CI runs spotlessCheck
-    ./gradlew lintFreeRelease
+    ./gradlew lint                              # all modules and variants, as CI runs it
 
 Prefix with `CI=1` to match CI: it turns Kotlin warnings into errors, so a deprecation warning
 that passes locally fails CI. Before committing, run:
 
     CI=1 ./gradlew spotlessCheck test -PslimTests assembleFreeDebug assembleFreeRelease \
-      lintFreeRelease metalavaCheckCompatibilityRelease
+      assembleNonFreeDebug assembleNonFreeRelease lint metalavaCheckCompatibilityRelease
 
 Flavors: `free` (no proprietary dependencies, Sentry replaced by `sentry-stub`) and `nonFree`
 (adds Sentry and Play Services SMS OTP).
@@ -63,6 +63,11 @@ itself, so it cannot be referenced with a local `./` path.
   and hash included. A dependency bump that moves a baselined jar needs the path updated.
 - `LaunchActivity` is exported and forwards `FILE_PATH` to `DecryptActivity` (not exported)
   only after `isFileInRepo` checks it canonically resolves inside the store.
+- AGP 9 applies packaging excludes (`AndroidCommon`, e.g. `**/*.txt`) to unit-test java
+  resources as well. A module whose tests load such a file must remove the exclude locally
+  (see `passgen/diceware/build.gradle.kts`).
+- Hilt runs through KSP (no kapt; AGP 9's built-in Kotlin does not support it). Dagger compiler
+  options are `ksp { arg(...) }` in `app/build.gradle.kts`.
 - JGit is pinned at 4.5.7 (2019). Newer JGit needs Java 11 APIs Android only partly desugars;
   upgrading it is a large, separate job.
 

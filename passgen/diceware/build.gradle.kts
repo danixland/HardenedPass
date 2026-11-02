@@ -10,7 +10,9 @@ plugins {
 android {
   namespace = "app.passwordstore.passgen.diceware"
   androidResources.enable = true
-  sourceSets { getByName("test") { resources.srcDir("src/main/res/raw") } }
+  sourceSets { getByName("test") { resources.directories.add("src/main/res/raw") } }
+  // AGP 9 applies packaging excludes to unit test resources too; keep the word list.
+  packaging.resources.excludes.remove("**/*.txt")
 }
 
 dependencies {

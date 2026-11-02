@@ -7,11 +7,11 @@
 plugins {
   id("com.github.android-password-store.android-application")
   id("com.github.android-password-store.kotlin-android")
-  id("com.github.android-password-store.kotlin-kapt")
   id("com.github.android-password-store.versioning-plugin")
   id("com.github.android-password-store.sentry")
   id("com.github.android-password-store.rename-artifacts")
   alias(libs.plugins.hilt)
+  alias(libs.plugins.ksp)
   alias(libs.plugins.kotlin.composeCompiler)
 }
 
@@ -35,9 +35,17 @@ android {
   }
 }
 
+ksp {
+  // https://dagger.dev/dev-guide/compiler-options
+  arg("dagger.fastInit", "enabled")
+  arg("dagger.experimentalDaggerErrorMessages", "enabled")
+  arg("dagger.hilt.shareTestComponents", "true")
+  arg("dagger.moduleBindingValidation", "ERROR")
+}
+
 dependencies {
   implementation(platform(libs.compose.bom))
-  kapt(libs.dagger.hilt.compiler)
+  ksp(libs.dagger.hilt.compiler)
   implementation(libs.androidx.annotation)
   coreLibraryDesugaring(libs.android.desugarJdkLibs)
   implementation(projects.autofillParser)

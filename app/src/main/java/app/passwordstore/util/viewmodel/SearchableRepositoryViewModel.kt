@@ -268,7 +268,7 @@ constructor(
       }
       .flowOn(dispatcherProvider.io())
 
-  private fun shouldTake(file: File) =
+  private fun shouldTake(file: File): Boolean =
     with(file) {
       if (showHiddenContents) {
         return !file.name.startsWith(".git")

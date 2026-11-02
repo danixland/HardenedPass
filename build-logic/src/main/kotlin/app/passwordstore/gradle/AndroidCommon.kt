@@ -8,37 +8,29 @@ package app.passwordstore.gradle
 import app.passwordstore.gradle.LintConfig.configureLint
 import app.passwordstore.gradle.flavors.configureSlimTests
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.LibraryExtension
-import com.android.build.gradle.TestedExtension
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.withType
 
 object AndroidCommon {
   fun configure(project: Project) {
-    project.extensions.configure<TestedExtension> {
-      compileSdkVersion(35)
-      defaultConfig {
-        minSdk = 26
-        targetSdk = 34
-      }
+    project.extensions.getByType(CommonExtension::class.java).apply {
+      compileSdk = 35
+      defaultConfig.minSdk = 26
 
-      packagingOptions {
-        resources.excludes.add("**/*.version")
-        resources.excludes.add("**/*.txt")
-        resources.excludes.add("**/*.kotlin_module")
-        resources.excludes.add("**/plugin.properties")
-        resources.excludes.add("**/META-INF/AL2.0")
-        resources.excludes.add("**/META-INF/LGPL2.1")
-      }
+      packaging.resources.excludes.add("**/*.version")
+      packaging.resources.excludes.add("**/*.txt")
+      packaging.resources.excludes.add("**/*.kotlin_module")
+      packaging.resources.excludes.add("**/plugin.properties")
+      packaging.resources.excludes.add("**/META-INF/AL2.0")
+      packaging.resources.excludes.add("**/META-INF/LGPL2.1")
 
-      testOptions {
-        animationsDisabled = true
-        unitTests.isReturnDefaultValues = true
-      }
+      testOptions.animationsDisabled = true
+      testOptions.unitTests.isReturnDefaultValues = true
 
       project.tasks.withType<Test>().configureEach {
         jvmArgs(
@@ -49,7 +41,10 @@ object AndroidCommon {
 
       project.configureSlimTests()
     }
-    project.extensions.findByType<ApplicationExtension>()?.run { lint.configureLint(project) }
+    project.extensions.findByType<ApplicationExtension>()?.run {
+      defaultConfig.targetSdk = 34
+      lint.configureLint(project)
+    }
     project.extensions.findByType<LibraryExtension>()?.run { lint.configureLint(project) }
     val libs = project.extensions.getByName("libs") as LibrariesForLibs
     project.dependencies.apply {
