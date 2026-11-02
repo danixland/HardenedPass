@@ -1,11 +1,11 @@
 [versions]
-agp = "8.7.0"
+agp = "8.13.2"
 androidxActivity = "1.9.2"
 bouncycastle = "1.86"
 coroutines = "1.9.0"
 flowbinding = "1.2.0"
-hilt = "2.52"
-kotlin = "2.0.21"
+hilt = "2.58"
+kotlin = "2.1.21"
 kotlinResult = "2.0.0"
 lifecycle = "2.8.6"
 moshi = "1.15.1"
@@ -44,7 +44,6 @@ build-metalava = "me.tylerbwong.gradle.metalava:plugin:0.3.5"
 build-moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 build-moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 build-okhttp = "com.squareup.okhttp3:okhttp:5.0.0-alpha.14"
-build-r8 = "com.android.tools:r8:8.5.35"
 build-semver = "com.github.zafarkhaja:java-semver:0.10.2"
 build-sentry = "io.sentry.android.gradle:io.sentry.android.gradle.gradle.plugin:4.11.0"
 build-spotless = "com.diffplug.spotless:spotless-plugin-gradle:7.0.0.BETA2"

@@ -80,7 +80,6 @@ dependencies {
   implementation(libs.build.moshi)
   implementation(libs.build.moshi.kotlin)
   implementation(libs.build.okhttp)
-  implementation(libs.build.r8)
   implementation(libs.build.semver)
   implementation(libs.build.sentry)
   implementation(libs.build.spotless)

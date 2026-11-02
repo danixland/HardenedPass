@@ -13,7 +13,6 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 @Suppress("Unused")
@@ -25,7 +24,6 @@ class KotlinCommonPlugin : Plugin<Project> {
       withType<KotlinCompile>().configureEach task@{
         compilerOptions {
           allWarningsAsErrors.set(project.providers.environmentVariable("CI").isPresent)
-          languageVersion.set(KotlinVersion.KOTLIN_1_9)
           freeCompilerArgs.addAll(ADDITIONAL_COMPILER_ARGS)
           if (!this@task.name.contains("test", ignoreCase = true) && !isAppModule) {
             freeCompilerArgs.add("-Xexplicit-api=strict")
