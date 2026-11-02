@@ -94,10 +94,8 @@ class PGPSettings(
         defaultValue = true
         /* Clear the cache once when unchecking; this is to prevent a malicious user (someone
          * knowing the screen-lock pin, but not knowing the PGP passphrase) from bypassing cache
-         * clearing via the settings. However, clearing EncryptedSharedPreferences requires
-         * authentication, otherwise the app crashes. Thus, the bad user could still bypass cache
-         * clearing by dismissing the auhentication dialog. To prevent this, we enforce cache
-         * clearing to stay enabled in case of any authentication failure. */
+         * clearing via the settings. Disabling it requires authentication, and cache clearing
+         * stays enabled in case of any authentication failure. */
         onClick {
           if (!checked) {
             if (

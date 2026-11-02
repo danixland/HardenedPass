@@ -6,16 +6,20 @@
 
 package app.passwordstore.util.settings
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import app.passwordstore.util.extensions.getString
 import app.passwordstore.util.git.sshj.SshKey
 import com.github.michaelbull.result.get
+import com.github.michaelbull.result.onFailure
 import com.github.michaelbull.result.runCatching
 import java.io.File
 import java.net.URI
+import java.security.KeyStore
 import logcat.LogPriority.ERROR
 import logcat.LogPriority.INFO
+import logcat.asLog
 import logcat.logcat
 
 private const val TAG = "Migrations"
@@ -29,6 +33,38 @@ fun runMigrations(filesDirPath: String, sharedPrefs: SharedPreferences, gitSetti
   removeExternalStorageProperties(sharedPrefs)
   removeCurrentBranchValue(sharedPrefs)
 }
+
+/**
+ * Deletes everything androidx security-crypto stored, which this app can no longer read since it
+ * moved to its own Keystore AES-GCM storage: Git and proxy credentials, password generator
+ * settings, cached PGP passphrases, the Tink keysets and their Keystore master keys, and a
+ * generated Ed25519 SSH key. Users re-enter credentials and regenerate an Ed25519 key once.
+ */
+fun removeSecurityCryptoData(context: Context, sharedPrefs: SharedPreferences) {
+  if (sharedPrefs.getBoolean(SECURITY_CRYPTO_REMOVED, false)) return
+  logcat(TAG, INFO) { "Removing data stored by androidx security-crypto" }
+  runCatching {
+      SshKey.deleteSecurityCryptoWrappedKey()
+      listOf(
+          "git_operation",
+          "http_proxy",
+          "pwgen_preferences",
+          "androidx_passphrase_keyset_prefs",
+          "androidx_sshkey_keyset_prefs",
+          "__androidx_security_crypto_encrypted_file_pref__",
+        )
+        .forEach { context.deleteSharedPreferences(it) }
+      KeyStore.getInstance("AndroidKeyStore").apply {
+        load(null)
+        deleteEntry("_androidx_security_master_key_")
+        deleteEntry("passphrase")
+      }
+    }
+    .onFailure { e -> logcat(TAG, ERROR) { e.asLog() } }
+  sharedPrefs.edit { putBoolean(SECURITY_CRYPTO_REMOVED, true) }
+}
+
+private const val SECURITY_CRYPTO_REMOVED = "security_crypto_removed"
 
 fun removeCurrentBranchValue(sharedPrefs: SharedPreferences) {
   if (!sharedPrefs.contains(PreferenceKeys.GIT_BRANCH_NAME)) {

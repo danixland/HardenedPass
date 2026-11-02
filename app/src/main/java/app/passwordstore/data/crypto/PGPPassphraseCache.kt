@@ -6,21 +6,37 @@
 package app.passwordstore.data.crypto
 
 import android.content.Context
+import android.security.keystore.KeyPermanentlyInvalidatedException
 import androidx.core.content.edit
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
 import app.passwordstore.crypto.PGPIdentifier
 import app.passwordstore.util.coroutines.DispatcherProvider
+import app.passwordstore.util.crypto.KeystorePreferences
+import app.passwordstore.util.crypto.keystoreAesKey
+import app.passwordstore.util.crypto.requireUserAuthentication
 import app.passwordstore.util.extensions.getString
+import java.security.KeyStore
 import javax.inject.Inject
 import kotlinx.coroutines.withContext
 
-/** Implements a rudimentary [EncryptedSharedPreferences]-backed cache for GPG passphrases. */
+/**
+ * Caches PGP passphrases in [KeystorePreferences] under a key that needs the screen lock or a
+ * strong biometric within the last 60 seconds.
+ */
 class PGPPassphraseCache @Inject constructor(private val dispatcherProvider: DispatcherProvider) {
 
   suspend fun cachePassphrase(context: Context, identifier: PGPIdentifier, passphrase: String) {
     withContext(dispatcherProvider.io()) {
-      getPreferences(context).edit { putString(identifier.toString(), passphrase) }
+      try {
+        getPreferences(context).edit { putString(identifier.toString(), passphrase) }
+      } catch (_: KeyPermanentlyInvalidatedException) {
+        // Enrolling a new biometric or removing the screen lock invalidates the key for good;
+        // start over with a fresh key, dropping passphrases that can no longer be decrypted.
+        KeyStore.getInstance("AndroidKeyStore").apply { load(null) }.deleteEntry(PREFS_NAME)
+        getPreferences(context).edit {
+          clear()
+          putString(identifier.toString(), passphrase)
+        }
+      }
     }
   }
 
@@ -40,31 +56,13 @@ class PGPPassphraseCache @Inject constructor(private val dispatcherProvider: Dis
     withContext(dispatcherProvider.io()) { getPreferences(context).edit { clear() } }
   }
 
-  private suspend fun getPreferences(context: Context) =
-    withContext(dispatcherProvider.io()) {
-      EncryptedSharedPreferences.create(
-        context,
-        ANDROIDX_SECURITY_KEYSET_PREF_NAME,
-        getOrCreateWrappingMasterKey(context),
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-      )
+  private fun getPreferences(context: Context) =
+    KeystorePreferences(context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)) {
+      keystoreAesKey(PREFS_NAME, strongBox = true) { requireUserAuthentication(60) }
     }
 
-  private suspend fun getOrCreateWrappingMasterKey(context: Context) =
-    withContext(dispatcherProvider.io()) {
-      MasterKey.Builder(context, "passphrase")
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .setRequestStrongBoxBacked(true)
-        .setUserAuthenticationRequired(
-          /* authenticationRequired = */ true,
-          /* userAuthenticationValidityDurationSeconds = */ 60,
-        )
-        .build()
-    }
+  companion object {
 
-  private companion object {
-
-    private const val ANDROIDX_SECURITY_KEYSET_PREF_NAME = "androidx_passphrase_keyset_prefs"
+    const val PREFS_NAME = "passphrase_cache"
   }
 }

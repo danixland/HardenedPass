@@ -25,11 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.fragment.app.FragmentActivity
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
 import app.passwordstore.BuildConfig
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
+import app.passwordstore.util.crypto.keystorePreferences
 import app.passwordstore.util.git.operation.GitOperation
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
@@ -44,21 +43,10 @@ val Context.autofillManager: AutofillManager?
 val Context.clipboard
   get() = getSystemService<ClipboardManager>()
 
-/** Wrapper for [getEncryptedPrefs] to avoid open-coding the file name at each call site */
-fun Context.getEncryptedGitPrefs() = getEncryptedPrefs("git_operation")
+/** The Keystore-encrypted preferences holding Git credentials. */
+fun Context.getEncryptedGitPrefs() = keystorePreferences(GIT_SECRETS_PREFS)
 
-/** Get an instance of [EncryptedSharedPreferences] with the given [fileName] */
-private fun Context.getEncryptedPrefs(fileName: String): SharedPreferences {
-  val masterKeyAlias =
-    MasterKey.Builder(applicationContext).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
-  return EncryptedSharedPreferences.create(
-    applicationContext,
-    fileName,
-    masterKeyAlias,
-    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-  )
-}
+const val GIT_SECRETS_PREFS = "git_secrets"
 
 /** Get an instance of [KeyguardManager] */
 val Context.keyguardManager: KeyguardManager

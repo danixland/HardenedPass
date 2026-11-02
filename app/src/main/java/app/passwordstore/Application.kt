@@ -22,6 +22,7 @@ import app.passwordstore.util.git.sshj.setUpBouncyCastleForSshj
 import app.passwordstore.util.proxy.ProxyUtils
 import app.passwordstore.util.settings.GitSettings
 import app.passwordstore.util.settings.PreferenceKeys
+import app.passwordstore.util.settings.removeSecurityCryptoData
 import app.passwordstore.util.settings.runMigrations
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
@@ -61,6 +62,7 @@ class Application : android.app.Application(), SharedPreferences.OnSharedPrefere
     prefs.registerOnSharedPreferenceChangeListener(this)
     setNightMode()
     setUpBouncyCastleForSshj()
+    removeSecurityCryptoData(this, prefs)
     runMigrations(filesDirPath, prefs, gitSettings)
     proxyUtils.setDefaultProxy()
     DynamicColors.applyToActivitiesIfAvailable(this)

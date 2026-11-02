@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+-   Credentials, the passphrase cache and generated Ed25519 SSH keys are now encrypted with Android Keystore AES-GCM directly, replacing the deprecated androidx security-crypto library (and Tink). **Upgrading from 0.1.x deletes the old data once**: re-enter Git HTTPS and proxy credentials and SSH key passphrases, retype cached PGP passphrases, and regenerate a generated Ed25519 SSH key (hardware RSA/ECDSA keys and imported keys are kept). Password generator settings reset to defaults
+
 ## [0.1.2] - 2026-11-02
 
 ### Fixed

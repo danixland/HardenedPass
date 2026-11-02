@@ -14,10 +14,12 @@ import android.security.keystore.KeyInfo
 import android.security.keystore.KeyProperties
 import android.util.Base64
 import androidx.core.content.edit
-import androidx.security.crypto.EncryptedFile
-import androidx.security.crypto.MasterKey
 import app.passwordstore.Application
 import app.passwordstore.R
+import app.passwordstore.util.crypto.keystoreAesKey
+import app.passwordstore.util.crypto.requireUserAuthentication
+import app.passwordstore.util.crypto.seal
+import app.passwordstore.util.crypto.unseal
 import app.passwordstore.util.extensions.getEncryptedGitPrefs
 import app.passwordstore.util.extensions.getString
 import app.passwordstore.util.extensions.sharedPrefs
@@ -35,7 +37,6 @@ import java.security.PublicKey
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import logcat.asLog
 import logcat.logcat
@@ -49,7 +50,7 @@ import net.schmizz.sshj.userauth.keyprovider.KeyProvider
 
 private const val PROVIDER_ANDROID_KEY_STORE = "AndroidKeyStore"
 private const val KEYSTORE_ALIAS = "sshkey"
-private const val ANDROIDX_SECURITY_KEYSET_PREF_NAME = "androidx_sshkey_keyset_prefs"
+private val WRAPPED_KEY_AAD = "ssh_key".encodeToByteArray()
 
 private val androidKeystore: KeyStore by unsafeLazy {
   KeyStore.getInstance(PROVIDER_ANDROID_KEY_STORE).apply { load(null) }
@@ -174,10 +175,6 @@ object SshKey {
 
   private fun delete() {
     androidKeystore.deleteEntry(KEYSTORE_ALIAS)
-    // Remove Tink key set used by AndroidX's EncryptedFile.
-    context.getSharedPreferences(ANDROIDX_SECURITY_KEYSET_PREF_NAME, Context.MODE_PRIVATE).edit {
-      clear()
-    }
     if (privateKeyFile.isFile) {
       privateKeyFile.delete()
     }
@@ -229,42 +226,30 @@ object SshKey {
     type = Type.Imported
   }
 
+  /** Deletes an Ed25519 key wrapped by androidx security-crypto, which can no longer be read. */
+  @Deprecated("To be used only in Migrations.kt")
+  fun deleteSecurityCryptoWrappedKey() {
+    if (type == Type.KeystoreWrappedEd25519) delete()
+  }
+
   @Deprecated("To be used only in Migrations.kt")
   fun useLegacyKey(isGenerated: Boolean) {
     type = if (isGenerated) Type.LegacyGenerated else Type.Imported
   }
 
-  private suspend fun getOrCreateWrappingMasterKey(requireAuthentication: Boolean) =
-    withContext(Dispatchers.IO) {
-      MasterKey.Builder(context, KEYSTORE_ALIAS)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .setRequestStrongBoxBacked(true)
-        .setUserAuthenticationRequired(requireAuthentication, 15)
-        .build()
-    }
-
-  private suspend fun getOrCreateWrappedPrivateKeyFile(requireAuthentication: Boolean) =
-    withContext(Dispatchers.IO) {
-      EncryptedFile.Builder(
-          context,
-          privateKeyFile,
-          getOrCreateWrappingMasterKey(requireAuthentication),
-          EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB,
-        )
-        .setKeysetPrefName(ANDROIDX_SECURITY_KEYSET_PREF_NAME)
-        .build()
-    }
-
   suspend fun generateKeystoreWrappedEd25519Key(requireAuthentication: Boolean) =
     withContext(Dispatchers.IO) {
       delete()
 
-      val encryptedPrivateKeyFile = getOrCreateWrappedPrivateKeyFile(requireAuthentication)
+      val wrappingKey =
+        keystoreAesKey(KEYSTORE_ALIAS, strongBox = true) {
+          if (requireAuthentication) requireUserAuthentication(15)
+        }
       // Generate the ed25519 key pair and encrypt the private key.
       val keyPair = net.i2p.crypto.eddsa.KeyPairGenerator().generateKeyPair()
-      encryptedPrivateKeyFile.openFileOutput().use { os ->
-        os.write((keyPair.private as EdDSAPrivateKey).seed)
-      }
+      privateKeyFile.writeBytes(
+        seal(wrappingKey, (keyPair.private as EdDSAPrivateKey).seed, WRAPPED_KEY_AAD)
+      )
 
       // Write public key in SSH format to .ssh_key.pub.
       publicKeyFile.writeText(toSshPublicKey(keyPair.public))
@@ -349,14 +334,8 @@ object SshKey {
 
     override fun getPrivate(): PrivateKey =
       runCatching {
-          // The current MasterKey API does not allow getting a reference to an existing
-          // one
-          // without specifying the KeySpec for a new one. However, the value for passed
-          // here
-          // for `requireAuthentication` is not used as the key already exists at this
-          // point.
-          val encryptedPrivateKeyFile = runBlocking { getOrCreateWrappedPrivateKeyFile(false) }
-          val rawPrivateKey = encryptedPrivateKeyFile.openFileInput().use { it.readBytes() }
+          val rawPrivateKey =
+            unseal(keystoreAesKey(KEYSTORE_ALIAS), privateKeyFile.readBytes(), WRAPPED_KEY_AAD)
           EdDSAPrivateKey(
             EdDSAPrivateKeySpec(rawPrivateKey, EdDSANamedCurveTable.ED_25519_CURVE_SPEC)
           )
