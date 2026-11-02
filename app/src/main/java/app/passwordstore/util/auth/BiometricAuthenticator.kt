@@ -5,6 +5,7 @@
 package app.passwordstore.util.auth
 
 import android.app.KeyguardManager
+import android.os.Build
 import androidx.annotation.StringRes
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators
@@ -18,8 +19,18 @@ import logcat.logcat
 object BiometricAuthenticator {
 
   private const val TAG = "BiometricAuthenticator"
-  private const val VALID_AUTHENTICATORS =
-    Authenticators.DEVICE_CREDENTIAL or Authenticators.BIOMETRIC_WEAK
+
+  /**
+   * Keystore keys that require user authentication are unlocked only by the device credential or a
+   * Class 3 (strong) biometric, so a weak biometric would pass the prompt and then fail to sign or
+   * decrypt with `User not authenticated`. Android 9 and 10 do not support combining
+   * [Authenticators.BIOMETRIC_STRONG] with [Authenticators.DEVICE_CREDENTIAL], so they keep the
+   * weak class.
+   */
+  private val VALID_AUTHENTICATORS =
+    Authenticators.DEVICE_CREDENTIAL or
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) Authenticators.BIOMETRIC_STRONG
+      else Authenticators.BIOMETRIC_WEAK
 
   /**
    * Sealed class to wrap [BiometricPrompt]'s [Int]-based return codes into more easily-interpreted
