@@ -45,9 +45,8 @@ that passes locally fails CI. Before committing, run:
       lint metalavaCheckCompatibilityRelease
 
 No product flavors: the app has no proprietary dependencies, no Sentry and no Play Services
-(the upstream `nonFree` flavor was removed). Scope `assemble*` to `:app`; a bare
-`assembleRelease` also verifies library modules in release mode, where `ui:compose` fails on a
-drawable using an AppCompat attribute it does not depend on.
+(the upstream `nonFree` flavor was removed). Scope `assemble*` to `:app`, which is all CI and
+releases need; a bare `assembleRelease` also builds every library module.
 
 CI is `.github/workflows/pull_request.yml` (named "CI"), on push to `master`. Workflows use the
 `setup-gradle` composite action from this fork at `@master`. It checks the repository out
