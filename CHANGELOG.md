@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+-   New entries write `username: name` with a space after the colon, as `pass` users and other clients expect
+-   Removed the inactive "fill OTP from SMS" autofill code, which needed Google Play Services
 -   Updated sshj to 0.41.2, which drops the unmaintained `net.i2p.crypto:eddsa` library; Ed25519 keys now go through Bouncy Castle. Existing generated Ed25519 keys keep working
 
 ## [0.1.3] - 2026-11-02

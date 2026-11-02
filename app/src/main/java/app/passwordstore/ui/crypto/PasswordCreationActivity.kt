@@ -335,7 +335,7 @@ class PasswordCreationActivity : BasePGPActivity() {
       }
 
       if (!editUsername.isEmpty()) {
-        editUsername = "\nusername:$editUsername"
+        editUsername = "\nusername: $editUsername"
       }
 
       if (editPass.isEmpty() && editExtra.isEmpty()) {
