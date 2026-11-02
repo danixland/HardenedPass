@@ -28,7 +28,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Удаляется…</string>
   <string name="move">Переместить</string>
-  <string name="edit">Редактировать</string>
   <string name="delete">Удалить</string>
   <string name="password_exists_title">Пароль уже существует!</string>
   <string name="password_exists_message">Это перезапишет %1$s на %2$s</string>
@@ -160,7 +159,6 @@
   <string name="dialog_yes">Да</string>
   <string name="dialog_no">Нет</string>
   <string name="dialog_cancel">Отмена</string>
-  <string name="dialog_skip">Пропустить</string>
   <string name="git_sync">Синхронизировать репозиторий</string>
   <string name="git_pull">Пулл с удаленного сервера</string>
   <string name="git_push">Пуш на удаленный сервер</string>
@@ -169,7 +167,6 @@
   <string name="show_password_pref_title">Показывать пароли</string>
   <string name="show_password_pref_summary">Видимость расшифрованных паролей, не влияет на копирование в буфер.</string>
   <string name="pwd_generate_button">Сгенерировать</string>
-  <string name="refresh_list">Обновить список</string>
   <string name="send_plaintext_password_to">Поделиться паролем в открытом виде с помощью</string>
   <string name="app_icon_hint">Иконка приложения</string>
   <!-- Oreo Autofill -->
@@ -227,7 +224,6 @@
   <string name="title_create_folder">Создать папку</string>
   <string name="title_rename_folder">Переименовать папку</string>
   <string name="message_category_error_empty_field">Название категории не может быть пустым</string>
-  <string name="message_category_error_category_exists">Название категории уже существует</string>
   <string name="message_error_destination_outside_repo">Путь должен указывать на область внутри репозитория</string>
   <string name="message_rename_folder">Введите адрес назначения для %1$s</string>
   <string name="button_create">Создать</string>
@@ -273,7 +269,6 @@
   <string name="invalid_gpg_id">Найден .gpg-id, но он содержит неверный ID ключа, fingerprint или ID пользователя</string>
   <string name="invalid_filename_text">Имя файла не должно содержать \'/\', укажите директорию выше</string>
   <string name="directory_hint">Директория</string>
-  <string name="new_folder_set_gpg_key">Установить GPG ключ для каталога</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Неизвестная ошибка</string>
   <string name="git_pull_rebase_fail_error">Не удалось получить изменения, вы находитесь в состоянии \"оторванной головы\". Используйте \"настройки &gt; утилиты git\", сохраните ваши изменения в новую удаленную ветку и разрешите конфликты на своем компьютере.</string>

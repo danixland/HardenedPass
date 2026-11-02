@@ -23,7 +23,6 @@
   </plurals>
   <string name="delete_directory_progress_text">正在删除…</string>
   <string name="move">更多</string>
-  <string name="edit">编辑</string>
   <string name="delete">删除</string>
   <string name="password_exists_title">密码已经存在！</string>
   <string name="password_exists_message">这将用%2$s覆盖%1$s</string>
@@ -168,7 +167,6 @@
   <string name="dialog_yes">同意</string>
   <string name="dialog_no">否定</string>
   <string name="dialog_cancel">取消</string>
-  <string name="dialog_skip">跳过</string>
   <string name="git_sync">同步存储库</string>
   <string name="git_pull">拉取远程数据</string>
   <string name="git_push">推送数据到远程</string>
@@ -177,7 +175,6 @@
   <string name="show_password_pref_title">显示密码</string>
   <string name="show_password_pref_summary">控制密码解密后的可见性,这不会禁用复制到剪贴板</string>
   <string name="pwd_generate_button">生成</string>
-  <string name="refresh_list">刷新列表</string>
   <string name="send_plaintext_password_to">使用明文发送密码…</string>
   <string name="app_icon_hint">应用图标</string>
   <!-- Oreo Autofill -->
@@ -235,7 +232,6 @@
   <string name="title_create_folder">清除目录</string>
   <string name="title_rename_folder">重命名目录</string>
   <string name="message_category_error_empty_field">类别名称不能为空</string>
-  <string name="message_category_error_category_exists">类别名称已存在</string>
   <string name="message_error_destination_outside_repo">目标必须在存储库中</string>
   <string name="message_rename_folder">输入%1$s的目标</string>
   <string name="button_create">创建</string>
@@ -283,7 +279,6 @@ personal.com</string>
   <string name="short_gpg_id">找到 .gpg-id 但它包含一个不受支持的短十六进制ID。</string>
   <string name="invalid_filename_text">文件名不能包含\'/\'</string>
   <string name="directory_hint">目录</string>
-  <string name="new_folder_set_gpg_key">为目录设置GPG密钥</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">未知错误</string>
   <string name="git_pull_merge_fail_error">合并失败，你处于冲突状态。</string>

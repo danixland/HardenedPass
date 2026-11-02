@@ -24,7 +24,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Eliminazione…</string>
   <string name="move">Sposta</string>
-  <string name="edit">Modifica</string>
   <string name="delete">Elimina</string>
   <string name="password_exists_title">La password esiste già!</string>
   <string name="password_exists_message">Questo sovrascriverà %1$s con %2$s.</string>
@@ -150,7 +149,6 @@
   <string name="dialog_yes">Sì</string>
   <string name="dialog_no">No</string>
   <string name="dialog_cancel">Annulla</string>
-  <string name="dialog_skip">Salta</string>
   <string name="git_sync">Sincronizza repository</string>
   <string name="git_pull">Pull dal remote</string>
   <string name="git_push">Push sul remote</string>
@@ -159,7 +157,6 @@
   <string name="show_password_pref_title">Mostra la password</string>
   <string name="show_password_pref_summary">Controlla la visibilità delle password una volta decrittografate. Questo non disabilita la copia negli appunti.</string>
   <string name="pwd_generate_button">Genera</string>
-  <string name="refresh_list">Aggiorna elenco</string>
   <string name="send_plaintext_password_to">Invia password come testo semplice usando…</string>
   <string name="app_icon_hint">Icona app</string>
   <!-- Oreo Autofill -->
@@ -217,7 +214,6 @@
   <string name="title_create_folder">Crea cartella</string>
   <string name="title_rename_folder">Rinomina cartella</string>
   <string name="message_category_error_empty_field">Il nome della categoria non può essere vuoto</string>
-  <string name="message_category_error_category_exists">Il nome della categoria esiste già</string>
   <string name="message_error_destination_outside_repo">La destinazione deve essere nel repository</string>
   <string name="message_rename_folder">Inserisci la destinazione per %1$s</string>
   <string name="button_create">Crea</string>
@@ -261,7 +257,6 @@
   <string name="exporting_passwords">Esportazione delle password…</string>
   <string name="invalid_filename_text">Il nome del file non deve contenere \'/\', imposta la directory qui sopra</string>
   <string name="directory_hint">Directory</string>
-  <string name="new_folder_set_gpg_key">Imposta la chiave GPG per la directory</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Errore sconosciuto</string>
   <string name="git_pull_rebase_fail_error">Pull non riuscito, sei in detached HEAD. Da \"Impostazioni > Utilità Git\" esegui il push delle modifiche sul remote in un nuovo branch e risolvi il conflitto dal computer.</string>

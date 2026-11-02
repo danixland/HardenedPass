@@ -24,7 +24,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Wird gelöscht</string>
   <string name="move">Verschieben</string>
-  <string name="edit">Bearbeiten</string>
   <string name="delete">Löschen</string>
   <string name="password_exists_title">Passwort existiert bereits!</string>
   <string name="password_exists_message">Dies wird %1$s mit %2$s überschreiben.</string>
@@ -167,7 +166,6 @@
   <string name="dialog_yes">Ja</string>
   <string name="dialog_no">Nein</string>
   <string name="dialog_cancel">Abbruch</string>
-  <string name="dialog_skip">Überspringen</string>
   <string name="git_sync">Synchronisiere Repository</string>
   <string name="git_pull">Git Pull</string>
   <string name="git_push">Git Push</string>
@@ -176,7 +174,6 @@
   <string name="show_password_pref_title">Zeige das Passwort.</string>
   <string name="show_password_pref_summary">Soll das entschlüsselte Passwort sichtbar sein? Dies deaktiviert nicht das Kopieren.</string>
   <string name="pwd_generate_button">Erstellen</string>
-  <string name="refresh_list">Liste aktualisieren</string>
   <string name="send_plaintext_password_to">Passwort unverschlüsselt senden an…</string>
   <string name="app_icon_hint">App-Icon</string>
   <!-- Oreo Autofill -->
@@ -234,7 +231,6 @@
   <string name="title_create_folder">Ordner erstellen</string>
   <string name="title_rename_folder">Ordner umbenennen</string>
   <string name="message_category_error_empty_field">Der Name der Kategorie darf nicht leer sein.</string>
-  <string name="message_category_error_category_exists">Der Kategoriename existiert bereits.</string>
   <string name="message_error_destination_outside_repo">Ziel muss innerhalb des Repositorys sein.</string>
   <string name="message_rename_folder">Ziel für %1$s angeben</string>
   <string name="button_create">Erstellen</string>
@@ -281,7 +277,6 @@
   <string name="short_gpg_id">.gpg-id wurde gefunden, enthält jedoch eine kurze Hex-ID, die nicht unterstützt wird.</string>
   <string name="invalid_filename_text">Dateiname darf kein \'/\' enthalten; Verzeichnis oben setzen</string>
   <string name="directory_hint">Ordner</string>
-  <string name="new_folder_set_gpg_key">PGP-Schlüssel für Ordner festlegen</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Unbekannter Fehler</string>
   <string name="git_pull_rebase_fail_error">Pull fehlgeschlagen. Sie befinden sich in einem abgelösten Head. Speichern Sie die Änderungen in \"Einstellungen &gt; Lokale Git-Konfiguration &amp; Dienstprogramme\" auf das Remote-Repository in einem neuen Branch und lösen Sie den Konflikt auf Ihrem Computer auf.</string>

@@ -24,7 +24,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Excluindo…</string>
   <string name="move">Mover</string>
-  <string name="edit">Editar</string>
   <string name="delete">Excluir</string>
   <string name="password_exists_title">Senha já existe!</string>
   <string name="password_exists_message">Isso irá sobrescrever %1$s com %2$s.</string>
@@ -167,7 +166,6 @@
   <string name="dialog_yes">Sim</string>
   <string name="dialog_no">Não</string>
   <string name="dialog_cancel">Cancelar</string>
-  <string name="dialog_skip">Pular</string>
   <string name="git_sync">Sincronizar repositório</string>
   <string name="git_pull">Pull do remoto</string>
   <string name="git_push">Push do remoto</string>
@@ -176,7 +174,6 @@
   <string name="show_password_pref_title">Mostrar a senha</string>
   <string name="show_password_pref_summary">Controle a visibilidade das senhas quando descriptografadas. Isso não desativa a cópia para a área de transferência.</string>
   <string name="pwd_generate_button">Gerar</string>
-  <string name="refresh_list">Atualizar lista</string>
   <string name="send_plaintext_password_to">Enviar senha como texto simples usando…</string>
   <string name="app_icon_hint">Ícone do aplicativo</string>
   <!-- Oreo Autofill -->
@@ -234,7 +231,6 @@
   <string name="title_create_folder">Criar pasta</string>
   <string name="title_rename_folder">Renomear pasta</string>
   <string name="message_category_error_empty_field">O nome da categoria não pode ser vazio</string>
-  <string name="message_category_error_category_exists">Nome da categoria já existe</string>
   <string name="message_error_destination_outside_repo">O destino deve estar dentro do repositório</string>
   <string name="message_rename_folder">Insira o destino para %1$s</string>
   <string name="button_create">Criar</string>
@@ -281,7 +277,6 @@
   <string name="short_gpg_id">Encontrado .gpg-id, mas contém uma ID hexadecimal curta, que não é suportada</string>
   <string name="invalid_filename_text">Nome do arquivo não deve conter \'/\', defina o diretório acima</string>
   <string name="directory_hint">Diretório</string>
-  <string name="new_folder_set_gpg_key">Definir chave GPG para diretório</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Erro desconhecido</string>
   <string name="git_pull_rebase_fail_error">O pull falhou, você está em uma Head avulsa. Usando \"configurações &gt; utils\" do git, salve suas alterações no remoto em uma nova branch e resolva o conflito no seu computador.</string>

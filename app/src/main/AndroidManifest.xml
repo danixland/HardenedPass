@@ -34,11 +34,6 @@
     tools:targetApi="s">
 
     <activity
-      android:name=".ui.passwords.PasswordStore"
-      android:configChanges="orientation|screenSize"
-      android:exported="false" />
-
-    <activity
       android:name=".ui.onboarding.activity.OnboardingActivity"
       android:configChanges="orientation|screenSize"
       android:exported="false" />

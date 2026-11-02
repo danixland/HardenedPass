@@ -11,9 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import app.passwordstore.R
-import app.passwordstore.data.repo.PasswordRepository
-import app.passwordstore.ui.passwords.PASSWORD_FRAGMENT_TAG
-import app.passwordstore.ui.passwords.PasswordStore
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,23 +20,10 @@ class SelectFolderActivity : AppCompatActivity(R.layout.select_folder_layout) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
     passwordList = SelectFolderFragment()
-    val args = Bundle()
-    args.putString(
-      PasswordStore.REQUEST_ARG_PATH,
-      PasswordRepository.getRepositoryDirectory().absolutePath,
-    )
-
-    passwordList.arguments = args
-
     supportActionBar?.show()
-
     supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
-    supportFragmentManager.commit {
-      replace(R.id.pgp_handler_linearlayout, passwordList, PASSWORD_FRAGMENT_TAG)
-    }
+    supportFragmentManager.commit { replace(R.id.pgp_handler_linearlayout, passwordList) }
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {

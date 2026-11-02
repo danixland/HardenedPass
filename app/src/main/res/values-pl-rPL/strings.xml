@@ -23,7 +23,6 @@
   <string name="creation_dialog_text">Zanim dodasz hasło lub rozpoczniesz synchronizację, stwórz albo sklonuj poniżej nowe repozytorium.</string>
   <string name="delete_directory_progress_text">Usuwanie…</string>
   <string name="move">Przenieś</string>
-  <string name="edit">Edytuj</string>
   <string name="delete">Usuń</string>
   <string name="password_exists_title">Hasło już istnieje!</string>
   <string name="password_exists_message">%1$s zostanie nadpisane przez %2$s.</string>
@@ -164,7 +163,6 @@
   <string name="dialog_yes">Tak</string>
   <string name="dialog_no">Nie</string>
   <string name="dialog_cancel">Anuluj</string>
-  <string name="dialog_skip">Pomiń</string>
   <string name="git_sync">Synchronizuj repozytorium</string>
   <string name="git_pull">Pobierz ze zdalnego repozytorium</string>
   <string name="git_push">Wypchnij do zdalnego repozytorium</string>
@@ -173,7 +171,6 @@
   <string name="show_password_pref_title">Pokaż hasło</string>
   <string name="show_password_pref_summary">Kontroluj widoczność haseł po odszyfrowaniu. To nie wyłącza kopiowania do schowka.</string>
   <string name="pwd_generate_button">Generuj</string>
-  <string name="refresh_list">Odśwież listę</string>
   <string name="send_plaintext_password_to">Wyślij niezaszyfrowane hasło, używając…</string>
   <string name="app_icon_hint">Ikona aplikacji</string>
   <!-- Oreo Autofill -->
@@ -229,7 +226,6 @@
   <string name="title_create_folder">Utwórz katalog</string>
   <string name="title_rename_folder">Zmień nazwę katalogu</string>
   <string name="message_category_error_empty_field">Nazwa kategorii nie może być pusta</string>
-  <string name="message_category_error_category_exists">Kategoria już istnieje</string>
   <string name="message_error_destination_outside_repo">Miejsce docelowe musi znajdować się w repozytorium</string>
   <string name="message_rename_folder">Wprowadź miejsce docelowe dla %1$s</string>
   <string name="button_create">Utwórz</string>
@@ -273,7 +269,6 @@
   <string name="short_gpg_id">Znaleziono .gpg-id, ale zawarty w nim skrócony identyfikator nie jest obsługiwany</string>
   <string name="invalid_filename_text">Nazwa pliku nie może zawierać \'/\', ustaw katalog powyżej</string>
   <string name="directory_hint">Katalog</string>
-  <string name="new_folder_set_gpg_key">Ustaw klucz GPG dla katalogu</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Nieznany błąd</string>
   <string name="git_pull_rebase_fail_error">Zaciąganie zmian nie powiodło się, nie jesteś na żadnej gałęzi (detached head). Używając \"Ustawienia &gt; narzędzia Git\", wyślij lokalne zmiany do zdalnego repozytorium na nowej gałęzi i rozwiąż konflikt na komputerze.</string>

@@ -24,7 +24,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Eliminando…</string>
   <string name="move">Mover</string>
-  <string name="edit">Editar</string>
   <string name="delete">Eliminar</string>
   <string name="password_exists_title">O contrasinal xa existe!</string>
   <string name="password_exists_message">Vas sobrescribir %1$s con %2$s.</string>
@@ -168,7 +167,6 @@
   <string name="dialog_yes">Si</string>
   <string name="dialog_no">Non</string>
   <string name="dialog_cancel">Cancelar</string>
-  <string name="dialog_skip">Omitir</string>
   <string name="git_sync">Sincronizar repositorio</string>
   <string name="git_pull">Traer desde remoto</string>
   <string name="git_push">Enviar a remoto</string>
@@ -177,7 +175,6 @@
   <string name="show_password_pref_title">Mostrar contrasinal</string>
   <string name="show_password_pref_summary">Controlar a visibilidade do contrasinal unha vez descifrado, esto non desactiva o copiado do contrasinal</string>
   <string name="pwd_generate_button">Crear</string>
-  <string name="refresh_list">Actualizar lista</string>
   <string name="send_plaintext_password_to">Enviar contrasinal como texto plano usando…</string>
   <string name="app_icon_hint">Icona da app</string>
   <!-- Oreo Autofill -->
@@ -236,7 +233,6 @@ a app desde unha fonte de confianza, como a Play Store, Amazon Appstore, F-Droid
   <string name="title_create_folder">Crear cartafol</string>
   <string name="title_rename_folder">Renomear cartafol</string>
   <string name="message_category_error_empty_field">O nome da categoría non pode estar baleiro</string>
-  <string name="message_category_error_category_exists">Xa existe o nome da categoría</string>
   <string name="message_error_destination_outside_repo">O destino debe estar dentro do repositorio</string>
   <string name="message_rename_folder">Escribe o destino para %1$s</string>
   <string name="button_create">Crear</string>
@@ -283,7 +279,6 @@ a app desde unha fonte de confianza, como a Play Store, Amazon Appstore, F-Droid
   <string name="short_gpg_id">Atopouse .gpg-id, pero contén un ID hex curto, ao que non damos soporte</string>
   <string name="invalid_filename_text">O nome do ficheiro non pode conter \'/\', establece un directorio superior</string>
   <string name="directory_hint">Directorio</string>
-  <string name="new_folder_set_gpg_key">Establece chave GPG para o directorio</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Fallo descoñecido</string>
   <string name="git_pull_rebase_fail_error">Fallou a acción pull, estás nun head diferente. Utiliza \"axustes &gt; utilidades git\", garda os cambios no remoto nunha nova rama e resolve o conflicto nun ordenador.</string>

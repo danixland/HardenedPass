@@ -15,9 +15,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.passwordstore.R
 import app.passwordstore.data.password.PasswordItem
+import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.databinding.PasswordRecyclerViewBinding
 import app.passwordstore.ui.adapters.PasswordItemRecyclerAdapter
-import app.passwordstore.ui.passwords.PasswordStore
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.viewBinding
 import app.passwordstore.util.viewmodel.ListMode
@@ -56,11 +56,11 @@ class SelectFolderFragment : Fragment(R.layout.password_recycler_view) {
     FastScrollerBuilder(binding.passRecycler).build()
     registerForContextMenu(binding.passRecycler)
 
-    val path =
-      requireNotNull(requireArguments().getString(PasswordStore.REQUEST_ARG_PATH)) {
-        "Cannot navigate if ${PasswordStore.REQUEST_ARG_PATH} is not provided"
-      }
-    model.navigateTo(File(path), listMode = ListMode.DirectoriesOnly, pushPreviousLocation = false)
+    model.navigateTo(
+      PasswordRepository.getRepositoryDirectory(),
+      listMode = ListMode.DirectoriesOnly,
+      pushPreviousLocation = false,
+    )
     lifecycleScope.launch {
       model.searchResult.flowWithLifecycle(lifecycle).collect { result ->
         recyclerAdapter.submitList(result.passwordItems)

@@ -30,7 +30,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Deleting…</string>
   <string name="move">Move</string>
-  <string name="edit">Edit</string>
   <string name="delete">Delete</string>
   <string name="password_exists_title">Password already exists!</string>
   <string name="password_exists_message">This will overwrite %1$s with %2$s.</string>
@@ -195,7 +194,6 @@
   <string name="dialog_yes">Yes</string>
   <string name="dialog_no">No</string>
   <string name="dialog_cancel">Cancel</string>
-  <string name="dialog_skip">Skip</string>
   <string name="git_sync">Synchronize repository</string>
   <string name="git_pull">Pull from remote</string>
   <string name="git_push">Push to remote</string>
@@ -204,7 +202,6 @@
   <string name="show_password_pref_title">Show the password</string>
   <string name="show_password_pref_summary">Control the visibility of the passwords once decrypted. This does not disable copying to clipboard.</string>
   <string name="pwd_generate_button">Generate</string>
-  <string name="refresh_list">Refresh list</string>
   <string name="send_plaintext_password_to">Send password as plaintext using…</string>
   <string name="app_icon_hint">App icon</string>
 
@@ -267,7 +264,6 @@
   <string name="title_create_folder">Create folder</string>
   <string name="title_rename_folder">Rename folder</string>
   <string name="message_category_error_empty_field">Category name can\'t be empty</string>
-  <string name="message_category_error_category_exists">Category name already exists</string>
   <string name="message_error_destination_outside_repo">Destination must be within the repository</string>
   <string name="message_rename_folder">Enter destination for %1$s</string>
   <string name="button_create">Create</string>
@@ -316,7 +312,6 @@
   <string name="short_gpg_id">Found .gpg-id, but it contains a short hex ID, which is not supported</string>
   <string name="invalid_filename_text">File name must not contain \'/\', set directory above</string>
   <string name="directory_hint">Directory</string>
-  <string name="new_folder_set_gpg_key">Set GPG key for directory</string>
 
   <!-- GitException messages -->
   <string name="git_unknown_error">Unknown error</string>

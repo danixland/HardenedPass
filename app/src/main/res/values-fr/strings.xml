@@ -24,7 +24,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Suppression…</string>
   <string name="move">Déplacer</string>
-  <string name="edit">Éditer</string>
   <string name="delete">Supprimer</string>
   <string name="password_exists_title">Le mot de passe existe!</string>
   <string name="password_exists_message">Cela écrasera %1$s avec %2$s.</string>
@@ -155,7 +154,6 @@
   <string name="dialog_yes">Oui</string>
   <string name="dialog_no">Non</string>
   <string name="dialog_cancel">Annuler</string>
-  <string name="dialog_skip">Ignorer</string>
   <string name="git_sync">Synchronisation du dépôt</string>
   <string name="git_pull">Importer du serveur</string>
   <string name="git_push">Pousser sur le serveur</string>
@@ -164,7 +162,6 @@
   <string name="show_password_pref_title">Montrer le mot de passe</string>
   <string name="show_password_pref_summary">Contrôle la visibilité des mots de passe une fois déchifrées, ceci n\'empêche pas de copier le mot de passe</string>
   <string name="pwd_generate_button">Générer</string>
-  <string name="refresh_list">Rafraichir la liste</string>
   <string name="send_plaintext_password_to">Envoyer le mot de passe en clair via…</string>
   <string name="app_icon_hint">Icône de l\'application</string>
   <!-- Oreo Autofill -->
@@ -222,7 +219,6 @@
   <string name="title_create_folder">Créer un dossier</string>
   <string name="title_rename_folder">Renommer le dossier</string>
   <string name="message_category_error_empty_field">Le nom de la catégorie ne peut pas être vide</string>
-  <string name="message_category_error_category_exists">Une catégorie du même nom existe déjà</string>
   <string name="message_error_destination_outside_repo">La destination doit être à l\'intérieur du dépôt</string>
   <string name="message_rename_folder">Entrez le chemin pour %1$s</string>
   <string name="button_create">Créer</string>
@@ -266,7 +262,6 @@
   <string name="exporting_passwords">Exportation des mots de passe…</string>
   <string name="invalid_filename_text">Le nom du fichier ne doit pas contenir \'/\', définir le répertoire parent</string>
   <string name="directory_hint">Dossier</string>
-  <string name="new_folder_set_gpg_key">Définir la clé GPG pour le dossier</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Erreur inconnue</string>
   <string name="git_pull_rebase_fail_error">Tirer a échoué, vous êtes dans un \'head\' détaché. En utilisant \"settings &gt; git utils\", enregistrez vos modifications sur le dépôt distant dans une nouvelle branche et résolvez le conflit sur votre ordinateur.</string>
