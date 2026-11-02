@@ -43,16 +43,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import app.passwordstore.R
 import app.passwordstore.ui.compose.BreadcrumbBar
 import app.passwordstore.ui.compose.EntryRow
@@ -99,6 +102,28 @@ fun ListScreen(
   val selecting = selected.isNotEmpty()
   val listState = rememberLazyListState()
   val pullState = rememberPullToRefreshState()
+  val searchFocus = remember { FocusRequester() }
+  val focusManager = LocalFocusManager.current
+  // Saveable, so it survives this destination leaving composition while a folder is open.
+  var launched by rememberSaveable { mutableStateOf(false) }
+  var returned by remember { mutableStateOf(false) }
+  LifecycleResumeEffect(Unit) {
+    returned = true
+    onPauseOrDispose {}
+  }
+  // Out of touch mode (keys, D-pad) the view system hands its default focus to the first
+  // focusable, the search field, which keeps it in touch mode too and brings the keyboard back
+  // when the list returns from a screen that had it up. So every return drops focus, except the
+  // first, where search on start asks for it. Done once the window has focus: before that the
+  // view still holds the touch mode it last saw, and out of it clearing focus refocuses the field.
+  val windowFocused = LocalWindowInfo.current.isWindowFocused
+  LaunchedEffect(returned, windowFocused) {
+    if (returned && windowFocused) {
+      returned = false
+      if (focusSearch && !launched) searchFocus.requestFocus() else focusManager.clearFocus()
+      launched = true
+    }
+  }
   // Filtered results always start at the top, where the best match is.
   LaunchedEffect(query) { if (query.isNotEmpty()) listState.scrollToItem(0) }
   Scaffold(
@@ -108,7 +133,7 @@ fun ListScreen(
         SelectionBar(rows, selected, onClearSelection, onMove, onDelete, onRename, onPin)
       } else {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-          SearchField(query, gitOps, onQueryChange, onGitOp, onSettings, focusSearch)
+          SearchField(query, gitOps, onQueryChange, onGitOp, onSettings, searchFocus)
           BreadcrumbBar(
             crumbsFor(path),
             stringResource(R.string.list_store_root),
@@ -120,9 +145,10 @@ fun ListScreen(
     },
     floatingActionButton = {
       if (!selecting)
-        ExtendedFloatingActionButton(
+      // M3 clears the label's semantics; the FAB takes its description from the icon.
+      ExtendedFloatingActionButton(
           text = { Text(stringResource(R.string.list_new_entry)) },
-          icon = { Icon(Icons.Filled.Add, contentDescription = null) },
+          icon = { Icon(Icons.Filled.Add, stringResource(R.string.list_new_entry)) },
           onClick = onNew,
         )
     },
@@ -212,10 +238,8 @@ private fun SearchField(
   onQueryChange: (String) -> Unit,
   onGitOp: (GitOp) -> Unit,
   onSettings: () -> Unit,
-  focusSearch: Boolean,
+  focus: FocusRequester,
 ) {
-  val focus = remember { FocusRequester() }
-  LaunchedEffect(Unit) { if (focusSearch) focus.requestFocus() }
   val focusManager = LocalFocusManager.current
   var menu by remember { mutableStateOf(false) }
   SearchBar(
