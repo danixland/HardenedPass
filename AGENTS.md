@@ -38,7 +38,8 @@ Needs JDK 17 and the Android SDK. `local.properties` (gitignored) holds `sdk.dir
 Prefix with `CI=1` to match CI: it turns Kotlin warnings into errors, so a deprecation warning
 that passes locally fails CI. Before committing, run:
 
-    CI=1 ./gradlew spotlessCheck test -PslimTests assembleFreeDebug assembleFreeRelease lintFreeRelease
+    CI=1 ./gradlew spotlessCheck test -PslimTests assembleFreeDebug assembleFreeRelease \
+      lintFreeRelease metalavaCheckCompatibilityRelease
 
 Flavors: `free` (no proprietary dependencies, Sentry replaced by `sentry-stub`) and `nonFree`
 (adds Sentry and Play Services SMS OTP).
