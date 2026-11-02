@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2026-11-02
+
+### Fixed
+
+-   An SSH key generated with "Protect with screen lock credential" could only be unlocked with the PIN or password: unlocking it with a fingerprint passed the prompt, then failed with "Socket closed". Keys generated from now on accept a strong (Class 3) biometric too; regenerate an existing protected key to use your fingerprint with it
+-   The unlock prompt no longer offers weak (Class 2) biometrics on Android 11 and later, since they cannot unlock Keystore keys
+
 ## [0.1.0] - 2026-11-02
 
 First release of HardenedPass, a maintained fork of the archived Android Password Store.
