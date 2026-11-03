@@ -68,7 +68,7 @@ constructor(
 
   fun changeUrl(value: String) {
     url = value
-    if (value.isNotEmpty()) authMode = fitAuthMode(value.trim(), authMode)
+    authMode = fitAuthMode(value.trim(), authMode)
   }
 
   fun clearHostKey() {

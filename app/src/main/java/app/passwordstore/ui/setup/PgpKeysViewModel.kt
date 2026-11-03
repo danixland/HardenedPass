@@ -21,6 +21,7 @@ import app.passwordstore.crypto.PGPKeyManager
 import app.passwordstore.crypto.errors.KeyAlreadyExistsException
 import app.passwordstore.crypto.errors.KeyDowngradeException
 import app.passwordstore.data.repo.PasswordRepository
+import app.passwordstore.ui.list.deleteWithoutFollowingLinks
 import app.passwordstore.util.coroutines.DispatcherProvider
 import com.github.michaelbull.result.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -211,6 +212,9 @@ constructor(
    */
   suspend fun createStore(root: File, row: KeyRow): String? =
     withContext(dispatcherProvider.io()) {
+      // A restored, already-cloned store must keep its .gpg-id.
+      if (root.isDirectory && cloneTarget(root) == CloneTarget.Occupied)
+        return@withContext "the folder is not empty"
       try {
         check(root.isDirectory || root.mkdirs()) { "Could not create $root" }
         PasswordRepository.createRepository(root)
@@ -229,8 +233,8 @@ constructor(
 
   private fun failed(root: File, e: Exception): String {
     logcat(ERROR) { e.asLog() }
-    // Only removes the folder while it is still empty, as the old onboarding did.
-    root.delete()
+    // Removes what this attempt made, including a fresh .git, without following links.
+    root.deleteWithoutFollowingLinks()
     return e.message.orEmpty()
   }
 

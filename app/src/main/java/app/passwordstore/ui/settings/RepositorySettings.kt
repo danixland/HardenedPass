@@ -94,7 +94,7 @@ class RepositorySettings(private val activity: FragmentActivity) : SettingsProvi
         titleRes = R.string.pref_import_ssh_key_title
         visible = PasswordRepository.isGitRepo()
         onClick {
-          activity.startActivity(MainActivity.setupIntent(activity, SetupStart.Ssh))
+          generateSshKey.launch(MainActivity.setupIntent(activity, SetupStart.Ssh))
           true
         }
       }

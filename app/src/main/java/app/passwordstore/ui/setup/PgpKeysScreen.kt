@@ -292,7 +292,7 @@ fun PgpKeysDestination(
       onImport = { picker.launch(arrayOf("*/*")) },
       onSelect = ::choose,
       onDelete = viewModel::deleteKey,
-      onLater = onDone,
+      onLater = ::leave,
       onBack = ::leave,
     )
     when (val result = viewModel.importResult) {
