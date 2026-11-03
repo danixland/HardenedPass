@@ -5,9 +5,13 @@
 
 package app.passwordstore.ui.main
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,8 +20,11 @@ import app.passwordstore.data.password.PasswordItem
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.compose.theme.APSTheme
 import app.passwordstore.ui.crypto.BasePGPActivity
-import app.passwordstore.ui.crypto.PasswordCreationActivity
+import app.passwordstore.ui.editor.EditorDestination
+import app.passwordstore.ui.editor.EditorForm
+import app.passwordstore.ui.editor.editorForm
 import app.passwordstore.ui.entry.EntryDestination
+import app.passwordstore.ui.entry.EntryViewModel
 import app.passwordstore.ui.git.base.BaseGitActivity
 import app.passwordstore.ui.list.ListDestination
 import app.passwordstore.ui.list.folderMoves
@@ -49,6 +56,13 @@ import kotlinx.serialization.Serializable
 @Serializable data class EntryRoute(val filePath: String)
 
 /**
+ * The editor: a new entry in [dir] (relative to the store root, "" is the root), or the entry
+ * [name] (file name without `.gpg`) there. An edit takes its plaintext from the entry view below it
+ * on the back stack, never from the route.
+ */
+@Serializable data class EditRoute(val dir: String, val name: String? = null)
+
+/**
  * Single-activity host for the Compose UI. Not exported: it is only started by [LaunchActivity],
  * after its biometric gate and path check. Extends [BaseGitActivity] (an AppCompatActivity, so also
  * the FragmentActivity BiometricPrompt needs) because the git operations require one; it hosts no
@@ -58,6 +72,9 @@ import kotlinx.serialization.Serializable
 class MainActivity : BaseGitActivity() {
 
   @Inject lateinit var shortcutHandler: ShortcutHandler
+
+  /** Composed destinations that show secrets; FLAG_SECURE is on while this is above zero. */
+  private var secureHolds = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -86,24 +103,66 @@ class MainActivity : BaseGitActivity() {
                   nav.navigate(EntryRoute(file.absolutePath))
                 }
               },
+              onNewEntry = {
+                if (nav.currentBackStackEntry?.id == entry.id) nav.navigate(EditRoute(path))
+              },
             )
           }
           composable<EntryRoute> { entry ->
+            val file = File(entry.toRoute<EntryRoute>().filePath)
+            SecureWindow(this@MainActivity)
             EntryDestination(
               activity = this@MainActivity,
-              file = File(entry.toRoute<EntryRoute>().filePath),
+              file = file,
               onClose = {
                 // Only the entry on top closes: the auto-close timer can race a back press.
                 if (nav.currentBackStackEntry?.id == entry.id) {
                   if (nav.previousBackStackEntry == null) finish() else nav.popBackStack()
                 }
               },
-              onSaved = {
-                // Back to the list, which re-reads the store on resume. Opened from a shortcut,
-                // the entry has no list below it: the list root replaces it.
+              onEdit = {
                 if (nav.currentBackStackEntry?.id == entry.id) {
-                  if (nav.previousBackStackEntry != null) nav.popBackStack()
-                  else nav.navigate(ListRoute()) { popUpTo<EntryRoute> { inclusive = true } }
+                  val root = PasswordRepository.getRepositoryDirectory().canonicalFile
+                  val dir = file.canonicalFile.parentFile?.relativeTo(root)?.path.orEmpty()
+                  nav.navigate(EditRoute(dir, file.nameWithoutExtension))
+                }
+              },
+            )
+          }
+          composable<EditRoute> { entry ->
+            val route = entry.toRoute<EditRoute>()
+            val name = route.name
+            // An edit reads the decrypted entry from the entry view below it. After process
+            // death that ViewModel is new and empty, and the editor closes.
+            val decrypted =
+              if (name == null) null
+              else
+                remember(entry) {
+                    // No entry view below (none on the stack): getBackStackEntry throws.
+                    try {
+                      nav.getBackStackEntry<EntryRoute>()
+                    } catch (_: IllegalArgumentException) {
+                      null
+                    }
+                  }
+                  ?.let { hiltViewModel<EntryViewModel>(it).entry }
+            SecureWindow(this@MainActivity)
+            EditorDestination(
+              activity = this@MainActivity,
+              initial =
+                if (name == null) EditorForm(dir = route.dir)
+                else decrypted?.let { editorForm(it, route.dir, name) },
+              original =
+                name?.let {
+                  File(File(PasswordRepository.getRepositoryDirectory(), route.dir), "$it.gpg")
+                },
+              onClose = { if (nav.currentBackStackEntry?.id == entry.id) nav.popBackStack() },
+              onSaved = {
+                // Back to the list, which re-reads the store on resume. An entry opened from a
+                // shortcut has no list below it: the list root replaces the stack.
+                if (nav.currentBackStackEntry?.id == entry.id) {
+                  if (!nav.popBackStack<ListRoute>(inclusive = false))
+                    nav.navigate(ListRoute()) { popUpTo<EntryRoute> { inclusive = true } }
                 }
               },
             )
@@ -111,6 +170,16 @@ class MainActivity : BaseGitActivity() {
         }
       }
     }
+  }
+
+  /** Counts a destination that shows secrets; the first one turns FLAG_SECURE on. */
+  fun holdSecure() {
+    if (secureHolds++ == 0) window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+  }
+
+  /** Ends a [holdSecure]; FLAG_SECURE goes off when no secret-showing destination is left. */
+  fun releaseSecure() {
+    if (--secureHolds == 0) window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
   }
 
   /** Re-reads the store; starts onboarding and returns false when there is none yet. */
@@ -145,21 +214,22 @@ class MainActivity : BaseGitActivity() {
     shortcutHandler.addPinnedShortcut(item, item.createAuthEnabledIntent(this))
   }
 
-  fun createEntry(dir: File) {
-    startActivity(
-      Intent(this, PasswordCreationActivity::class.java)
-        .putExtra(BasePGPActivity.EXTRA_FILE_PATH, dir.absolutePath)
-        .putExtra(
-          BasePGPActivity.EXTRA_REPO_PATH,
-          PasswordRepository.getRepositoryDirectory().absolutePath,
-        )
-    )
-  }
-
   fun openSettings() {
     launchActivity(SettingsActivity::class.java)
   }
 
   private fun entryItem(file: File) =
     PasswordItem.newPassword(file.name, file, PasswordRepository.getRepositoryDirectory())
+}
+
+/**
+ * FLAG_SECURE while composed. Counted in [MainActivity], because in a transition (entry view to
+ * editor and back) the entering destination is composed before the leaving one is disposed.
+ */
+@Composable
+private fun SecureWindow(activity: MainActivity) {
+  DisposableEffect(activity) {
+    activity.holdSecure()
+    onDispose { activity.releaseSecure() }
+  }
 }

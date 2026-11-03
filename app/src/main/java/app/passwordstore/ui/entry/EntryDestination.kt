@@ -7,7 +7,6 @@ package app.passwordstore.ui.entry
 
 import android.app.Activity
 import android.content.Intent
-import android.view.WindowManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -43,12 +41,9 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.passwordstore.R
-import app.passwordstore.data.passfile.PasswordEntry
 import app.passwordstore.data.passfile.Totp
 import app.passwordstore.data.repo.PasswordRepository
-import app.passwordstore.ui.crypto.BasePGPActivity
 import app.passwordstore.ui.crypto.BasePGPActivity.Companion.getParentPath
-import app.passwordstore.ui.crypto.PasswordCreationActivity
 import app.passwordstore.ui.crypto.copyPasswordToClipboard
 import app.passwordstore.ui.crypto.copyTextToClipboard
 import app.passwordstore.ui.crypto.getPGPIdentifiers
@@ -62,28 +57,20 @@ import app.passwordstore.util.settings.PreferenceKeys
 import java.io.File
 
 /**
- * One entry: wires [EntryScreen] to the [viewModel], the biometric and passphrase prompts, the
- * clipboard and the legacy editor. [onClose] leaves the destination; [onSaved] runs after the
- * editor saved the entry (the host returns to the list).
+ * One entry: wires [EntryScreen] to the [viewModel], the biometric and passphrase prompts and the
+ * clipboard. [onClose] leaves the destination; [onEdit] opens the editor on the decrypted entry.
+ * The host keeps FLAG_SECURE on while this is composed.
  */
 @Composable
 fun EntryDestination(
   activity: MainActivity,
   file: File,
   onClose: () -> Unit,
-  onSaved: () -> Unit,
+  onEdit: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: EntryViewModel = hiltViewModel(),
 ) {
   val root = PasswordRepository.getRepositoryDirectory()
-
-  // Secrets stay out of screenshots and recents while this destination is composed.
-  // ponytail: plain add/clear, fine while no other secret-showing destination can overlap this
-  // one in a transition; count in MainActivity once the editor (step 4) becomes a destination.
-  DisposableEffect(Unit) {
-    activity.window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-    onDispose { activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE) }
-  }
 
   // Routes come from the app's own listing or from LaunchActivity's check; check once more.
   val inRepo = remember(file) { LaunchActivity.isFileInRepo(file.path, root) }
@@ -105,16 +92,12 @@ fun EntryDestination(
     }
   }
 
-  // ponytail: after process death during key import or the editor, the unlock flow can start
+  // ponytail: after process death during key import, the unlock flow can start
   // twice or a prompt can be left over the list; rare, no secret exposed. Fix by tracking
   // whether the flow already started if it shows up.
   val keyImport =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
       if (result.resultCode == Activity.RESULT_OK) unlock() else onClose()
-    }
-  val editor =
-    rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-      if (result.resultCode == Activity.RESULT_OK) onSaved()
     }
 
   // ponytail: a theme or locale change while the biometric prompt is up loses that prompt's
@@ -150,7 +133,7 @@ fun EntryDestination(
       otpFractionLeft = totp?.fractionLeft() ?: 0f,
       showPassword = showPassword,
       onBack = onClose,
-      onEdit = { entry?.let { editor.launch(editIntent(activity, file, root, it)) } },
+      onEdit = { if (entry != null) onEdit() },
       onShare = { fields?.password?.let { activity.startActivity(shareIntent(activity, it)) } },
       onCopyName = { activity.copyTextToClipboard(file.nameWithoutExtension) },
       onCopySecret = { activity.copyPasswordToClipboard(it) },
@@ -251,18 +234,6 @@ private fun PassphraseDialog(
     },
   )
 }
-
-/** The legacy editor, filled exactly as the old decrypt screen filled it. */
-private fun editIntent(activity: Activity, file: File, root: File, entry: PasswordEntry): Intent =
-  Intent(activity, PasswordCreationActivity::class.java)
-    .setAction(Intent.ACTION_VIEW)
-    .putExtra(BasePGPActivity.EXTRA_FILE_PATH, getParentPath(file.absolutePath, root.absolutePath))
-    .putExtra(BasePGPActivity.EXTRA_REPO_PATH, root.absolutePath)
-    .putExtra(PasswordCreationActivity.EXTRA_FILE_NAME, file.nameWithoutExtension)
-    .putExtra(PasswordCreationActivity.EXTRA_USERNAME, entry.username)
-    .putExtra(PasswordCreationActivity.EXTRA_PASSWORD, entry.password)
-    .putExtra(PasswordCreationActivity.EXTRA_EXTRA_CONTENT, entry.extraContentWithoutUsername)
-    .putExtra(PasswordCreationActivity.EXTRA_EDITING, true)
 
 /** Always a chooser, so the user can still cancel. */
 private fun shareIntent(activity: Activity, password: String): Intent =

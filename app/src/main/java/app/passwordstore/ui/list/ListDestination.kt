@@ -60,7 +60,7 @@ private enum class ListDialog {
 /**
  * The list at [path] (relative to the store root): wires [ListScreen] to the [viewModel], the
  * folder picker, the legacy activities and the store operations. [onOpenFolder] takes a path
- * relative to the root, [onOpenEntry] an entry file.
+ * relative to the root, [onOpenEntry] an entry file; [onNewEntry] opens the editor in this folder.
  */
 @Composable
 fun ListDestination(
@@ -68,6 +68,7 @@ fun ListDestination(
   path: String,
   onOpenFolder: (relativePath: String) -> Unit,
   onOpenEntry: (File) -> Unit,
+  onNewEntry: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: SearchableRepositoryViewModel = hiltViewModel(),
 ) {
@@ -178,7 +179,7 @@ fun ListDestination(
           onDismiss = { dialog = ListDialog.None },
           onNewEntry = {
             dialog = ListDialog.None
-            ifInitialized { activity.createEntry(dir) }
+            ifInitialized(onNewEntry)
           },
           onNewFolder = {
             dialog = ListDialog.None
