@@ -49,6 +49,16 @@ private fun childCount(folder: File): Int =
   folder.listFiles { f -> f.isDirectory || f.extension == "gpg" }?.size ?: 0
 
 /**
+ * Folders directly inside [dir] that the folder picker offers, by name: never `.git`, other hidden
+ * folders only with "Show hidden contents" ([showHidden]), as the list filters them.
+ */
+fun subfolders(dir: File, showHidden: Boolean): List<File> =
+  dir
+    .listFiles { f -> f.isDirectory && !f.name.startsWith(".git") && (showHidden || !f.isHidden) }
+    .orEmpty()
+    .sortedBy { it.name.lowercase() }
+
+/**
  * How to get from the list at [from] to the list at [to] (both relative to the store root) while
  * the back stack holds one entry per folder level: how many entries to pop, then which paths to
  * push. Breadcrumb jumps only pop; opening a folder from search results may pop and push.

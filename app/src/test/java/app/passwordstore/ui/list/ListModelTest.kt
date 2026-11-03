@@ -90,4 +90,16 @@ class ListModelTest {
     assertEquals(listOf(z.absolutePath, y.absolutePath), rows.folders.map { it.path })
     assertEquals(listOf(b.absolutePath, a.absolutePath), rows.entries.map { it.path })
   }
+
+  @Test
+  fun pickerOffersFoldersByName() {
+    folder("b")
+    folder("A")
+    folder(".hidden")
+    folder(".git")
+    file("c.gpg")
+    assertEquals(listOf("A", "b"), subfolders(root, showHidden = false).map { it.name })
+    assertEquals(listOf(".hidden", "A", "b"), subfolders(root, showHidden = true).map { it.name })
+    assertEquals(emptyList<File>(), subfolders(File(root, "missing"), showHidden = false))
+  }
 }
