@@ -40,6 +40,7 @@ import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.settings.AuthMode
 import app.passwordstore.util.settings.PreferenceKeys
 import app.passwordstore.util.shortcuts.ShortcutHandler
+import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.onFailure
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -226,6 +227,12 @@ class MainActivity : BaseGitActivity() {
   /** Runs [op]; failures show the usual git error dialog. */
   suspend fun runGit(op: GitOp) {
     launchGitOperation(op).onFailure { promptOnErrorHandler(it) }
+  }
+
+  /** Runs [op] (a hard reset against [branch]) and returns its outcome; the caller reports it. */
+  suspend fun gitOperation(op: GitOp, branch: String = ""): Result<Unit, Throwable> {
+    remoteBranch = branch
+    return launchGitOperation(op)
   }
 
   /** Adds [file] to the launcher's dynamic shortcuts, as opening it from the list always did. */

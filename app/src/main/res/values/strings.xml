@@ -415,5 +415,7 @@
   <string name="store_delete_failed">Could not delete everything in the store folder.</string>
   <string name="clear_saved_secret_message">It will be asked again at the next Git operation.</string>
   <string name="invalid_proxy_port">Enter a port from 1 to 65535, or nothing</string>
+  <string name="git_reset_confirm_message">Local commits and changes that are not on this remote branch are discarded.</string>
+  <string name="git_tool_done">%1$s: done</string>
   <string name="store_delete_confirm">Delete the local store? Entries not pushed to the remote are lost.</string>
 </resources>

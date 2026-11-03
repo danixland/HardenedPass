@@ -57,9 +57,8 @@ class BreakOutOfDetached(callingActivity: AppCompatActivity) : GitOperation(call
         .setMessage(
           callingActivity.resources.getString(R.string.git_break_out_of_detached_unneeded)
         )
-        .setPositiveButton(callingActivity.resources.getString(R.string.dialog_ok)) { _, _ ->
-          callingActivity.finish()
-        }
+        // Only closes the dialog: the calling activity is the app's main screen.
+        .setPositiveButton(callingActivity.resources.getString(R.string.dialog_ok), null)
         .show()
       false
     } else {
