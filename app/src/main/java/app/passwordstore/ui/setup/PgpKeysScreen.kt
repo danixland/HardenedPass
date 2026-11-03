@@ -261,7 +261,7 @@ fun PgpKeysDestination(
     viewModel.busy = true
     activity.lifecycleScope.launch {
       try {
-        val error = viewModel.createStore(root, row)
+        val error = viewModel.createStore(root, row, activity.getString(R.string.store_not_empty))
         if (error != null) {
           activity.snackbar(
             message = activity.getString(R.string.store_create_failed, error),

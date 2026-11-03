@@ -413,6 +413,7 @@
   <string name="pgp_key_needed_message">Import the private key this store is encrypted for, so its entries can be read and saved.</string>
   <string name="pgp_key_needed_recipients">Store recipients</string>
   <string name="store_create_failed">Could not create the store: %1$s</string>
+  <string name="store_not_empty">the folder already holds a store</string>
   <string name="git_clone_delete_failed">Could not empty the store folder, so the clone did not start.</string>
   <string name="pgp_key_import_too_large">The file is larger than 1 MiB: not a PGP key.</string>
   <string name="pgp_key_import_downgrade">A private key with this ID is already imported. Its public key alone cannot replace it: delete the private key first if you really want to.</string>
