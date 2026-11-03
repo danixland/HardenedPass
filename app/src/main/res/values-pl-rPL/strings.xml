@@ -37,7 +37,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Skopiowano do schowka</string>
   <string name="file_toast_text">Podaj nazwę pliku</string>
-  <string name="path_toast_text">Podaj ścieżkę do pliku</string>
   <string name="empty_toast_text">Nie możesz użyć pustego hasła lub pustej dodatkowej zawartości</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Wystąpił błąd podczas operacji Git</string>
@@ -61,7 +60,6 @@
   <string name="crypto_name_hint">Nazwa</string>
   <string name="crypto_pass_label">Hasło</string>
   <string name="crypto_extra_label">Treść dodatkowa</string>
-  <string name="crypto_encrypt_username_label">Szyfruj nazwę użytkownika</string>
   <string name="crypto_select">Wybierz</string>
   <string name="crypto_save">Zapisz</string>
   <string name="crypto_save_and_copy">Zapisz i skopiuj</string>
@@ -122,7 +120,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Generuj hasło</string>
   <string name="pwgen_generate">Wygeneruj</string>
-  <string name="pwgen_include">Załącz</string>
   <string name="pwgen_length">Długość</string>
   <string name="pwgen_numerals">Cyfry</string>
   <string name="pwgen_symbols">Symbole</string>
@@ -170,7 +167,6 @@
   <string name="git_log">Pokaż dziennik commitów</string>
   <string name="show_password_pref_title">Pokaż hasło</string>
   <string name="show_password_pref_summary">Kontroluj widoczność haseł po odszyfrowaniu. To nie wyłącza kopiowania do schowka.</string>
-  <string name="pwd_generate_button">Generuj</string>
   <string name="send_plaintext_password_to">Wyślij niezaszyfrowane hasło, używając…</string>
   <string name="app_icon_hint">Ikona aplikacji</string>
   <!-- Oreo Autofill -->
@@ -202,7 +198,6 @@
   <string name="oreo_autofill_enable_dialog_installed_browsers">Obsługa autouzupełniania w zainstalowanych przeglądarkach:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Nie można otworzyć klucza prywatnego ssh, sprawdź czy plik istnieje</string>
-  <string name="new_password_title">Nowe hasło</string>
   <string name="clear_saved_passphrase_ssh">Wyczyść zapisane hasło dla lokalnego klucza SSH</string>
   <string name="clear_saved_passphrase_https">Wyczyść zapisane hasło HTTPS</string>
   <string name="git_operation_remember_passphrase">Zapamiętaj hasło klucza</string>
@@ -268,7 +263,6 @@
   <string name="invalid_gpg_id">Znaleziono .gpg-id, ale zawiera nieprawidłowy identyfikator klucza, odcisk palca lub identyfikator użytkownika</string>
   <string name="short_gpg_id">Znaleziono .gpg-id, ale zawarty w nim skrócony identyfikator nie jest obsługiwany</string>
   <string name="invalid_filename_text">Nazwa pliku nie może zawierać \'/\', ustaw katalog powyżej</string>
-  <string name="directory_hint">Katalog</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Nieznany błąd</string>
   <string name="git_pull_rebase_fail_error">Zaciąganie zmian nie powiodło się, nie jesteś na żadnej gałęzi (detached head). Używając \"Ustawienia &gt; narzędzia Git\", wyślij lokalne zmiany do zdalnego repozytorium na nowej gałęzi i rozwiąż konflikt na komputerze.</string>
@@ -309,11 +303,9 @@
   <string name="clear_saved_host_key_success">Pomyślnie wyczyszczono zapisany klucz hosta!</string>
   <string name="otp_import_qr_code">Skanuj kod QR</string>
   <string name="otp_import_from_file">Wybierz obraz</string>
-  <string name="otp_import_manual_entry">Wprowadź ręcznie</string>
   <string name="otp_import_manual_hint_secret">Sekret</string>
   <string name="otp_import_manual_hint_account">Konto</string>
   <string name="place_shortcut_on_home_screen">Utwórz skrót na pulpicie</string>
-  <string name="password_list_fab_content_description">Utwórz nowe hasło lub folder</string>
   <string name="pgp_key_import_failed">Nie udało się zaimportować klucza PGP</string>
   <string name="pgp_key_import_failed_replace_message">Znaleziono istniejący klucz z tym identyfikatorem, czy chcesz go zastąpić?</string>
   <string name="pgp_key_import_succeeded">Pomyślnie zaimportowano klucz PGP</string>

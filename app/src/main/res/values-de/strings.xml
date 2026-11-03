@@ -39,7 +39,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">In die Zwischenablage kopiert</string>
   <string name="file_toast_text">Bitte setzen Sie einen Dateinamen.</string>
-  <string name="path_toast_text">Bitte setzen Sie einen Pfad.</string>
   <string name="empty_toast_text">Sie können kein leeres Passwort oder leere Extra-Angaben setzen.</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Es ist ein Fehler während der Git-Operation aufgetreten.</string>
@@ -63,7 +62,6 @@
   <string name="crypto_name_hint">Name</string>
   <string name="crypto_pass_label">Passwort</string>
   <string name="crypto_extra_label">Zusätzliche Angaben</string>
-  <string name="crypto_encrypt_username_label">Benutzername verschlüsseln</string>
   <string name="crypto_select">Auswählen</string>
   <string name="crypto_save">Speichern</string>
   <string name="crypto_save_and_copy">Speichern und kopieren</string>
@@ -125,7 +123,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Passwort erstellen</string>
   <string name="pwgen_generate">Erstellen</string>
-  <string name="pwgen_include">Einschließen</string>
   <string name="pwgen_length">Länge</string>
   <string name="pwgen_numerals">Nummern</string>
   <string name="pwgen_symbols">Symbole</string>
@@ -173,7 +170,6 @@
   <string name="git_log">Commit-Log anzeigen</string>
   <string name="show_password_pref_title">Zeige das Passwort.</string>
   <string name="show_password_pref_summary">Soll das entschlüsselte Passwort sichtbar sein? Dies deaktiviert nicht das Kopieren.</string>
-  <string name="pwd_generate_button">Erstellen</string>
   <string name="send_plaintext_password_to">Passwort unverschlüsselt senden an…</string>
   <string name="app_icon_hint">App-Icon</string>
   <!-- Oreo Autofill -->
@@ -207,7 +203,6 @@
   <string name="oreo_autofill_enable_dialog_installed_browsers">Autofill-Unterstützung mit installierten Browsern:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Der private SSH-Schlüssel konnte nicht geöffnet werden. Bitte überprüfen Sie, ob die Datei existiert.</string>
-  <string name="new_password_title">Neues Passwort</string>
   <string name="clear_saved_passphrase_ssh">Gespeicherte Passphrase für lokalen SSH-Schlüssel löschen</string>
   <string name="clear_saved_passphrase_https">Gespeichertes HTTPS-Passwort löschen</string>
   <string name="git_operation_remember_passphrase">Schlüsselpasswort merken</string>
@@ -276,7 +271,6 @@
   <string name="invalid_gpg_id">.gpg-id wurde gefunden, enthält jedoch ungültige Schlüssel-ID, Fingerabdruck oder Benutzer-ID.</string>
   <string name="short_gpg_id">.gpg-id wurde gefunden, enthält jedoch eine kurze Hex-ID, die nicht unterstützt wird.</string>
   <string name="invalid_filename_text">Dateiname darf kein \'/\' enthalten; Verzeichnis oben setzen</string>
-  <string name="directory_hint">Ordner</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Unbekannter Fehler</string>
   <string name="git_pull_rebase_fail_error">Pull fehlgeschlagen. Sie befinden sich in einem abgelösten Head. Speichern Sie die Änderungen in \"Einstellungen &gt; Lokale Git-Konfiguration &amp; Dienstprogramme\" auf das Remote-Repository in einem neuen Branch und lösen Sie den Konflikt auf Ihrem Computer auf.</string>
@@ -319,11 +313,9 @@
   <string name="clear_saved_host_key_success">Host-Schlüssel erfolgreich gelöscht!</string>
   <string name="otp_import_qr_code">QR-Code scannen</string>
   <string name="otp_import_from_file">Wählen Sie ein Bild.</string>
-  <string name="otp_import_manual_entry">Manuell eingeben</string>
   <string name="otp_import_manual_hint_secret">Schlüssel</string>
   <string name="otp_import_manual_hint_account">Benutzer-Konto</string>
   <string name="place_shortcut_on_home_screen">Verknüpfung auf dem Home-Screen erstellen</string>
-  <string name="password_list_fab_content_description">Neues Passwort oder neuen Ordner erstellen</string>
   <string name="pgp_key_import_failed">Fehler beim Import des PGP-Schlüssels</string>
   <string name="pgp_key_import_failed_replace_message">Ein bestehender Schlüssel mit dieser ID wurde gefunden. Möchten Sie ihn ersetzen?</string>
   <string name="pgp_key_import_succeeded">PGP-Schlüssel erfolgreich importiert</string>

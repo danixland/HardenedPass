@@ -43,7 +43,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Скопировано в буфер обмена</string>
   <string name="file_toast_text">Пожалуйста, укажите имя файла</string>
-  <string name="path_toast_text">Пожалуйста, задайте путь к файлу</string>
   <string name="empty_toast_text">Вы не можете использовать пустой пароль или пустое поле информации</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Произошла ошибка выполнения операции Git</string>
@@ -67,7 +66,6 @@
   <string name="crypto_name_hint">название</string>
   <string name="crypto_pass_label">Пароль</string>
   <string name="crypto_extra_label">Дополнительно</string>
-  <string name="crypto_encrypt_username_label">Зашифровать имя пользователя</string>
   <string name="crypto_select">Выбрать</string>
   <string name="crypto_save">Сохранить</string>
   <string name="crypto_save_and_copy">Сохранить и скопировать</string>
@@ -118,7 +116,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Сгенерировать пароль</string>
   <string name="pwgen_generate">Сгенерировать</string>
-  <string name="pwgen_include">Включая</string>
   <string name="pwgen_length">Длина</string>
   <string name="pwgen_numerals">Цифры</string>
   <string name="pwgen_symbols">Символы</string>
@@ -166,7 +163,6 @@
   <string name="git_log">Показать журнал изменений</string>
   <string name="show_password_pref_title">Показывать пароли</string>
   <string name="show_password_pref_summary">Видимость расшифрованных паролей, не влияет на копирование в буфер.</string>
-  <string name="pwd_generate_button">Сгенерировать</string>
   <string name="send_plaintext_password_to">Поделиться паролем в открытом виде с помощью</string>
   <string name="app_icon_hint">Иконка приложения</string>
   <!-- Oreo Autofill -->
@@ -200,7 +196,6 @@
   <string name="oreo_autofill_enable_dialog_installed_browsers">Поддержка автозаполнения установленными браузерами:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Невозможно открыть приватный ключ ssh, пожалуйста проверьте, что файл существует</string>
-  <string name="new_password_title">Новый пароль</string>
   <string name="clear_saved_passphrase_ssh">Очистить сохраненную кодовую фразу для локального SSH ключа</string>
   <string name="clear_saved_passphrase_https">Удалить сохраненный пароль HTTPS</string>
   <string name="git_operation_remember_passphrase">Запомнить кодовую фразу</string>
@@ -268,7 +263,6 @@
   <string name="exporting_passwords">Экспорт паролей…</string>
   <string name="invalid_gpg_id">Найден .gpg-id, но он содержит неверный ID ключа, fingerprint или ID пользователя</string>
   <string name="invalid_filename_text">Имя файла не должно содержать \'/\', укажите директорию выше</string>
-  <string name="directory_hint">Директория</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Неизвестная ошибка</string>
   <string name="git_pull_rebase_fail_error">Не удалось получить изменения, вы находитесь в состоянии \"оторванной головы\". Используйте \"настройки &gt; утилиты git\", сохраните ваши изменения в новую удаленную ветку и разрешите конфликты на своем компьютере.</string>
@@ -311,10 +305,8 @@
   <string name="clear_saved_host_key_success">Сохраненный ключ хоста был успешно удален!</string>
   <string name="otp_import_qr_code">Отсканировать QR-код</string>
   <string name="otp_import_from_file">Выберите изображение</string>
-  <string name="otp_import_manual_entry">Ввести вручную</string>
   <string name="otp_import_manual_hint_account">Учетная запись</string>
   <string name="place_shortcut_on_home_screen">Разместить ярлык на рабочем столе</string>
-  <string name="password_list_fab_content_description">Создать новый пароль или папку</string>
   <string name="pgp_key_import_failed">Не удалось импортировать PGP-ключ</string>
   <string name="pgp_key_import_succeeded">PGP ключ успешно импортирован</string>
 </resources>

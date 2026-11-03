@@ -95,12 +95,6 @@
       android:label="@string/action_settings"
       android:parentActivityName=".ui.main.MainActivity" />
 
-    <activity
-      android:name=".ui.crypto.PasswordCreationActivity"
-      android:exported="false"
-      android:label="@string/new_password_title"
-      android:windowSoftInputMode="adjustResize" />
-
     <service
       android:name=".util.services.ClipboardService"
       android:exported="false"
@@ -123,9 +117,6 @@
         android:resource="@xml/oreo_autofill_service" />
     </service>
 
-    <activity
-      android:name=".ui.folderselect.SelectFolderActivity"
-      android:exported="false" />
     <activity
       android:name=".ui.sshkeygen.SshKeyImportActivity"
       android:exported="false"

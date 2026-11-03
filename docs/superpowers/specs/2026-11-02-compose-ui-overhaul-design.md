@@ -46,7 +46,10 @@ the maintainer's phone stays on 0.1.4 until then.
 - Password with reveal and a generator button; the generator is a bottom sheet with random and
   diceware tabs.
 - Username field, free-text extra content (pass format kept as text, nothing hidden).
-- "OTP from QR" and "OTP manual" actions.
+- "OTP from QR" (camera or image) and "OTP manual" actions.
+- "Save and copy" in the overflow. Saving returns to the list; closing returns to where the
+  editor was opened. The folder picker is a dialog, shared with the list's move action. The
+  autofill save flow (`AutofillSaveActivity`) hosts the same editor.
 
 ## Architecture
 
@@ -94,7 +97,8 @@ needs it.
 ## Security
 
 - `FLAG_SECURE` is set on the window while the entry view or editor destination is shown and
-  cleared when leaving it, so secrets stay out of screenshots and recents.
+  cleared when leaving it, so secrets stay out of screenshots and recents. It is counted, so
+  moving between the two never clears it.
 - `MainActivity` is not exported. Routes come only from `LaunchActivity` after its checks; an
   entry route is still validated with `isFileInRepo`.
 

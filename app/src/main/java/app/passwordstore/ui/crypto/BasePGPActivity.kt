@@ -29,7 +29,6 @@ import app.passwordstore.util.extensions.clipboard
 import app.passwordstore.util.extensions.getString
 import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.extensions.snackbar
-import app.passwordstore.util.extensions.unsafeLazy
 import app.passwordstore.util.services.ClipboardService
 import app.passwordstore.util.settings.Constants
 import app.passwordstore.util.settings.PreferenceKeys
@@ -43,12 +42,6 @@ import kotlinx.coroutines.withContext
 @Suppress("Registered")
 @AndroidEntryPoint
 open class BasePGPActivity : AppCompatActivity() {
-
-  /** Full path to the repository */
-  val repoPath by unsafeLazy { intent.getStringExtra("REPO_PATH")!! }
-
-  /** Full path to the password file being worked on */
-  val fullPath by unsafeLazy { intent.getStringExtra("FILE_PATH")!! }
 
   /** Action to invoke if [keyImportAction] succeeds. */
   private var onKeyImport: (() -> Unit)? = null
@@ -103,7 +96,6 @@ open class BasePGPActivity : AppCompatActivity() {
   companion object {
 
     const val EXTRA_FILE_PATH = "FILE_PATH"
-    const val EXTRA_REPO_PATH = "REPO_PATH"
 
     /** Gets the relative path to the repository */
     fun getRelativePath(fullPath: String, repositoryPath: String): String =

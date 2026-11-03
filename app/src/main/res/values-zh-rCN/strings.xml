@@ -38,7 +38,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">复制到剪切板</string>
   <string name="file_toast_text">请提供文件名</string>
-  <string name="path_toast_text">请提供文件路径</string>
   <string name="empty_toast_text">您不能使用空密码或空额外内容</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Git操作过程中发生错误</string>
@@ -62,7 +61,6 @@
   <string name="crypto_name_hint">名称</string>
   <string name="crypto_pass_label">密码</string>
   <string name="crypto_extra_label">附加内容</string>
-  <string name="crypto_encrypt_username_label">加密用户名</string>
   <string name="crypto_select">选择</string>
   <string name="crypto_save">保存</string>
   <string name="crypto_save_and_copy">保存并复制</string>
@@ -121,7 +119,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">生成密码</string>
   <string name="pwgen_generate">生成</string>
-  <string name="pwgen_include">包含</string>
   <string name="pwgen_length">长度</string>
   <string name="pwgen_numerals">数字</string>
   <string name="pwgen_symbols">标识</string>
@@ -174,7 +171,6 @@
   <string name="git_log">显示提交日志</string>
   <string name="show_password_pref_title">显示密码</string>
   <string name="show_password_pref_summary">控制密码解密后的可见性,这不会禁用复制到剪贴板</string>
-  <string name="pwd_generate_button">生成</string>
   <string name="send_plaintext_password_to">使用明文发送密码…</string>
   <string name="app_icon_hint">应用图标</string>
   <!-- Oreo Autofill -->
@@ -209,7 +205,6 @@
   <string name="oreo_autofill_enable_dialog_installed_browsers">已安装支持自动填充的浏览器:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">无法打开SSH私钥,请检查文件是否存在</string>
-  <string name="new_password_title">新密码</string>
   <string name="clear_saved_passphrase_ssh">清除本地已保存的SSH密钥密码</string>
   <string name="clear_saved_passphrase_https">清除保存的HTTPS密码</string>
   <string name="git_operation_remember_passphrase">记住密钥密码</string>
@@ -278,7 +273,6 @@ personal.com</string>
   <string name="invalid_gpg_id">找到了 .gpg-id，但它包含无效的密钥ID、指纹或用户ID</string>
   <string name="short_gpg_id">找到 .gpg-id 但它包含一个不受支持的短十六进制ID。</string>
   <string name="invalid_filename_text">文件名不能包含\'/\'</string>
-  <string name="directory_hint">目录</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">未知错误</string>
   <string name="git_pull_merge_fail_error">合并失败，你处于冲突状态。</string>
@@ -324,11 +318,9 @@ GPG
   <string name="clear_saved_host_key_success">已成功清除已保存的主机密钥!</string>
   <string name="otp_import_qr_code">扫描二维码</string>
   <string name="otp_import_from_file">选择图像</string>
-  <string name="otp_import_manual_entry">手动输入</string>
   <string name="otp_import_manual_hint_secret">安全码 (Secret)</string>
   <string name="otp_import_manual_hint_account">账户</string>
   <string name="place_shortcut_on_home_screen">在主屏幕上放置快捷方式</string>
-  <string name="password_list_fab_content_description">创建新密码或文件夹</string>
   <string name="pgp_key_import_failed">导入 PGP 密钥失败</string>
   <string name="pgp_key_import_failed_replace_message">发现了 ID 相同的现有密钥，您要替换它吗？</string>
   <string name="pgp_key_import_succeeded">成功导入 PGP 密钥</string>

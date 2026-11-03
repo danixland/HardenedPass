@@ -47,7 +47,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Copied to clipboard</string>
   <string name="file_toast_text">Please provide a file name</string>
-  <string name="path_toast_text">Please provide a file path</string>
   <string name="empty_toast_text">You cannot use an empty password or empty extra content</string>
 
   <!-- Git Async Task -->
@@ -79,7 +78,6 @@
   <string name="crypto_username_hint">Username</string>
   <string name="crypto_pass_label">Password</string>
   <string name="crypto_extra_label">Extra content</string>
-  <string name="crypto_encrypt_username_label">Encrypt username</string>
   <string name="crypto_select">Select</string>
   <string name="crypto_save">Save</string>
   <string name="crypto_save_and_copy">Save and Copy</string>
@@ -148,7 +146,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Generate Password</string>
   <string name="pwgen_generate">Generate</string>
-  <string name="pwgen_include">Include</string>
   <string name="pwgen_length">Length</string>
   <string name="pwgen_numerals">Numerals</string>
   <string name="pwgen_symbols">Symbols</string>
@@ -201,7 +198,6 @@
   <string name="git_log">Show commit log</string>
   <string name="show_password_pref_title">Show the password</string>
   <string name="show_password_pref_summary">Control the visibility of the passwords once decrypted. This does not disable copying to clipboard.</string>
-  <string name="pwd_generate_button">Generate</string>
   <string name="send_plaintext_password_to">Send password as plaintext using…</string>
   <string name="app_icon_hint">App icon</string>
 
@@ -239,7 +235,6 @@
 
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Unable to open the ssh private key, please check that the file exists</string>
-  <string name="new_password_title">New password</string>
   <string name="clear_saved_passphrase_ssh">Clear saved passphrase for local SSH key</string>
   <string name="clear_saved_passphrase_https">Clear saved HTTPS password</string>
   <string name="git_operation_remember_passphrase">Remember key passphrase</string>
@@ -311,7 +306,6 @@
   <string name="invalid_gpg_id">Found .gpg-id, but it contains an invalid key ID, fingerprint or user ID</string>
   <string name="short_gpg_id">Found .gpg-id, but it contains a short hex ID, which is not supported</string>
   <string name="invalid_filename_text">File name must not contain \'/\', set directory above</string>
-  <string name="directory_hint">Directory</string>
 
   <!-- GitException messages -->
   <string name="git_unknown_error">Unknown error</string>
@@ -360,11 +354,9 @@
   <string name="clear_saved_host_key_success">Successfully cleared saved host key!</string>
   <string name="otp_import_qr_code">Scan QR code</string>
   <string name="otp_import_from_file">Choose an image</string>
-  <string name="otp_import_manual_entry">Enter manually</string>
   <string name="otp_import_manual_hint_secret">Secret</string>
   <string name="otp_import_manual_hint_account">Account</string>
   <string name="place_shortcut_on_home_screen">Place shortcut on home screen</string>
-  <string name="password_list_fab_content_description">Create new password or folder</string>
   <string name="pgp_key_import_failed">Failed to import PGP key</string>
   <string name="pgp_key_import_failed_replace_message">An existing key with this ID was found, do you want to replace it?</string>
   <string name="pgp_key_import_succeeded">Successfully imported PGP key</string>

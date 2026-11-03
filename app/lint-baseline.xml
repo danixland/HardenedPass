@@ -36,29 +36,7 @@
         errorLine2="                ~~~~~~~~~~~~~~">
         <location
             file="src/main/java/app/passwordstore/util/git/sshj/SshKey.kt"
-            line="238"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="RawDispatchersUse"
-        message="Use SlackDispatchers."
-        errorLine1="    withContext(Dispatchers.IO) {"
-        errorLine2="                ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/util/git/sshj/SshKey.kt"
-            line="247"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="RawDispatchersUse"
-        message="Use SlackDispatchers."
-        errorLine1="    withContext(Dispatchers.IO) {"
-        errorLine2="                ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/util/git/sshj/SshKey.kt"
-            line="259"
+            line="249"
             column="17"/>
     </issue>
 
@@ -195,28 +173,6 @@
             file="src/main/res/layout/oreo_autofill_filter_row.xml"
             line="43"
             column="4"/>
-    </issue>
-
-    <issue
-        id="SetTextI18n"
-        message="Number formatting does not take into account locale settings. Consider using `String.format` instead."
-        errorLine1="    binding.passwordLengthText.setText(prefs.getInt(DICEWARE_LENGTH, 5).toString())"
-        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/ui/dialogs/DicewarePasswordGeneratorDialogFragment.kt"
-            line="46"
-            column="40"/>
-    </issue>
-
-    <issue
-        id="SetTextI18n"
-        message="Number formatting does not take into account locale settings. Consider using `String.format` instead."
-        errorLine1="    binding.lengthNumber.setText(prefs.getInt(PreferenceKeys.LENGTH, 20).toString())"
-        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/ui/dialogs/PasswordGeneratorDialogFragment.kt"
-            line="54"
-            column="34"/>
     </issue>
 
 </issues>

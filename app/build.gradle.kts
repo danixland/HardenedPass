@@ -73,7 +73,6 @@ dependencies {
   implementation(libs.androidx.preference)
   implementation(libs.androidx.recyclerview)
   implementation(libs.androidx.recyclerviewSelection)
-  implementation(libs.androidx.swiperefreshlayout)
   implementation(libs.compose.ui.tooling)
   implementation(libs.dagger.hilt.android)
 
@@ -86,7 +85,6 @@ dependencies {
   implementation(libs.aps.zxingAndroidEmbedded)
 
   implementation(libs.thirdparty.fastscroll)
-  implementation(libs.thirdparty.flowbinding.android)
   implementation(libs.thirdparty.jgit) {
     exclude(group = "org.apache.httpcomponents", module = "httpclient")
   }

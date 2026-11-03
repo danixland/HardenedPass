@@ -95,18 +95,13 @@ fun FragmentActivity.isPermissionGranted(permission: String): Boolean {
   return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 }
 
-/**
- * Show a [Snackbar] in a [FragmentActivity] and correctly anchor it to a
- * [com.google.android.material.floatingactionbutton.FloatingActionButton] if one exists in the
- * [view]
- */
+/** Show a [Snackbar] in a [FragmentActivity]. */
 fun FragmentActivity.snackbar(
   view: View = findViewById(android.R.id.content),
   message: String,
   length: Int = Snackbar.LENGTH_SHORT,
 ): Snackbar {
   val snackbar = Snackbar.make(view, message, length)
-  snackbar.anchorView = findViewById(R.id.fab)
   snackbar.show()
   return snackbar
 }

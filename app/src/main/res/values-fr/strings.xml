@@ -38,7 +38,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Copié dans le presse-papiers</string>
   <string name="file_toast_text">Veuillez fournir un nom de fichier</string>
-  <string name="path_toast_text">Veuillez fournir un chemin d\'accès au fichier</string>
   <string name="empty_toast_text">Vous ne pouvez pas utiliser un mot de passe vide ou des données supplémentaires vide</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Une erreur c\'est produite lors d\'une opération Git</string>
@@ -62,7 +61,6 @@
   <string name="crypto_name_hint">Nom</string>
   <string name="crypto_pass_label">Mot de passe</string>
   <string name="crypto_extra_label">Extra</string>
-  <string name="crypto_encrypt_username_label">Chiffrer le nom d\'utilisateur</string>
   <string name="crypto_select">Sélectionner</string>
   <string name="crypto_save">Sauvegarder</string>
   <string name="crypto_save_and_copy">Enregistrer et copier</string>
@@ -113,7 +111,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Générer un mot de passe</string>
   <string name="pwgen_generate">Générer</string>
-  <string name="pwgen_include">Inclure</string>
   <string name="pwgen_length">Longueur</string>
   <string name="pwgen_numerals">Chiffres</string>
   <string name="pwgen_symbols">Symboles</string>
@@ -161,7 +158,6 @@
   <string name="git_log">Afficher l\'historique des commits</string>
   <string name="show_password_pref_title">Montrer le mot de passe</string>
   <string name="show_password_pref_summary">Contrôle la visibilité des mots de passe une fois déchifrées, ceci n\'empêche pas de copier le mot de passe</string>
-  <string name="pwd_generate_button">Générer</string>
   <string name="send_plaintext_password_to">Envoyer le mot de passe en clair via…</string>
   <string name="app_icon_hint">Icône de l\'application</string>
   <!-- Oreo Autofill -->
@@ -195,7 +191,6 @@
   <string name="oreo_autofill_enable_dialog_installed_browsers">Prise en charge du remplissage automatique avec les navigateurs installés:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Impossible d\'ouvrir la clef ssh, merci de vérifier que le ficher existe</string>
-  <string name="new_password_title">Nouveau mot de passe</string>
   <string name="clear_saved_passphrase_ssh">Effacer le mot de passe enregistrée pour la clé SSH locale</string>
   <string name="clear_saved_passphrase_https">Effacer le mot de passe HTTPS enregistré</string>
   <string name="git_operation_remember_passphrase">Se rappeler de la phrase secrète dans la configuration de l\'application (peu sûr)</string>
@@ -261,7 +256,6 @@
   <string name="otp_import_failure_generic">Impossible d\'importer la configuration TOTP</string>
   <string name="exporting_passwords">Exportation des mots de passe…</string>
   <string name="invalid_filename_text">Le nom du fichier ne doit pas contenir \'/\', définir le répertoire parent</string>
-  <string name="directory_hint">Dossier</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Erreur inconnue</string>
   <string name="git_pull_rebase_fail_error">Tirer a échoué, vous êtes dans un \'head\' détaché. En utilisant \"settings &gt; git utils\", enregistrez vos modifications sur le dépôt distant dans une nouvelle branche et résolvez le conflit sur votre ordinateur.</string>
@@ -300,10 +294,8 @@
   <string name="clear_saved_host_key_success">La clé d\'hôte a été effacée avec succès!</string>
   <string name="otp_import_qr_code">Scanner le code QR</string>
   <string name="otp_import_from_file">Choisissez une image</string>
-  <string name="otp_import_manual_entry">Saisir manuellement</string>
   <string name="otp_import_manual_hint_secret">Secret</string>
   <string name="otp_import_manual_hint_account">Compte</string>
-  <string name="password_list_fab_content_description">Créer un nouveau mot de passe ou dossier</string>
   <string name="pgp_key_import_failed">Impossible d\'importer la clé PGP</string>
   <string name="pgp_key_import_succeeded">Clé PGP importée avec succès</string>
   <string name="pgp_key_import_succeeded_message">La clé d\'identification de la clé importée est donné ci-dessous, veuillez la vérifier pour qu\'elle soit correcte :\n%1$s</string>

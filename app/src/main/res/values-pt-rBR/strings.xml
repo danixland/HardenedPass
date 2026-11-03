@@ -39,7 +39,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Copiado para a área de transferência</string>
   <string name="file_toast_text">Por favor, informe um nome de arquivo</string>
-  <string name="path_toast_text">Por favor, forneça o caminho do arquivo</string>
   <string name="empty_toast_text">Você não pode usar uma senha vazia ou conteúdo extra vazio</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Ocorreu um erro durante uma operação do Git</string>
@@ -63,7 +62,6 @@
   <string name="crypto_name_hint">Nome</string>
   <string name="crypto_pass_label">Senha</string>
   <string name="crypto_extra_label">Conteúdo extra</string>
-  <string name="crypto_encrypt_username_label">Criptografar nome de usuário</string>
   <string name="crypto_select">Selecionar</string>
   <string name="crypto_save">Salvar</string>
   <string name="crypto_save_and_copy">Salvar e Copiar</string>
@@ -125,7 +123,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Gerar Senha</string>
   <string name="pwgen_generate">Gerar</string>
-  <string name="pwgen_include">Incluir</string>
   <string name="pwgen_length">Tamanho</string>
   <string name="pwgen_numerals">Numerais</string>
   <string name="pwgen_symbols">Símbolos</string>
@@ -173,7 +170,6 @@
   <string name="git_log">Mostrar log de commit</string>
   <string name="show_password_pref_title">Mostrar a senha</string>
   <string name="show_password_pref_summary">Controle a visibilidade das senhas quando descriptografadas. Isso não desativa a cópia para a área de transferência.</string>
-  <string name="pwd_generate_button">Gerar</string>
   <string name="send_plaintext_password_to">Enviar senha como texto simples usando…</string>
   <string name="app_icon_hint">Ícone do aplicativo</string>
   <!-- Oreo Autofill -->
@@ -207,7 +203,6 @@
   <string name="oreo_autofill_enable_dialog_installed_browsers">Suporte ao preenchimento automático com navegadores instalados:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Não foi possível abrir a chave privada ssh, por favor verifique se o arquivo existe</string>
-  <string name="new_password_title">Nova senha</string>
   <string name="clear_saved_passphrase_ssh">Limpar a frase secreta salva para chave SSH local</string>
   <string name="clear_saved_passphrase_https">Limpar senha HTTPS salva</string>
   <string name="git_operation_remember_passphrase">Lembrar senha da chave</string>
@@ -276,7 +271,6 @@
   <string name="invalid_gpg_id">Encontrado .gpg-id, mas contém um ID de chave, fingerprint ou ID de usuário inválidos</string>
   <string name="short_gpg_id">Encontrado .gpg-id, mas contém uma ID hexadecimal curta, que não é suportada</string>
   <string name="invalid_filename_text">Nome do arquivo não deve conter \'/\', defina o diretório acima</string>
-  <string name="directory_hint">Diretório</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Erro desconhecido</string>
   <string name="git_pull_rebase_fail_error">O pull falhou, você está em uma Head avulsa. Usando \"configurações &gt; utils\" do git, salve suas alterações no remoto em uma nova branch e resolva o conflito no seu computador.</string>
@@ -319,11 +313,9 @@
   <string name="clear_saved_host_key_success">Chave de host limpa com sucesso!</string>
   <string name="otp_import_qr_code">Escanear QR code</string>
   <string name="otp_import_from_file">Selecione uma imagem</string>
-  <string name="otp_import_manual_entry">Inserir manualmente</string>
   <string name="otp_import_manual_hint_secret">Segredo</string>
   <string name="otp_import_manual_hint_account">Conta</string>
   <string name="place_shortcut_on_home_screen">Criar atalho na tela inicial</string>
-  <string name="password_list_fab_content_description">Criar nova senha ou pasta</string>
   <string name="pgp_key_import_failed">Falha ao importar a chave PGP</string>
   <string name="pgp_key_import_failed_replace_message">Uma chave existente com esse ID foi encontrada, você deseja substituí-lo?</string>
   <string name="pgp_key_import_succeeded">Chave PGP importada com sucesso</string>

@@ -38,7 +38,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Copiato negli appunti</string>
   <string name="file_toast_text">Inserisci un nome per il file</string>
-  <string name="path_toast_text">Inserisci il percorso del file</string>
   <string name="empty_toast_text">Non puoi usare una password vuota o dei contenuti extra vuoti</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Si è verificato un errore durante un\'operazione Git</string>
@@ -62,7 +61,6 @@
   <string name="crypto_name_hint">Nome</string>
   <string name="crypto_pass_label">Password</string>
   <string name="crypto_extra_label">Contenuto extra</string>
-  <string name="crypto_encrypt_username_label">Crittografa nome utente</string>
   <string name="crypto_select">Seleziona</string>
   <string name="crypto_save">Salva</string>
   <string name="crypto_save_and_copy">Salva e Copia</string>
@@ -108,7 +106,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Genera Password</string>
   <string name="pwgen_generate">Genera</string>
-  <string name="pwgen_include">Includi</string>
   <string name="pwgen_length">Lunghezza</string>
   <string name="pwgen_numerals">Numeri</string>
   <string name="pwgen_symbols">Simboli</string>
@@ -156,7 +153,6 @@
   <string name="git_log">Mostra registro dei commit</string>
   <string name="show_password_pref_title">Mostra la password</string>
   <string name="show_password_pref_summary">Controlla la visibilità delle password una volta decrittografate. Questo non disabilita la copia negli appunti.</string>
-  <string name="pwd_generate_button">Genera</string>
   <string name="send_plaintext_password_to">Invia password come testo semplice usando…</string>
   <string name="app_icon_hint">Icona app</string>
   <!-- Oreo Autofill -->
@@ -190,7 +186,6 @@
   <string name="oreo_autofill_enable_dialog_installed_browsers">Supporto alla compilazione automatica nei browser installati:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Impossibile aprire la chiave privata SSH, controlla che il file esista</string>
-  <string name="new_password_title">Nuova password</string>
   <string name="clear_saved_passphrase_ssh">Cancella la frase segreta salvata per la chiave SSH locale</string>
   <string name="clear_saved_passphrase_https">Cancella la password HTTPS salvata</string>
   <string name="git_operation_remember_passphrase">Ricorda la frase segreta della chiave</string>
@@ -256,7 +251,6 @@
   <string name="otp_import_failure_generic">Impossibile importare la configurazione di TOTP</string>
   <string name="exporting_passwords">Esportazione delle password…</string>
   <string name="invalid_filename_text">Il nome del file non deve contenere \'/\', imposta la directory qui sopra</string>
-  <string name="directory_hint">Directory</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Errore sconosciuto</string>
   <string name="git_pull_rebase_fail_error">Pull non riuscito, sei in detached HEAD. Da \"Impostazioni > Utilità Git\" esegui il push delle modifiche sul remote in un nuovo branch e risolvi il conflitto dal computer.</string>
@@ -293,7 +287,6 @@
   <string name="clear_saved_host_key">Cancella la chiave host salvata</string>
   <string name="clear_saved_host_key_success">Chiave host cancellata con successo!</string>
   <string name="otp_import_from_file">Scegli un\'immagine</string>
-  <string name="password_list_fab_content_description">Crea nuova password o cartella</string>
   <string name="git_commit_gpg_id">Inizializza gli ID GPG in %1$s.</string>
   <string name="crypto_username_hint">Nome utente</string>
   <string name="otp_label_format">OTP (scade tra %ds)</string>
@@ -327,7 +320,6 @@
   <string name="git_scheme_disallowed_message">Il protocollo git di git-daemon non cifra il trasporto e non è adatto a operazioni sicure.</string>
   <string name="activity_proxy_label">Impostazioni proxy</string>
   <string name="otp_import_qr_code">Scansiona codice QR</string>
-  <string name="otp_import_manual_entry">Inserisci manualmente</string>
   <string name="otp_import_manual_hint_secret">Segreto</string>
   <string name="otp_import_manual_hint_account">Account</string>
   <string name="place_shortcut_on_home_screen">Aggiungi scorciatoia alla schermata Home</string>
