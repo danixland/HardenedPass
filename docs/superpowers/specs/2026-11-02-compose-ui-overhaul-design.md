@@ -51,6 +51,23 @@ the maintainer's phone stays on 0.1.4 until then.
   editor was opened. The folder picker is a dialog, shared with the list's move action. The
   autofill save flow (`AutofillSaveActivity`) hosts the same editor.
 
+### Setup
+
+- Without a store the app opens on a welcome screen: clone a remote repository or create a
+  local store; Settings is reachable from it.
+- The git server screen serves the clone and later edits: URL, authentication mode (SSH key or
+  password; none or password for HTTP(S)), the SSH key's state with "Manage", "Clear saved host
+  key". A failed clone stays on the screen, so URL or key can be fixed and the clone retried.
+- The SSH key screen shows the key's state and, for a key generated on the device, the public
+  key (copy, share); it imports a key file (refusing files sshj cannot read, such as OpenPGP
+  keys) and opens key generation (RSA, ECDSA, Ed25519, optionally behind the screen lock).
+- One PGP keys screen manages keys (import, delete), picks the key of a new local store (the
+  repository is created only then, its `.gpg-id` naming the key by its uppercase long key ID, as
+  `pass init <key ID>` does), and imports the key a store needs: after a clone that no
+  imported key can decrypt, and when an entry is opened with no key imported.
+- Screens outside the graph (Settings, autofill, git operations) and the entry view's key
+  import open these through a `MainActivity` setup intent until steps 6 and 7.
+
 ## Architecture
 
 ### Activities

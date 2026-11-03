@@ -199,7 +199,6 @@
   <string name="show_password_pref_title">Show the password</string>
   <string name="show_password_pref_summary">Control the visibility of the passwords once decrypted. This does not disable copying to clipboard.</string>
   <string name="send_plaintext_password_to">Send password as plaintext using…</string>
-  <string name="app_icon_hint">App icon</string>
 
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Select entry to fill into</string>
@@ -321,17 +320,13 @@
   <string name="git_break_out_of_detached_unneeded">The repository is not rebasing, no need to push to another branch</string>
 
   <!-- GPG key selection in folder creation -->
-  <string name="gpg_key_select_mandatory">Selecting a GPG key is necessary to proceed</string>
   <string name="folder_creation_err_file_exists">A file by that name already exists</string>
   <string name="folder_creation_err_folder_exists">A folder by that name already exists</string>
 
   <!-- Onboarding flow -->
-  <string name="let_s_go">Let\'s Go</string>
-  <string name="select_n_repository_type">Select \nRepository Type</string>
   <string name="select_repo_type_text">Select if you want to create a local repo or clone a remote repo.</string>
   <string name="clone_remote_repo">Clone Remote Repo</string>
   <string name="create_local_repo">Create Local Repo</string>
-  <string name="select_gpg_key_title">Select\nGPG Key</string>
   <string name="select_gpg_key_message">Select a GPG key to initialize your store with</string>
   <string name="gpg_key_select">Select key</string>
 

@@ -168,7 +168,6 @@
   <string name="show_password_pref_title">Pokaż hasło</string>
   <string name="show_password_pref_summary">Kontroluj widoczność haseł po odszyfrowaniu. To nie wyłącza kopiowania do schowka.</string>
   <string name="send_plaintext_password_to">Wyślij niezaszyfrowane hasło, używając…</string>
-  <string name="app_icon_hint">Ikona aplikacji</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Wybierz wpis do wypełnienia</string>
   <string name="oreo_autofill_strict_domain_search">Wyszukiwanie odporne na wyłudzenie</string>
@@ -278,12 +277,9 @@
   <string name="folder_creation_err_file_exists">Plik o tej nazwie już istnieje</string>
   <string name="folder_creation_err_folder_exists">Folder o tej nazwie już istnieje</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">Zaczynajmy</string>
-  <string name="select_n_repository_type">Wybierz \ntyp repozytorium</string>
   <string name="select_repo_type_text">Zaznacz, czy chcesz utworzyć lokalne repozytorium, czy sklonować zdalne repozytorium.</string>
   <string name="clone_remote_repo">Klonuj zdalne repozytorium</string>
   <string name="create_local_repo">Utwórz lokalne repozytorium</string>
-  <string name="select_gpg_key_title">Wybierz\nklucz GPG</string>
   <string name="select_gpg_key_message">Wybierz klucz GPG, którym zainicjować swoje repozytorium</string>
   <string name="gpg_key_select">Wybierz klucz</string>
   <!-- SSH port validation -->

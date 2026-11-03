@@ -167,7 +167,6 @@
   <string name="show_password_pref_title">비밀번호 표시하기</string>
   <string name="show_password_pref_summary">암호가 해독된 후 비밀번호의 공개 여부를 제어합니다. 그렇다고 해서 클립보드 복사가 비활성화되지는 않습니다.</string>
   <string name="send_plaintext_password_to">비밀번호를 일반 텍스트로 보내는 중…</string>
-  <string name="app_icon_hint">앱 아이콘</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">입력할 항목 선택</string>
   <string name="oreo_autofill_strict_domain_search">피싱 방지 검색</string>
@@ -281,16 +280,12 @@ username@example.com:…</string>
   <string name="git_break_out_of_detached_success">리베이스하는 동안 충돌이 발생했습니다. 로컬 %1$s 브랜치가 %2$s이라는 다른 브랜치로 푸시되었습니다.\n이 브랜치를 사용하여 컴퓨터에서 충돌을 해결하세요.</string>
   <string name="git_break_out_of_detached_unneeded">이 저장소는 리베이스가 아니므로 다른 브랜치로 푸시할 필요가 없습니다.</string>
   <!-- GPG key selection in folder creation -->
-  <string name="gpg_key_select_mandatory">계속하려면 GPG 키를 선택해야 합니다</string>
   <string name="folder_creation_err_file_exists">동일한 이름의 파일이 이미 있습니다</string>
   <string name="folder_creation_err_folder_exists">이 이름의 폴더가 이미 존재합니다</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">시작합니다!</string>
-  <string name="select_n_repository_type">저장소 유형 \n선택</string>
   <string name="select_repo_type_text">로컬 리포지토리를 만들 것인지, 원격 리포지토리를 복제할 것인지 선택합니다.</string>
   <string name="clone_remote_repo">원격 저장소 복제</string>
   <string name="create_local_repo">로컬 저장소 생성</string>
-  <string name="select_gpg_key_title">GPG 키\n선택</string>
   <string name="select_gpg_key_message">스토어를 초기화할 GPG 키를 선택합니다</string>
   <string name="gpg_key_select">키 선택</string>
   <!-- SSH port validation -->

@@ -154,7 +154,6 @@
   <string name="show_password_pref_title">Mostra la password</string>
   <string name="show_password_pref_summary">Controlla la visibilità delle password una volta decrittografate. Questo non disabilita la copia negli appunti.</string>
   <string name="send_plaintext_password_to">Invia password come testo semplice usando…</string>
-  <string name="app_icon_hint">Icona app</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Seleziona la voce da compilare</string>
   <string name="oreo_autofill_strict_domain_search">Ricerca resistente al phishing</string>
@@ -265,12 +264,9 @@
   <string name="folder_creation_err_file_exists">Un file con quel nome esiste già</string>
   <string name="folder_creation_err_folder_exists">Una cartella con quel nome esiste già</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">Andiamo</string>
-  <string name="select_n_repository_type">Seleziona \nTipo di repository</string>
   <string name="select_repo_type_text">Seleziona se vuoi creare un repo locale o clonarne uno remoto.</string>
   <string name="clone_remote_repo">Clona repo remoto</string>
   <string name="create_local_repo">Crea repo locale</string>
-  <string name="select_gpg_key_title">Seleziona\nChiave\nGPG</string>
   <string name="select_gpg_key_message">Seleziona una chiave GPG con cui inizializzare il tuo archivio</string>
   <string name="gpg_key_select">Seleziona chiave</string>
   <!-- SSH port validation -->
@@ -315,7 +311,6 @@
   <string name="invalid_gpg_id">Trovato .gpg-id, ma contiene un ID chiave, un\'impronta o un ID utente non valido</string>
   <string name="short_gpg_id">Trovato .gpg-id, ma contiene un ID esadecimale corto, che non è supportato</string>
   <string name="git_pull_merge_fail_error">Merge non riuscito, il repository è in conflitto.</string>
-  <string name="gpg_key_select_mandatory">Per proseguire devi selezionare una chiave GPG</string>
   <string name="git_scheme_disallowed_title">Il protocollo git:// è sconsigliato</string>
   <string name="git_scheme_disallowed_message">Il protocollo git di git-daemon non cifra il trasporto e non è adatto a operazioni sicure.</string>
   <string name="activity_proxy_label">Impostazioni proxy</string>

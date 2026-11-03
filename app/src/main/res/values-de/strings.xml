@@ -171,7 +171,6 @@
   <string name="show_password_pref_title">Zeige das Passwort.</string>
   <string name="show_password_pref_summary">Soll das entschlüsselte Passwort sichtbar sein? Dies deaktiviert nicht das Kopieren.</string>
   <string name="send_plaintext_password_to">Passwort unverschlüsselt senden an…</string>
-  <string name="app_icon_hint">App-Icon</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Eintrag zum Ausfüllen auswählen</string>
   <string name="oreo_autofill_strict_domain_search">Phishing-resistente Suche</string>
@@ -283,16 +282,12 @@
   <string name="git_break_out_of_detached_success">Es gab einen Konflikt während des Rebase-Prozesses. Ihr lokaler Branch %1$s wurde auf einen anderen Branch namens %2$s gepusht.\nNutzen Sie diesen Branch, um den Konflikt auf dem Server zu beheben</string>
   <string name="git_break_out_of_detached_unneeded">Das Repository befindet sich nicht im Rebase-Prozess; es ist nicht nötig, den Zustand auf einen weiteren Branch zu pushen.</string>
   <!-- GPG key selection in folder creation -->
-  <string name="gpg_key_select_mandatory">Um fortzufahren, muss ein PGP-Schlüssel ausgewählt werden.</string>
   <string name="folder_creation_err_file_exists">Dateiname bereits vergeben</string>
   <string name="folder_creation_err_folder_exists">Ein Ordner mit diesem Namen existiert bereits.</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">Los geht\'s</string>
-  <string name="select_n_repository_type">Wählen Sie einen \nRepository-Typ.</string>
   <string name="select_repo_type_text">Wählen Sie aus, ob Sie ein lokales Repository anlegen, oder ein Remote-Repository klonen möchten.</string>
   <string name="clone_remote_repo">Remote-Repository klonen</string>
   <string name="create_local_repo">Lokales Repository anlegen</string>
-  <string name="select_gpg_key_title">Wählen Sie einen\nPGP-Schlüssel.</string>
   <string name="select_gpg_key_message">Wählen einen PGP-Schlüssel, mit dem der Store initialisiert werden soll.</string>
   <string name="gpg_key_select">Schlüssel auswählen</string>
   <!-- SSH port validation -->

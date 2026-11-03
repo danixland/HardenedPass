@@ -172,7 +172,6 @@
   <string name="show_password_pref_title">显示密码</string>
   <string name="show_password_pref_summary">控制密码解密后的可见性,这不会禁用复制到剪贴板</string>
   <string name="send_plaintext_password_to">使用明文发送密码…</string>
-  <string name="app_icon_hint">应用图标</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">选择要填写的条目</string>
   <string name="oreo_autofill_strict_domain_search">防钓鱼搜索</string>
@@ -285,18 +284,12 @@ personal.com</string>
 使用此分支解决计算机上的冲突</string>
   <string name="git_break_out_of_detached_unneeded">存储库没有变更,无需推送到另一个分支</string>
   <!-- GPG key selection in folder creation -->
-  <string name="gpg_key_select_mandatory">选择一个 GPG 密钥才能继续</string>
   <string name="folder_creation_err_file_exists">该名称的文件已存在</string>
   <string name="folder_creation_err_folder_exists">该名称的文件夹已存在</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">开始配置</string>
-  <string name="select_n_repository_type">选择仓库模式</string>
   <string name="select_repo_type_text">你是要同步仓库还是现在创建一个仓库呢?</string>
   <string name="clone_remote_repo">同步远程仓库</string>
   <string name="create_local_repo">创建本地仓库</string>
-  <string name="select_gpg_key_title">选择
-GPG
-密钥</string>
   <string name="select_gpg_key_message">选择一个GPG密钥来初始化您的仓库</string>
   <string name="gpg_key_select">选择密钥</string>
   <!-- SSH port validation -->

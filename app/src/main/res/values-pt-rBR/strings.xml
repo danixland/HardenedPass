@@ -171,7 +171,6 @@
   <string name="show_password_pref_title">Mostrar a senha</string>
   <string name="show_password_pref_summary">Controle a visibilidade das senhas quando descriptografadas. Isso não desativa a cópia para a área de transferência.</string>
   <string name="send_plaintext_password_to">Enviar senha como texto simples usando…</string>
-  <string name="app_icon_hint">Ícone do aplicativo</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Selecione a entrada para preencher</string>
   <string name="oreo_autofill_strict_domain_search">Busca resistente a phishing</string>
@@ -283,16 +282,12 @@
   <string name="git_break_out_of_detached_success">Houve um conflito ao executar o rebase. Houve um push de branch %1$s local para outra branch chamada %2$s\n Use esta branch para resolver o conflito no seu computador</string>
   <string name="git_break_out_of_detached_unneeded">O repositório não está sendo rebased, não há necessidade de fazer push para outro branch</string>
   <!-- GPG key selection in folder creation -->
-  <string name="gpg_key_select_mandatory">A seleção de uma chave GPG é necessária para prosseguir</string>
   <string name="folder_creation_err_file_exists">Já existe um arquivo com esse nome</string>
   <string name="folder_creation_err_folder_exists">Já existe uma pasta com esse nome</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">Vamos lá</string>
-  <string name="select_n_repository_type">Selecione \nTipo de Repositório</string>
   <string name="select_repo_type_text">Selecione se você quer criar um repositório local ou clonar um repositório remoto.</string>
   <string name="clone_remote_repo">Clonar repositório remoto</string>
   <string name="create_local_repo">Criar repositório local</string>
-  <string name="select_gpg_key_title">Selecione\nChave GPG</string>
   <string name="select_gpg_key_message">Selecione uma chave GPG para inicializar o armazenamento com</string>
   <string name="gpg_key_select">Selecione a chave</string>
   <!-- SSH port validation -->
