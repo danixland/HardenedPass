@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import javax.inject.Inject
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import logcat.LogPriority.ERROR
 import logcat.asLog
@@ -216,7 +217,9 @@ constructor(
         encrypted.error.message.orEmpty(),
       )
     }
-    return withContext(dispatcherProvider.io()) {
+    // NonCancellable: a recreated activity must not stop between writing the target and deleting
+    // the original, which would leave a rename that cannot be retried ("duplicate").
+    return withContext(NonCancellable + dispatcherProvider.io()) {
       try {
         writeEntry(target, out.toByteArray())
       } catch (e: IOException) {

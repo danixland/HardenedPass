@@ -361,5 +361,6 @@
 
   <!-- Compose folder picker -->
   <string name="folder_picker_title">Scegli una cartella</string>
+  <string name="folder_creation_err_failed">Impossibile creare la cartella</string>
   <string name="folder_picker_new">Nuova cartella</string>
 </resources>

@@ -77,6 +77,10 @@ class EditorModelTest {
       entryFile(root, EditorForm(name = " mail ", dir = "work")),
     )
     assertEquals(File(root, "mail.gpg"), entryFile(root, EditorForm(name = "mail")))
+    assertEquals(
+      File(root, "b/mail.gpg"),
+      entryFile(root, EditorForm(name = "mail", dir = "./a/../b")),
+    )
   }
 
   @Test

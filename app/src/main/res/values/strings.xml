@@ -395,5 +395,6 @@
 
   <!-- Compose folder picker -->
   <string name="folder_picker_title">Choose a folder</string>
+  <string name="folder_creation_err_failed">Could not create the folder</string>
   <string name="folder_picker_new">New folder</string>
 </resources>

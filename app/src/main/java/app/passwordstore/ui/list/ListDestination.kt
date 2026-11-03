@@ -5,6 +5,7 @@
 
 package app.passwordstore.ui.list
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import app.passwordstore.ui.compose.theme.SpacingMedium
 import app.passwordstore.ui.git.base.BaseGitActivity.GitOp
 import app.passwordstore.ui.git.config.GitServerConfigActivity
 import app.passwordstore.ui.main.MainActivity
+import app.passwordstore.util.extensions.isInsideRepository
 import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.settings.AuthMode
 import app.passwordstore.util.settings.PreferenceKeys
@@ -237,12 +239,24 @@ fun ListDestination(
           start = path,
           onPick = { target ->
             // One move per pick: a double tap on Select must not move twice.
-            if (dialog == ListDialog.Move) {
-              val files = selected.map(::File)
+            val destination = File(root, target)
+            val files = selected.map(::File)
+            val canonical = destination.canonicalFile
+            if (
+              !destination.isInsideRepository() ||
+                files.any { it.isDirectory && canonical.startsWith(it.canonicalFile) }
+            ) {
+              Toast.makeText(
+                  activity,
+                  R.string.message_error_destination_outside_repo,
+                  Toast.LENGTH_LONG,
+                )
+                .show()
+            } else if (dialog == ListDialog.Move) {
               dialog = ListDialog.None
               selected = emptyList()
               activity.lifecycleScope.launch {
-                activity.moveItems(files, File(root, target))
+                activity.moveItems(files, destination)
                 refresh()
               }
             }

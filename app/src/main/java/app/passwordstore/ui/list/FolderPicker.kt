@@ -5,6 +5,7 @@
 
 package app.passwordstore.ui.list
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -79,9 +80,12 @@ fun FolderPicker(
       validate = { folderNameError(it, File(dir, it)) },
       onConfirm = { name ->
         val folder = File(dir, name).canonicalFile
-        folder.mkdirs()
         naming = false
-        path = folder.relativeTo(root.canonicalFile).path
+        if (folder.mkdirs() || folder.isDirectory) {
+          path = folder.relativeTo(root.canonicalFile).path
+        } else {
+          Toast.makeText(context, R.string.folder_creation_err_failed, Toast.LENGTH_LONG).show()
+        }
       },
       onDismiss = { naming = false },
     )

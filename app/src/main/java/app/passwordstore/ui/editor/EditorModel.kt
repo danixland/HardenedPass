@@ -18,6 +18,7 @@ import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.mapError
 import com.github.michaelbull.result.runCatching
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URLEncoder
 import java.nio.file.Files
@@ -64,7 +65,7 @@ fun formError(form: EditorForm): Int? =
 
 /** Where [form] is saved in the store at [root]. */
 fun entryFile(root: File, form: EditorForm): File =
-  File(File(root, form.dir), "${form.name.trim()}.gpg")
+  File(File(root, form.dir), "${form.name.trim()}.gpg").toPath().normalize().toFile()
 
 /** True when saving to [target] would replace a file other than the [original] being edited. */
 fun overwrites(target: File, original: File?): Boolean =
@@ -79,7 +80,10 @@ fun writeEntry(target: File, bytes: ByteArray) {
   dir.mkdirs()
   val temp = File(dir, ".${target.name}.tmp")
   try {
-    temp.writeBytes(bytes)
+    FileOutputStream(temp).use {
+      it.write(bytes)
+      it.fd.sync()
+    }
     Files.move(
       temp.toPath(),
       target.toPath(),
