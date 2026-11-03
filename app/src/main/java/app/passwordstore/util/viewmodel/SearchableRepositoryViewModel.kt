@@ -71,12 +71,7 @@ private fun PasswordItem.Companion.makeComparator(
   directoryStructure: DirectoryStructure,
 ): Comparator<PasswordItem> {
   return when (typeSortOrder) {
-      PasswordSortOrder.FOLDER_FIRST -> compareBy { it.type }
-      // In order to let INDEPENDENT not distinguish between items based on their type, we
-      // simply
-      // declare them all equal at this stage.
-      PasswordSortOrder.INDEPENDENT -> Comparator { _, _ -> 0 }
-      PasswordSortOrder.FILE_FIRST -> compareByDescending { it.type }
+      PasswordSortOrder.FOLDER_FIRST -> compareBy<PasswordItem> { it.type }
       PasswordSortOrder.RECENTLY_USED -> PasswordSortOrder.RECENTLY_USED.comparator
     }
     .then(

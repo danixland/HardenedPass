@@ -96,8 +96,6 @@
   <string name="pref_recursive_filter_summary">Encontrar senhas do diretório corrente recursivamente.</string>
   <string name="pref_sort_order_title">Ordenação da Senha</string>
   <string name="pref_folder_first_sort_order">Pastas primeiro</string>
-  <string name="pref_file_first_sort_order">Arquivos primeiro</string>
-  <string name="pref_type_independent_sort_order">Tipo independente</string>
   <string name="pref_recently_used_sort_order">Usado recentemente</string>
   <string name="pref_category_autofill_title">Preenchimento Automático</string>
   <string name="pref_autofill_enable_title">Ativar preenchimento automático</string>

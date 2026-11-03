@@ -96,8 +96,6 @@
   <string name="pref_recursive_filter_summary">Findet Passwörter auch in Unterordnern.</string>
   <string name="pref_sort_order_title">Passwortsortierung</string>
   <string name="pref_folder_first_sort_order">Ordner zuerst</string>
-  <string name="pref_file_first_sort_order">Dateien zuerst</string>
-  <string name="pref_type_independent_sort_order">typunabhängig</string>
   <string name="pref_recently_used_sort_order">Zuletzt verwendet</string>
   <string name="pref_category_autofill_title">Automatisch ausfüllen</string>
   <string name="pref_autofill_enable_title">Autofill aktivieren</string>

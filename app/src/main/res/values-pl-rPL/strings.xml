@@ -94,8 +94,6 @@
   <string name="pref_directory_structure">Organizacja plików haseł</string>
   <string name="pref_sort_order_title">Kolejność sortowania haseł</string>
   <string name="pref_folder_first_sort_order">Najpierw foldery</string>
-  <string name="pref_file_first_sort_order">Najpierw pliki</string>
-  <string name="pref_type_independent_sort_order">Niezależnie od typu</string>
   <string name="pref_recently_used_sort_order">Ostatnio używane</string>
   <string name="pref_category_autofill_title">Autouzupełnianie</string>
   <string name="pref_autofill_enable_title">Włącz autouzupełnianie</string>

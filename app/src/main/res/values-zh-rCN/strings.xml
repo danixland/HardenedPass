@@ -95,8 +95,6 @@
   <string name="pref_recursive_filter_summary">递归式寻找当前目录的密码</string>
   <string name="pref_sort_order_title">密码排序顺序</string>
   <string name="pref_folder_first_sort_order">目录优先</string>
-  <string name="pref_file_first_sort_order">文件优先</string>
-  <string name="pref_type_independent_sort_order">类型无关</string>
   <string name="pref_recently_used_sort_order">最近使用</string>
   <string name="pref_category_autofill_title">自动填充</string>
   <string name="pref_autofill_enable_title">启用自动填充</string>

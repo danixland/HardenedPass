@@ -95,8 +95,6 @@
   <string name="pref_directory_structure">암허 파일 정리</string>
   <string name="pref_sort_order_title">암호 정렬 순서</string>
   <string name="pref_folder_first_sort_order">폴더 우선</string>
-  <string name="pref_file_first_sort_order">파일 우선</string>
-  <string name="pref_type_independent_sort_order">타입순</string>
   <string name="pref_recently_used_sort_order">최신순</string>
   <string name="pref_category_autofill_title">자동완성</string>
   <string name="pref_autofill_enable_title">자동완성 활성화</string>

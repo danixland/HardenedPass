@@ -97,8 +97,6 @@
   <string name="pref_directory_structure">Organización dos contrasinais</string>
   <string name="pref_sort_order_title">Orde para mostrar contrasinais</string>
   <string name="pref_folder_first_sort_order">Primeiro cartafoles</string>
-  <string name="pref_file_first_sort_order">Primeiro ficheiros</string>
-  <string name="pref_type_independent_sort_order">Independentemente do tipo</string>
   <string name="pref_recently_used_sort_order">Usadas recentemente</string>
   <string name="pref_category_autofill_title">Completado automático</string>
   <string name="pref_autofill_enable_title">Activar completado automático</string>

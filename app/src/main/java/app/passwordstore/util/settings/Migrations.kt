@@ -32,6 +32,8 @@ fun runMigrations(filesDirPath: String, sharedPrefs: SharedPreferences, gitSetti
   migrateToDiceware(sharedPrefs)
   removeExternalStorageProperties(sharedPrefs)
   removeCurrentBranchValue(sharedPrefs)
+  migrateRemovedSortOrders(sharedPrefs)
+  removeOpenKeystoreKeyId(sharedPrefs)
 }
 
 /**
@@ -193,4 +195,21 @@ private fun removeExternalStorageProperties(prefs: SharedPreferences) {
       remove(PreferenceKeys.GIT_EXTERNAL_REPO)
     }
   }
+}
+
+/**
+ * "Files first" and "type independent" were removed with the Compose list, which shows folders and
+ * entries in separate groups: a stored one becomes folders first, the list's default.
+ */
+private fun migrateRemovedSortOrders(sharedPrefs: SharedPreferences) {
+  val stored = sharedPrefs.getString(PreferenceKeys.SORT_ORDER) ?: return
+  if (stored != "FILE_FIRST" && stored != "INDEPENDENT") return
+  logcat(TAG, INFO) { "Replacing the removed sort order $stored" }
+  sharedPrefs.edit { putString(PreferenceKeys.SORT_ORDER, PasswordSortOrder.FOLDER_FIRST.name) }
+}
+
+/** OpenKeychain SSH support is gone and nothing reads the remembered key ID any more. */
+private fun removeOpenKeystoreKeyId(sharedPrefs: SharedPreferences) {
+  if (!sharedPrefs.contains(PreferenceKeys.SSH_OPENKEYSTORE_KEYID)) return
+  sharedPrefs.edit { remove(PreferenceKeys.SSH_OPENKEYSTORE_KEYID) }
 }

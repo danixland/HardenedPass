@@ -94,8 +94,6 @@
   <string name="pref_recursive_filter_summary">Cherche le mot de passe dans tous les sous-répertoires du répertoire actuel.</string>
   <string name="pref_sort_order_title">Ordre de tri des mots de passe</string>
   <string name="pref_folder_first_sort_order">Dossiers en premier</string>
-  <string name="pref_file_first_sort_order">Fichiers en premier</string>
-  <string name="pref_type_independent_sort_order">Indifférent au type d\'entrée</string>
   <string name="pref_recently_used_sort_order">Récemment utilisé</string>
   <string name="pref_category_autofill_title">Saisie automatique</string>
   <string name="pref_autofill_enable_title">Saisie automatique</string>
