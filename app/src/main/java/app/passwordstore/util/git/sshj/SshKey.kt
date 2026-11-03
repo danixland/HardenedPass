@@ -46,7 +46,9 @@ import net.schmizz.sshj.SSHClient
 import net.schmizz.sshj.common.Buffer
 import net.schmizz.sshj.common.Ed25519KeyFactory
 import net.schmizz.sshj.common.KeyType
+import net.schmizz.sshj.userauth.keyprovider.KeyFormat
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider
+import net.schmizz.sshj.userauth.keyprovider.KeyProviderUtil
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters
 
 private const val PROVIDER_ANDROID_KEY_STORE = "AndroidKeyStore"
@@ -81,6 +83,25 @@ internal fun ed25519KeyPair(seed: ByteArray) =
     Ed25519KeyFactory.getPublicKey(Ed25519PrivateKeyParameters(seed).generatePublicKey().encoded),
     Ed25519KeyFactory.getPrivateKey(seed),
   )
+
+/**
+ * True when [lines] look like an SSH private key sshj can load: private key markers on the first
+ * and last line, in a format sshj recognizes. An OpenPGP private key block has the same markers and
+ * is refused by the format check.
+ */
+internal fun isSshPrivateKey(lines: List<String>): Boolean {
+  if (
+    lines.size < 2 ||
+      !Regex("BEGIN .* PRIVATE KEY").containsMatchIn(lines.first()) ||
+      !Regex("END .* PRIVATE KEY").containsMatchIn(lines.last())
+  )
+    return false
+  return try {
+    KeyProviderUtil.detectKeyFileFormat(lines.joinToString("\n"), false) != KeyFormat.Unknown
+  } catch (_: IOException) {
+    false
+  }
+}
 
 object SshKey {
 
@@ -198,9 +219,8 @@ object SshKey {
     val fileSize =
       context.contentResolver.query(uri, arrayOf(OpenableColumns.SIZE), null, null, null)?.use {
         cursor ->
-        // Cursor returns only a single row.
-        cursor.moveToFirst()
-        cursor.getInt(0)
+        // A single row; none when the provider cannot tell: the IOException below.
+        if (cursor.moveToFirst()) cursor.getInt(0) else null
       } ?: throw IOException(context.getString(R.string.ssh_key_does_not_exist))
 
     // We assume that an SSH key's ideal size is > 0 bytes && < 100 kilobytes.
@@ -214,13 +234,8 @@ object SshKey {
         ?: throw IOException(context.getString(R.string.ssh_key_does_not_exist))
     val lines = sshKeyInputStream.use { `is` -> `is`.bufferedReader().readLines() }
 
-    // The file must have more than 2 lines, and the first and last line must have private key
-    // markers.
-    if (
-      lines.size < 2 ||
-        !Regex("BEGIN .* PRIVATE KEY").containsMatchIn(lines.first()) ||
-        !Regex("END .* PRIVATE KEY").containsMatchIn(lines.last())
-    )
+    // Private key markers and a format sshj can read; the current key stays when this fails.
+    if (!isSshPrivateKey(lines))
       throw IllegalArgumentException(
         context.getString(R.string.ssh_key_import_error_not_an_ssh_key_message)
       )
