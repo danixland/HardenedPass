@@ -12,9 +12,7 @@ import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.main.MainActivity
 import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.auth.BiometricAuthenticator
-import app.passwordstore.util.auth.BiometricAuthenticator.Result.CanceledBySystem
 import app.passwordstore.util.auth.BiometricAuthenticator.Result.CanceledByUser
-import app.passwordstore.util.auth.BiometricAuthenticator.Result.Failure
 import app.passwordstore.util.auth.BiometricAuthenticator.Result.Retry
 import app.passwordstore.util.auth.BiometricAuthenticator.Result.Success
 import app.passwordstore.util.coroutines.DispatcherProvider
@@ -163,7 +161,9 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
                     callingActivity,
                     R.string.biometric_prompt_title_ssh_auth,
                   ) { result ->
-                    if (result !is Failure && result !is Retry) cont.resume(result)
+                    // Retry: a failed attempt while the prompt stays open. Every other result
+                    // closes it, so waiting for more would leave the operation hanging.
+                    if (result !is Retry) cont.resume(result)
                   }
                 }
               }
@@ -173,10 +173,6 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
               }
               is CanceledByUser -> {
                 return Err(SSHException(DisconnectReason.AUTH_CANCELLED_BY_USER))
-              }
-              is Failure,
-              is CanceledBySystem -> {
-                throw IllegalStateException("Biometric authentication failures should be ignored")
               }
               else -> {
                 // There is a chance we succeed if the user recently confirmed
