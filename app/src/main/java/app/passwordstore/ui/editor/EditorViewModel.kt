@@ -87,6 +87,19 @@ constructor(
   var saving by mutableStateOf(false)
     private set
 
+  /**
+   * The successful save, kept until the editor has committed it and left ([left]), so an editor
+   * recreated in the middle finishes the job. Memory only: it holds the plaintext form.
+   */
+  var saved by mutableStateOf<SaveResult.Saved?>(null)
+    private set
+
+  /** Whether [saved] is to be copied to the clipboard ("Save and copy"). */
+  var copyOnSave = false
+    private set
+
+  private var announced = false
+
   /** Whether [start] filled the form. */
   var started = false
     private set
@@ -175,28 +188,38 @@ constructor(
    * renamed or moved. Nothing is written (not even the folder) when [target] would replace another
    * entry or when encryption fails; a recipient whose key is missing fails it (see
    * CryptoRepository.encrypt). The caller checked [formError] and that [target] is inside the
-   * store. Returns null when a save already ran or is running.
+   * store. A success lands in [saved], with [copy] in [copyOnSave]. Returns null when a save
+   * already ran or is running.
    */
   suspend fun save(
     ids: List<PGPIdentifier>,
     target: File,
     original: File?,
     context: Context,
+    copy: Boolean,
   ): SaveResult? {
     if (saving) return null
     saving = true
-    var result: SaveResult? = null
+    copyOnSave = copy
     try {
-      result = write(ids, target, original, context.applicationContext)
+      return write(ids, target, original, context.applicationContext)
     } finally {
       // Stays set after a success (the editor is leaving); cleared on failure or cancellation.
-      if (result !is SaveResult.Saved) saving = false
+      if (saved == null) saving = false
     }
-    return result
+  }
+
+  /** True the first time only: the copy and notices of [saved] run once, across recreation. */
+  fun announce(): Boolean = !announced.also { announced = true }
+
+  /** The editor committed [saved] and left: nothing is left to finish. */
+  fun left() {
+    saved = null
   }
 
   override fun onCleared() {
     form = EditorForm()
+    saved = null
   }
 
   private suspend fun write(
@@ -235,7 +258,8 @@ constructor(
           stale = original
         }
       }
-      SaveResult.Saved(target, form, stale)
+      // Set here, inside NonCancellable: a written entry is never forgotten by a cancelled caller.
+      SaveResult.Saved(target, form, stale).also { saved = it }
     }
   }
 

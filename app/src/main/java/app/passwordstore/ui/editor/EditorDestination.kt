@@ -122,36 +122,41 @@ fun EditorDestination(
     // Recipients from the nearest .gpg-id, as pass does; null: an invalid ID, already reported.
     val ids = activity.getPGPIdentifiers(current.dir) ?: return
     activity.lifecycleScope.launch {
-      when (val result = viewModel.save(ids, target, original, activity)) {
-        null -> Unit
-        is SaveResult.Failed -> failure = activity.getString(result.message, result.arg)
-        is SaveResult.Saved -> {
-          if (copy) activity.copyPasswordToClipboard(result.form.password)
-          result.staleOriginal?.let {
-            activity.snackbar(
-              message =
-                activity.getString(
-                  R.string.password_creation_file_delete_fail_message,
-                  it.nameWithoutExtension,
-                ),
-              length = Snackbar.LENGTH_LONG,
-            )
-          }
-          // ponytail: commit failures are not shown, as for the list's move and delete; a theme
-          // or locale change in the middle of a save cancels before this commit, and the next
-          // commit picks the file up.
-          activity.commitChange(
+      val result = viewModel.save(ids, target, original, activity, copy)
+      if (result is SaveResult.Failed) failure = activity.getString(result.message, result.arg)
+    }
+  }
+
+  // Finishes a save: run again by an editor recreated in the middle (a theme or locale change
+  // cancels this effect), so the commit and onSaved always happen; the copy and notice only once.
+  val saved = viewModel.saved
+  LaunchedEffect(saved) {
+    if (saved == null) return@LaunchedEffect
+    if (viewModel.announce()) {
+      if (viewModel.copyOnSave) activity.copyPasswordToClipboard(saved.form.password)
+      saved.staleOriginal?.let {
+        activity.snackbar(
+          message =
             activity.getString(
-              if (original != null) R.string.git_commit_edit_text else R.string.git_commit_add_text,
-              target.relativeTo(root).path.removeSuffix(".gpg"),
-            )
-          )
-          keyboard?.hide()
-          focusManager.clearFocus()
-          onSaved(result)
-        }
+              R.string.password_creation_file_delete_fail_message,
+              it.nameWithoutExtension,
+            ),
+          length = Snackbar.LENGTH_LONG,
+        )
       }
     }
+    // ponytail: commit failures are not shown, as for the list's move and delete. A commit cut
+    // short by recreation runs again; one that already went through finds nothing to commit.
+    activity.commitChange(
+      activity.getString(
+        if (original != null) R.string.git_commit_edit_text else R.string.git_commit_add_text,
+        saved.file.relativeTo(root).path.removeSuffix(".gpg"),
+      )
+    )
+    keyboard?.hide()
+    focusManager.clearFocus()
+    viewModel.left()
+    onSaved(saved)
   }
 
   BackHandler(onBack = ::close)
