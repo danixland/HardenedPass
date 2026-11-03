@@ -146,10 +146,13 @@
       android:exported="false"
       android:theme="@style/DialogLikeThemeM3"
       android:windowSoftInputMode="adjustNothing" />
+    <!-- ponytail: rotation must not cancel a save running in lifecycleScope, as in MainActivity. -->
     <activity
       android:name=".ui.autofill.AutofillSaveActivity"
+      android:configChanges="orientation|screenSize"
       android:exported="false"
-      android:theme="@style/NoBackgroundThemeM3" />
+      android:theme="@style/NoActionBarThemeM3"
+      android:windowSoftInputMode="adjustResize" />
     <activity
       android:name=".ui.autofill.AutofillPublisherChangedActivity"
       android:configChanges="orientation|keyboardHidden"
