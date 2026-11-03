@@ -22,10 +22,21 @@ import java.io.File
 @SuppressLint("CustomSplashScreen")
 class LaunchActivity : AppCompatActivity() {
 
+  private var prompted = false
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    if (!sharedPrefs.getBoolean(PreferenceKeys.BIOMETRIC_AUTH_2, false)) startTargetActivity(true)
+  }
+
+  // The prompt waits for window focus: Android 14's SystemUI dismisses a prompt shown while its
+  // activity is not yet on top (shown from onCreate), with ERROR_CANCELED, closing the app at once.
+  override fun onWindowFocusChanged(hasFocus: Boolean) {
+    super.onWindowFocusChanged(hasFocus)
+    if (!hasFocus || prompted || isFinishing) return
     val prefs = sharedPrefs
     if (prefs.getBoolean(PreferenceKeys.BIOMETRIC_AUTH_2, false)) {
+      prompted = true
       BiometricAuthenticator.authenticate(this) { result ->
         when (result) {
           is Result.Success -> {
@@ -43,8 +54,6 @@ class LaunchActivity : AppCompatActivity() {
           is Result.Retry -> {}
         }
       }
-    } else {
-      startTargetActivity(true)
     }
   }
 
