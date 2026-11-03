@@ -12,6 +12,7 @@ import com.hierynomus.sshj.transport.cipher.GcmCiphers
 import com.hierynomus.sshj.transport.kex.ExtInfoClientFactory
 import com.hierynomus.sshj.transport.mac.Macs
 import com.hierynomus.sshj.userauth.keyprovider.OpenSSHKeyV1KeyFile
+import java.security.Provider
 import java.security.Security
 import logcat.LogPriority.VERBOSE
 import logcat.logcat
@@ -32,6 +33,18 @@ import net.schmizz.sshj.userauth.keyprovider.PuTTYKeyFile
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.slf4j.Logger
 
+private object Ed25519KeyFactoryProvider :
+  Provider("HardenedPassEd25519", 1.0, "Ed25519 KeyFactory from Bouncy Castle") {
+  private fun readResolve(): Any = Ed25519KeyFactoryProvider
+
+  init {
+    put(
+      "KeyFactory.Ed25519",
+      "org.bouncycastle.jcajce.provider.asymmetric.edec.KeyFactorySpi\$Ed25519",
+    )
+  }
+}
+
 fun setUpBouncyCastleForSshj() {
   // Replace the Android BC provider with the Java BouncyCastle provider since the former does
   // not include all the required algorithms.
@@ -48,6 +61,11 @@ fun setUpBouncyCastleForSshj() {
     runCatching { Class.forName("sun.security.jca.Providers") }
     Security.insertProviderAt(BouncyCastleProvider(), bcIndex + 1)
   }
+  // Recent Conscrypt (Android 14 mainline updates) serves KeyFactory "Ed25519" with keys whose
+  // algorithm name sshj does not map to ssh-ed25519 (KeyType.UNKNOWN, "Don't know how to encode
+  // key"), which breaks every Ed25519 host and user key. Pin only that factory to Bouncy Castle,
+  // ahead of every other provider; signatures still pick a provider per key.
+  Security.insertProviderAt(Ed25519KeyFactoryProvider, 1)
   logcat("setUpBouncyCastleForSshj", priority = VERBOSE) {
     "JCE providers: ${Security.getProviders().joinToString { "${it.name} (${it.version})" }}"
   }
