@@ -60,7 +60,8 @@ fun PreferenceAction(
 ) {
   ListItem(
     headlineContent = { Text(title) },
-    modifier = modifier.clickable(enabled = enabled, onClick = onClick).dimmed(enabled),
+    modifier =
+      modifier.clickable(enabled = enabled, role = Role.Button, onClick = onClick).dimmed(enabled),
     supportingContent =
       if (summary != null) {
         { Text(summary) }

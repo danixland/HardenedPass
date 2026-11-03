@@ -46,7 +46,7 @@ object BiometricAuthenticator {
 
     /**
      * An incorrect biometric was entered, but the prompt UI is offering the option to retry the
-     * operation.
+     * operation. The prompt is still open; a terminal result follows.
      */
     data object Retry : Result()
 
@@ -100,7 +100,8 @@ object BiometricAuthenticator {
         when (errorCode) {
           /** Keep in sync with [androidx.biometric.BiometricPrompt.AuthenticationError] */
           BiometricPrompt.ERROR_HW_UNAVAILABLE -> callback(Result.HardwareUnavailableOrDisabled)
-          BiometricPrompt.ERROR_UNABLE_TO_PROCESS -> callback(Result.Retry)
+          // An error always closes the prompt, so none of them is a Retry.
+          BiometricPrompt.ERROR_UNABLE_TO_PROCESS,
           BiometricPrompt.ERROR_TIMEOUT ->
             callback(
               Result.Failure(

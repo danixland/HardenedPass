@@ -728,7 +728,8 @@ fun PreferenceAction(
 ) {
   ListItem(
     headlineContent = { Text(title) },
-    modifier = modifier.clickable(enabled = enabled, onClick = onClick).dimmed(enabled),
+    modifier =
+      modifier.clickable(enabled = enabled, role = Role.Button, onClick = onClick).dimmed(enabled),
     supportingContent =
       if (summary != null) {
         { Text(summary) }
@@ -1218,6 +1219,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import app.passwordstore.BuildConfig
 import app.passwordstore.R
@@ -1291,7 +1293,7 @@ fun SettingsScreen(
     SettingsSection.entries.forEach { section ->
       ListItem(
         headlineContent = { Text(stringResource(section.title)) },
-        modifier = Modifier.clickable { onSection(section) },
+        modifier = Modifier.clickable(role = Role.Button) { onSection(section) },
         leadingContent = { Icon(painterResource(section.icon), contentDescription = null) },
         colors = rowColors(),
       )
@@ -1674,7 +1676,8 @@ fun SettingsSectionDestination(
     if (prompting) return
     prompting = true
     BiometricAuthenticator.authenticate(activity, title) { result ->
-      // Retry: a finger was not recognized, the prompt stays open.
+      // Retry: a finger was not recognized, the prompt stays open. Errors close it and are
+      // terminal (Failure, Canceled*, HardwareUnavailableOrDisabled).
       if (result !is Result.Retry) prompting = false
       onResult(result)
     }
@@ -1690,14 +1693,19 @@ fun SettingsSectionDestination(
           activity.autofillManager?.disableAutofillServices()
           refresh()
         }
-      PreferenceKeys.BIOMETRIC_AUTH_2 ->
-        authenticate(R.string.biometric_prompt_title) { result ->
-          if (result is Result.Success) {
-            viewModel.putBoolean(key, value)
-            // Shortcuts were built for the old lock setting, as the old screen knew.
-            activity.getSystemService<ShortcutManager>()?.removeAllDynamicShortcuts()
-          }
+      PreferenceKeys.BIOMETRIC_AUTH_2 -> {
+        fun write() {
+          viewModel.putBoolean(key, value)
+          // Shortcuts were built for the old lock setting, as the old screen knew.
+          activity.getSystemService<ShortcutManager>()?.removeAllDynamicShortcuts()
         }
+        // Without a screen lock no prompt can open: turning the app lock off needs none.
+        if (!value && !BiometricAuthenticator.canAuthenticate(activity)) write()
+        else
+          authenticate(R.string.biometric_prompt_title) { result ->
+            if (result is Result.Success) write()
+          }
+      }
       Feature.EnablePGPPassphraseCache.configKey ->
         if (!BiometricAuthenticator.canAuthenticate(activity)) viewModel.setPassphraseCache(false)
         else
