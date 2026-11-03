@@ -23,7 +23,8 @@ import app.passwordstore.crypto.PGPIdentifier
 import app.passwordstore.data.crypto.CryptoRepository
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.injection.prefs.SettingsPreferences
-import app.passwordstore.ui.pgp.PGPKeyImportActivity
+import app.passwordstore.ui.main.MainActivity
+import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.clipboard
 import app.passwordstore.util.extensions.getString
@@ -83,7 +84,9 @@ open class BasePGPActivity : AppCompatActivity() {
             .setMessage(resources.getString(R.string.no_keys_imported_dialog_message))
             .setPositiveButton(resources.getString(R.string.button_label_import)) { _, _ ->
               onKeyImport = onKeysExist
-              keyImportAction.launch(Intent(this@BasePGPActivity, PGPKeyImportActivity::class.java))
+              keyImportAction.launch(
+                MainActivity.setupIntent(this@BasePGPActivity, SetupStart.PgpImport)
+              )
             }
             .show()
         }

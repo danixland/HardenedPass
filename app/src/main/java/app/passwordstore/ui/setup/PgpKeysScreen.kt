@@ -8,6 +8,7 @@ package app.passwordstore.ui.setup
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
+import androidx.annotation.Keep
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,7 +62,8 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
-/** What the PGP keys screen is for. */
+/** What the PGP keys screen is for. A route argument: kept from minification. */
+@Keep
 @Serializable
 enum class KeysMode {
   /** Import and delete keys (Settings). */

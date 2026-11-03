@@ -5,7 +5,6 @@
 
 package app.passwordstore.ui.settings
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.ShortcutManager
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
@@ -16,11 +15,9 @@ import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.injection.prefs.GitPreferences
 import app.passwordstore.ui.git.config.GitConfigActivity
-import app.passwordstore.ui.git.config.GitServerConfigActivity
+import app.passwordstore.ui.main.MainActivity
 import app.passwordstore.ui.proxy.ProxySelectorActivity
-import app.passwordstore.ui.sshkeygen.ShowSshKeyFragment
-import app.passwordstore.ui.sshkeygen.SshKeyGenActivity
-import app.passwordstore.ui.sshkeygen.SshKeyImportActivity
+import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.extensions.getString
 import app.passwordstore.util.extensions.launchActivity
 import app.passwordstore.util.extensions.sharedPrefs
@@ -73,7 +70,7 @@ class RepositorySettings(private val activity: FragmentActivity) : SettingsProvi
         titleRes = R.string.pref_edit_git_server_settings
         visible = PasswordRepository.isGitRepo()
         onClick {
-          activity.launchActivity(GitServerConfigActivity::class.java)
+          activity.startActivity(MainActivity.setupIntent(activity, SetupStart.GitServer))
           true
         }
       }
@@ -97,14 +94,14 @@ class RepositorySettings(private val activity: FragmentActivity) : SettingsProvi
         titleRes = R.string.pref_import_ssh_key_title
         visible = PasswordRepository.isGitRepo()
         onClick {
-          activity.launchActivity(SshKeyImportActivity::class.java)
+          activity.startActivity(MainActivity.setupIntent(activity, SetupStart.Ssh))
           true
         }
       }
       pref(PreferenceKeys.SSH_KEYGEN) {
         titleRes = R.string.pref_ssh_keygen_title
         onClick {
-          generateSshKey.launch(Intent(activity, SshKeyGenActivity::class.java))
+          generateSshKey.launch(MainActivity.setupIntent(activity, SetupStart.SshGenerate))
           true
         }
       }
@@ -113,7 +110,7 @@ class RepositorySettings(private val activity: FragmentActivity) : SettingsProvi
           titleRes = R.string.pref_ssh_see_key_title
           visible = PasswordRepository.isGitRepo() && SshKey.canShowSshPublicKey
           onClick {
-            ShowSshKeyFragment().show(activity.supportFragmentManager, "public_key")
+            activity.startActivity(MainActivity.setupIntent(activity, SetupStart.Ssh))
             true
           }
         }

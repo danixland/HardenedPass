@@ -5,6 +5,8 @@
 
 package app.passwordstore.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
@@ -28,8 +30,11 @@ import app.passwordstore.ui.entry.EntryViewModel
 import app.passwordstore.ui.git.base.BaseGitActivity
 import app.passwordstore.ui.list.ListDestination
 import app.passwordstore.ui.list.folderMoves
-import app.passwordstore.ui.onboarding.activity.OnboardingActivity
 import app.passwordstore.ui.settings.SettingsActivity
+import app.passwordstore.ui.setup.GitServerRoute
+import app.passwordstore.ui.setup.SetupStart
+import app.passwordstore.ui.setup.WelcomeRoute
+import app.passwordstore.ui.setup.setupGraph
 import app.passwordstore.util.extensions.launchActivity
 import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.settings.AuthMode
@@ -64,9 +69,9 @@ import kotlinx.serialization.Serializable
 
 /**
  * Single-activity host for the Compose UI. Not exported: it is only started by [LaunchActivity],
- * after its biometric gate and path check. Extends [BaseGitActivity] (an AppCompatActivity, so also
- * the FragmentActivity BiometricPrompt needs) because the git operations require one; it hosts no
- * fragments.
+ * after its biometric gate and path check, and by the app itself through [setupIntent]. Extends
+ * [BaseGitActivity] (an AppCompatActivity, so also the FragmentActivity BiometricPrompt needs)
+ * because the git operations require one; it hosts no fragments.
  */
 @AndroidEntryPoint
 class MainActivity : BaseGitActivity() {
@@ -79,7 +84,18 @@ class MainActivity : BaseGitActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val filePath = intent.getStringExtra(BasePGPActivity.EXTRA_FILE_PATH)
-    val start: Any = if (filePath != null) EntryRoute(filePath) else ListRoute()
+    val setup =
+      intent.getStringExtra(EXTRA_SETUP)?.let { name ->
+        SetupStart.entries.firstOrNull { it.name == name }
+      }
+    // A restored back stack wins over this choice, so a recreation stays where it was.
+    val start: Any =
+      when {
+        filePath != null -> EntryRoute(filePath)
+        setup != null -> setup.route
+        checkStore() -> ListRoute()
+        else -> WelcomeRoute
+      }
     setContent {
       APSTheme {
         val nav = rememberNavController()
@@ -105,6 +121,15 @@ class MainActivity : BaseGitActivity() {
               },
               onNewEntry = {
                 if (nav.currentBackStackEntry?.id == entry.id) nav.navigate(EditRoute(path))
+              },
+              onClone = {
+                if (nav.currentBackStackEntry?.id == entry.id)
+                  nav.navigate(GitServerRoute(clone = true))
+              },
+              onNoStore = {
+                // The store is gone (deleted from Settings): setup starts over.
+                if (nav.currentBackStackEntry?.id == entry.id)
+                  nav.navigate(WelcomeRoute) { popUpTo(nav.graph.id) { inclusive = true } }
               },
             )
           }
@@ -168,6 +193,7 @@ class MainActivity : BaseGitActivity() {
               },
             )
           }
+          setupGraph(this@MainActivity, nav)
         }
       }
     }
@@ -183,12 +209,10 @@ class MainActivity : BaseGitActivity() {
     if (--secureHolds == 0) window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
   }
 
-  /** Re-reads the store; starts onboarding and returns false when there is none yet. */
+  /** Re-reads the store; false when there is none yet and setup has to run. */
   fun checkStore(): Boolean {
     PasswordRepository.initialize()
-    if (sharedPrefs.getBoolean(PreferenceKeys.REPOSITORY_INITIALIZED, false)) return true
-    launchActivity(OnboardingActivity::class.java)
-    return false
+    return sharedPrefs.getBoolean(PreferenceKeys.REPOSITORY_INITIALIZED, false)
   }
 
   /** Git actions offered in the list's menu, chosen as the old list chose its menu. */
@@ -221,6 +245,22 @@ class MainActivity : BaseGitActivity() {
 
   private fun entryItem(file: File) =
     PasswordItem.newPassword(file.name, file, PasswordRepository.getRepositoryDirectory())
+
+  companion object {
+
+    private const val EXTRA_SETUP = "SETUP"
+
+    /**
+     * Opens one setup screen in an instance of its own, for callers outside the graph (legacy
+     * Settings, autofill, git operations) and for those waiting for a result (the entry view's
+     * missing key). Leaving that screen finishes the instance; the PGP keys screen sets RESULT_OK
+     * once a key was imported.
+     */
+    // ponytail: a second instance instead of in-graph navigation, until steps 6 and 7 move
+    // Settings and autofill into the graph.
+    fun setupIntent(context: Context, start: SetupStart): Intent =
+      Intent(context, MainActivity::class.java).putExtra(EXTRA_SETUP, start.name)
+  }
 }
 
 /**

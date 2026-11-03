@@ -49,7 +49,7 @@ import app.passwordstore.ui.crypto.copyTextToClipboard
 import app.passwordstore.ui.crypto.getPGPIdentifiers
 import app.passwordstore.ui.main.LaunchActivity
 import app.passwordstore.ui.main.MainActivity
-import app.passwordstore.ui.pgp.PGPKeyImportActivity
+import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result as BiometricResult
 import app.passwordstore.util.extensions.sharedPrefs
@@ -151,7 +151,7 @@ fun EntryDestination(
             TextButton(
               onClick = {
                 viewModel.dismissPrompt()
-                keyImport.launch(Intent(activity, PGPKeyImportActivity::class.java))
+                keyImport.launch(MainActivity.setupIntent(activity, SetupStart.PgpImport))
               }
             ) {
               Text(stringResource(R.string.button_label_import))

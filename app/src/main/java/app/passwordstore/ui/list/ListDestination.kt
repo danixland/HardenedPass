@@ -35,7 +35,6 @@ import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.compose.theme.SpacingMedium
 import app.passwordstore.ui.git.base.BaseGitActivity.GitOp
-import app.passwordstore.ui.git.config.GitServerConfigActivity
 import app.passwordstore.ui.main.MainActivity
 import app.passwordstore.util.extensions.isInsideRepository
 import app.passwordstore.util.extensions.sharedPrefs
@@ -60,7 +59,8 @@ private enum class ListDialog {
 /**
  * The list at [path] (relative to the store root): wires [ListScreen] to the [viewModel], the
  * folder picker, the legacy activities and the store operations. [onOpenFolder] takes a path
- * relative to the root, [onOpenEntry] an entry file; [onNewEntry] opens the editor in this folder.
+ * relative to the root, [onOpenEntry] an entry file; [onNewEntry] opens the editor in this folder,
+ * [onClone] the git server screen for a clone; [onNoStore] runs when the store is gone.
  */
 @Composable
 fun ListDestination(
@@ -69,6 +69,8 @@ fun ListDestination(
   onOpenFolder: (relativePath: String) -> Unit,
   onOpenEntry: (File) -> Unit,
   onNewEntry: () -> Unit,
+  onClone: () -> Unit,
+  onNoStore: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: SearchableRepositoryViewModel = hiltViewModel(),
 ) {
@@ -98,7 +100,7 @@ fun ListDestination(
 
   // Every return to this folder (back from a child, or from a legacy activity) re-reads it.
   LifecycleResumeEffect(Unit) {
-    if (activity.checkStore()) refresh()
+    if (activity.checkStore()) refresh() else onNoStore()
     resumes++
     onPauseOrDispose {}
   }
@@ -270,7 +272,7 @@ fun ListDestination(
           confirm = stringResource(R.string.clone_button),
           onConfirm = {
             dialog = ListDialog.None
-            activity.startActivity(GitServerConfigActivity.createCloneIntent(activity))
+            onClone()
           },
           onDismiss = { dialog = ListDialog.None },
           dismiss = stringResource(R.string.dialog_cancel),

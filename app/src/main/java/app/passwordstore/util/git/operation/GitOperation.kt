@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
-import app.passwordstore.ui.sshkeygen.SshKeyGenActivity
-import app.passwordstore.ui.sshkeygen.SshKeyImportActivity
+import app.passwordstore.ui.main.MainActivity
+import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result.CanceledBySystem
 import app.passwordstore.util.auth.BiometricAuthenticator.Result.CanceledByUser
@@ -18,7 +18,6 @@ import app.passwordstore.util.auth.BiometricAuthenticator.Result.Failure
 import app.passwordstore.util.auth.BiometricAuthenticator.Result.Retry
 import app.passwordstore.util.auth.BiometricAuthenticator.Result.Success
 import app.passwordstore.util.coroutines.DispatcherProvider
-import app.passwordstore.util.extensions.launchActivity
 import app.passwordstore.util.git.GitCommandExecutor
 import app.passwordstore.util.git.sshj.SshAuthMethod
 import app.passwordstore.util.git.sshj.SshKey
@@ -27,8 +26,6 @@ import app.passwordstore.util.settings.AuthMode
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
-import com.github.michaelbull.result.onFailure
-import com.github.michaelbull.result.runCatching
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -37,9 +34,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.withContext
-import logcat.LogPriority.ERROR
-import logcat.asLog
-import logcat.logcat
 import net.schmizz.sshj.common.DisconnectReason
 import net.schmizz.sshj.common.SSHException
 import net.schmizz.sshj.userauth.password.PasswordFinder
@@ -106,12 +100,12 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
   }
 
   private fun getSshKey(generateKey: Boolean) {
-    runCatching {
-        callingActivity.launchActivity(
-          if (generateKey) SshKeyGenActivity::class.java else SshKeyImportActivity::class.java
-        )
-      }
-      .onFailure { e -> logcat(ERROR) { e.asLog() } }
+    callingActivity.startActivity(
+      MainActivity.setupIntent(
+        callingActivity,
+        if (generateKey) SetupStart.SshGenerate else SetupStart.Ssh,
+      )
+    )
   }
 
   private fun registerAuthProviders(
@@ -152,10 +146,8 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
       ) { _, _ ->
         getSshKey(true)
       }
-      .setNeutralButton(callingActivity.resources.getString(R.string.dialog_cancel)) { _, _ ->
-        // Finish the blank GitActivity so user doesn't have to press back
-        callingActivity.finish()
-      }
+      // Cancel only closes the dialog: the calling activity is the app's own screen now.
+      .setNeutralButton(callingActivity.resources.getString(R.string.dialog_cancel), null)
       .show()
   }
 
@@ -197,7 +189,7 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
                     Toast.LENGTH_LONG,
                   )
                   .show()
-                callingActivity.finish()
+                return Err(SSHException(DisconnectReason.AUTH_CANCELLED_BY_USER))
               }
             }
           } else {

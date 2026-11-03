@@ -10,9 +10,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import app.passwordstore.R
 import app.passwordstore.data.crypto.PGPPassphraseCache
-import app.passwordstore.ui.pgp.PGPKeyListActivity
+import app.passwordstore.ui.main.MainActivity
+import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.auth.BiometricAuthenticator
-import app.passwordstore.util.extensions.launchActivity
 import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.features.Feature
 import app.passwordstore.util.settings.PreferenceKeys
@@ -33,7 +33,7 @@ class PGPSettings(
         titleRes = R.string.pref_pgp_key_manager_title
         persistent = false
         onClick {
-          activity.launchActivity(PGPKeyListActivity::class.java)
+          activity.startActivity(MainActivity.setupIntent(activity, SetupStart.PgpKeys))
           false
         }
       }
