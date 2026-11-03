@@ -60,7 +60,8 @@ private enum class ListDialog {
  * The list at [path] (relative to the store root): wires [ListScreen] to the [viewModel], the
  * folder picker, the legacy activities and the store operations. [onOpenFolder] takes a path
  * relative to the root, [onOpenEntry] an entry file; [onNewEntry] opens the editor in this folder,
- * [onClone] the git server screen for a clone; [onNoStore] runs when the store is gone.
+ * [onClone] the git server screen for a clone, [onSettings] the settings; [onNoStore] runs when the
+ * store is gone.
  */
 @Composable
 fun ListDestination(
@@ -70,6 +71,7 @@ fun ListDestination(
   onOpenEntry: (File) -> Unit,
   onNewEntry: () -> Unit,
   onClone: () -> Unit,
+  onSettings: () -> Unit,
   onNoStore: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: SearchableRepositoryViewModel = hiltViewModel(),
@@ -151,7 +153,7 @@ fun ListDestination(
         }
       },
       onGitOp = { op -> ifInitialized { runGit(op) } },
-      onSettings = activity::openSettings,
+      onSettings = onSettings,
       onNew = { dialog = ListDialog.Create },
       onMove = { dialog = ListDialog.Move },
       onDelete = {

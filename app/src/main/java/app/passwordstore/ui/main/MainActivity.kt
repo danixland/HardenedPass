@@ -30,12 +30,12 @@ import app.passwordstore.ui.entry.EntryViewModel
 import app.passwordstore.ui.git.base.BaseGitActivity
 import app.passwordstore.ui.list.ListDestination
 import app.passwordstore.ui.list.folderMoves
-import app.passwordstore.ui.settings.SettingsActivity
+import app.passwordstore.ui.settings.SettingsRoute
+import app.passwordstore.ui.settings.settingsGraph
 import app.passwordstore.ui.setup.GitServerRoute
 import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.ui.setup.WelcomeRoute
 import app.passwordstore.ui.setup.setupGraph
-import app.passwordstore.util.extensions.launchActivity
 import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.settings.AuthMode
 import app.passwordstore.util.settings.PreferenceKeys
@@ -127,6 +127,9 @@ class MainActivity : BaseGitActivity() {
                 if (nav.currentBackStackEntry?.id == entry.id)
                   nav.navigate(GitServerRoute(clone = true))
               },
+              onSettings = {
+                if (nav.currentBackStackEntry?.id == entry.id) nav.navigate(SettingsRoute)
+              },
               onNoStore = {
                 // The store is gone (deleted from Settings): setup starts over.
                 if (nav.currentBackStackEntry?.id == entry.id)
@@ -195,6 +198,7 @@ class MainActivity : BaseGitActivity() {
             )
           }
           setupGraph(this@MainActivity, nav)
+          settingsGraph(this@MainActivity, nav)
         }
       }
     }
@@ -244,10 +248,6 @@ class MainActivity : BaseGitActivity() {
   fun pinEntry(file: File) {
     val item = entryItem(file)
     shortcutHandler.addPinnedShortcut(item, item.createAuthEnabledIntent(this))
-  }
-
-  fun openSettings() {
-    launchActivity(SettingsActivity::class.java)
   }
 
   private fun entryItem(file: File) =

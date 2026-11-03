@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import app.passwordstore.ui.main.ListRoute
 import app.passwordstore.ui.main.MainActivity
+import app.passwordstore.ui.settings.SettingsRoute
 import kotlinx.serialization.Serializable
 
 /** The first screen without a store. */
@@ -63,7 +64,7 @@ fun NavGraphBuilder.setupGraph(activity: MainActivity, nav: NavHostController) {
     WelcomeScreen(
       onClone = { if (onTop(entry)) nav.navigate(GitServerRoute(clone = true)) },
       onCreate = { if (onTop(entry)) nav.navigate(PgpKeysRoute(KeysMode.Choose)) },
-      onSettings = activity::openSettings,
+      onSettings = { if (onTop(entry)) nav.navigate(SettingsRoute) },
     )
   }
   composable<GitServerRoute> { entry ->
