@@ -5,11 +5,7 @@
 
 package app.passwordstore.ui.list
 
-import android.app.Activity
-import android.content.Intent
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -37,7 +33,6 @@ import androidx.lifecycle.lifecycleScope
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.compose.theme.SpacingMedium
-import app.passwordstore.ui.folderselect.SelectFolderActivity
 import app.passwordstore.ui.git.base.BaseGitActivity.GitOp
 import app.passwordstore.ui.git.config.GitServerConfigActivity
 import app.passwordstore.ui.main.MainActivity
@@ -55,14 +50,15 @@ private enum class ListDialog {
   NewFolder,
   Rename,
   Delete,
+  Move,
   Clone,
   NotInitialized,
 }
 
 /**
  * The list at [path] (relative to the store root): wires [ListScreen] to the [viewModel], the
- * legacy activities and the store operations. [onOpenFolder] takes a path relative to the root,
- * [onOpenEntry] an entry file.
+ * folder picker, the legacy activities and the store operations. [onOpenFolder] takes a path
+ * relative to the root, [onOpenEntry] an entry file.
  */
 @Composable
 fun ListDestination(
@@ -105,20 +101,6 @@ fun ListDestination(
   }
   BackHandler(enabled = selected.isNotEmpty()) { selected = emptyList() }
   BackHandler(enabled = selected.isEmpty() && query.isNotEmpty()) { query = "" }
-
-  val moveLauncher =
-    rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-      val data = result.data
-      val target = data?.getStringExtra("SELECTED_FOLDER_PATH")?.let(::File)
-      val files = data?.getStringArrayExtra("Files")?.map(::File)
-      if (result.resultCode == Activity.RESULT_OK && target?.isDirectory == true && files != null) {
-        selected = emptyList()
-        activity.lifecycleScope.launch {
-          activity.moveItems(files, target)
-          refresh()
-        }
-      }
-    }
 
   fun ifInitialized(action: () -> Unit) {
     if (PasswordRepository.isInitialized) action() else dialog = ListDialog.NotInitialized
@@ -166,12 +148,7 @@ fun ListDestination(
       onGitOp = { op -> ifInitialized { runGit(op) } },
       onSettings = activity::openSettings,
       onNew = { dialog = ListDialog.Create },
-      onMove = {
-        moveLauncher.launch(
-          Intent(activity, SelectFolderActivity::class.java)
-            .putExtra("Files", selected.toTypedArray())
-        )
-      },
+      onMove = { dialog = ListDialog.Move },
       onDelete = {
         val files = selected.map(::File)
         val count = countFiles(files)
@@ -254,6 +231,24 @@ fun ListDestination(
           onDismiss = { dialog = ListDialog.None },
           dismiss = stringResource(R.string.dialog_no),
         )
+      ListDialog.Move ->
+        FolderPicker(
+          root = root,
+          start = path,
+          onPick = { target ->
+            // One move per pick: a double tap on Select must not move twice.
+            if (dialog == ListDialog.Move) {
+              val files = selected.map(::File)
+              dialog = ListDialog.None
+              selected = emptyList()
+              activity.lifecycleScope.launch {
+                activity.moveItems(files, File(root, target))
+                refresh()
+              }
+            }
+          },
+          onDismiss = { dialog = ListDialog.None },
+        )
       ListDialog.Clone ->
         Prompt(
           text = stringResource(R.string.clone_git_repo),
@@ -276,9 +271,12 @@ fun ListDestination(
   }
 }
 
-/** Asks for a folder name; [validate] returns an error string resource or null. */
+/**
+ * Asks for a folder name; [validate] returns an error string resource or null. Shared with the
+ * folder picker's "New folder".
+ */
 @Composable
-private fun FolderNameDialog(
+internal fun FolderNameDialog(
   title: String,
   message: String?,
   confirm: String,

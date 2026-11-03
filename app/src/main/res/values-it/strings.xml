@@ -358,4 +358,8 @@
   <string name="entry_show_password">Mostra password</string>
   <string name="entry_hide_password">Nascondi password</string>
   <string name="entry_copy_name">Copia nome</string>
+
+  <!-- Compose folder picker -->
+  <string name="folder_picker_title">Scegli una cartella</string>
+  <string name="folder_picker_new">Nuova cartella</string>
 </resources>
