@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - 2026-11-03
+
+### Fixed
+
+-   Clone and sync over SSH failed with "Don't know how to encode key" for servers with an Ed25519 host key (and with Ed25519 SSH keys) on Android 14 devices whose system crypto library was updated; Ed25519 keys now always come from Bouncy Castle
+-   A typed entry or folder name such as `../store-evil/x` could pass the "inside the store" check, which compared paths as strings; it now compares whole path components
+
 ## [0.1.4] - 2026-11-02
 
 ### Changed
