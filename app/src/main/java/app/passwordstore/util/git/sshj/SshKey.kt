@@ -16,6 +16,7 @@ import android.util.Base64
 import androidx.core.content.edit
 import app.passwordstore.Application
 import app.passwordstore.R
+import app.passwordstore.ui.setup.readAtMost
 import app.passwordstore.util.crypto.keystoreAesKey
 import app.passwordstore.util.crypto.requireUserAuthentication
 import app.passwordstore.util.crypto.seal
@@ -239,7 +240,18 @@ object SshKey {
     val sshKeyInputStream =
       context.contentResolver.openInputStream(uri)
         ?: throw IOException(context.getString(R.string.ssh_key_does_not_exist))
-    val lines = sshKeyInputStream.use { `is` -> `is`.bufferedReader().readLines() }
+    // Bounded whatever the provider claimed above: a larger stream is refused, not read whole.
+    val bytes =
+      sshKeyInputStream.use { readAtMost(it, 100_000) }
+        ?: throw IllegalArgumentException(
+          context.getString(R.string.ssh_key_import_error_not_an_ssh_key_message)
+        )
+    val lines =
+      try {
+        bytes.inputStream().bufferedReader().readLines()
+      } finally {
+        bytes.fill(0)
+      }
 
     // Private key markers and a format sshj can read; the current key stays when this fails.
     if (!isSshPrivateKey(lines))

@@ -72,6 +72,11 @@ class PGPKeyManagerTest {
       val keyId = keyManager.getKeyId(keyManager.addKey(secretKey, true).unwrap())
 
       assertEquals(KeyId(CryptoConstants.KEY_ID), keyId)
+      // Replaced through a temporary file that does not stay behind.
+      assertEquals(listOf("$keyId.${PGPKeyManager.KEY_EXTENSION}"), keysDir.list()?.toList())
+      // A stray temporary file left by a crash is not listed as a key.
+      File(keysDir, ".$keyId.${PGPKeyManager.KEY_EXTENSION}.tmp").writeText("partial")
+      assertEquals(1, keyManager.getAllKeys().unwrap().size)
     }
 
   @Test

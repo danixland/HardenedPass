@@ -95,6 +95,13 @@ fun storeRecipients(text: String): List<PGPIdentifier> =
 fun gpgIdText(keys: List<PGPIdentifier.KeyId>): String =
   keys.joinToString("") { "${it.toString().uppercase(Locale.ROOT)}\n" }
 
+/**
+ * Whether [dir] holds a store already made for [key]: its `.gpg-id` is exactly what creating one
+ * for [key] writes. Blocking: call it off the main thread.
+ */
+fun createdFor(dir: File, key: PGPIdentifier.KeyId): Boolean =
+  readGpgId(dir) == gpgIdText(listOf(key))
+
 private const val MAX_GPG_ID_BYTES = 64 * 1024
 
 /**

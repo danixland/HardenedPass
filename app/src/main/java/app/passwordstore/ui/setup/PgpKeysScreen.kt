@@ -43,6 +43,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -121,11 +123,13 @@ fun PgpKeysScreen(
       )
     },
     floatingActionButton = {
-      // M3 clears the label's semantics; the FAB takes its description from the icon.
+      // M3 clears the semantics of the FAB's content, label and icon alike: describe the FAB.
+      val label = stringResource(R.string.pref_import_pgp_key_title)
       ExtendedFloatingActionButton(
-        text = { Text(stringResource(R.string.pref_import_pgp_key_title)) },
-        icon = { Icon(Icons.Filled.Add, stringResource(R.string.pref_import_pgp_key_title)) },
+        text = { Text(label) },
+        icon = { Icon(Icons.Filled.Add, null) },
         onClick = { if (!busy) onImport() },
+        modifier = Modifier.semantics { contentDescription = label },
       )
     },
   ) { padding ->
@@ -254,8 +258,8 @@ fun PgpKeysDestination(
       if (uri != null) viewModel.import(uri, activity)
     }
 
-  // ponytail: a theme or locale change in the middle cancels the commit; the next commit picks up
-  // the new `.gpg-id`, and choosing the key again re-creates nothing that would conflict.
+  // ponytail: a theme or locale change in the middle cancels the commit. Choosing the same key
+  // again finds the store already made for it (createdFor), commits the `.gpg-id` and moves on.
   fun choose(row: KeyRow) {
     if (viewModel.busy) return
     viewModel.busy = true

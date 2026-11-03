@@ -56,6 +56,9 @@ class LaunchActivity : AppCompatActivity() {
     val intentToStart = Intent(this, MainActivity::class.java)
     if (intent.action == ACTION_DECRYPT_PASS && isFileInRepo(filePath, repoDir))
       intentToStart.putExtra(BasePGPActivity.EXTRA_FILE_PATH, filePath)
+    // A plain start replaces the task, so an instance already open (one whose store vanished, say)
+    // is not left below the new one. An entry opens on top, back returns to where the user was.
+    else intentToStart.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
     startActivity(intentToStart)
 
     Handler(Looper.getMainLooper()).postDelayed({ finish() }, if (noAuth) 0L else 500L)

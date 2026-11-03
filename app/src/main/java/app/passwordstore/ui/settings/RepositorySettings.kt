@@ -110,7 +110,7 @@ class RepositorySettings(private val activity: FragmentActivity) : SettingsProvi
           titleRes = R.string.pref_ssh_see_key_title
           visible = PasswordRepository.isGitRepo() && SshKey.canShowSshPublicKey
           onClick {
-            activity.startActivity(MainActivity.setupIntent(activity, SetupStart.Ssh))
+            generateSshKey.launch(MainActivity.setupIntent(activity, SetupStart.Ssh))
             true
           }
         }

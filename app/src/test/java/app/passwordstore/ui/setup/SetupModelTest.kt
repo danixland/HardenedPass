@@ -137,4 +137,14 @@ class SetupModelTest {
     val folder = File(root, "folder").apply { File(this, ".gpg-id").mkdirs() }
     assertNull(readGpgId(folder))
   }
+
+  @Test
+  fun createdForMatchesOnlyTheChosenKeysGpgId() {
+    val key = PGPIdentifier.fromString("0xf8993a789cdfb014") as PGPIdentifier.KeyId
+    assertEquals(false, createdFor(root, key))
+    File(root, ".gpg-id").writeText(gpgIdText(listOf(key)))
+    assertEquals(true, createdFor(root, key))
+    File(root, ".gpg-id").writeText("F8993A789CDFB014\nB950AE2813841585\n")
+    assertEquals(false, createdFor(root, key))
+  }
 }

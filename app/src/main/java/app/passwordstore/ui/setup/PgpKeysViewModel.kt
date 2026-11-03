@@ -209,12 +209,16 @@ constructor(
   /**
    * Creates the local store at [root] for [row]: a git repository and a `.gpg-id` naming the key by
    * its uppercase long key ID ([gpgIdText]). Returns null, or why it failed; [occupied] is the
-   * reason given when [root] already holds a store.
+   * reason given when [root] already holds a store, unless that store was made for [row] already.
    */
   suspend fun createStore(root: File, row: KeyRow, occupied: String): String? =
     withContext(dispatcherProvider.io()) {
-      // A restored, already-cloned store must keep its .gpg-id.
-      if (root.isDirectory && cloneTarget(root) == CloneTarget.Occupied) return@withContext occupied
+      if (root.isDirectory && cloneTarget(root) == CloneTarget.Occupied) {
+        // Made by an earlier attempt for this key whose commit a recreation cancelled: done.
+        if (createdFor(root, row.keyId)) return@withContext null
+        // A restored, already-cloned store must keep its .gpg-id.
+        return@withContext occupied
+      }
       try {
         check(root.isDirectory || root.mkdirs()) { "Could not create $root" }
         PasswordRepository.createRepository(root)

@@ -22,6 +22,8 @@ import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.coroutines.runSuspendCatching
 import com.github.michaelbull.result.unwrap
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -51,13 +53,13 @@ constructor(filesDir: String, private val dispatcher: CoroutineDispatcher) :
             tryParseKeyring(PGPKey(existingKeyBytes)) ?: throw InvalidKeyException
           when {
             existingKeyRing is PGPPublicKeyRing && incomingKeyRing is PGPSecretKeyRing -> {
-              keyFile.writeBytes(key.contents)
+              writeAtomically(keyFile, key.contents)
               return@runSuspendCatching key
             }
             existingKeyRing is PGPPublicKeyRing && incomingKeyRing is PGPPublicKeyRing -> {
               val updatedPublicKey = PGPainless.mergeCertificate(existingKeyRing, incomingKeyRing)
               val keyBytes = PGPainless.asciiArmor(updatedPublicKey).encodeToByteArray()
-              keyFile.writeBytes(keyBytes)
+              writeAtomically(keyFile, keyBytes)
               return@runSuspendCatching key
             }
             // Never with replace either: it would delete the only copy of the private key.
@@ -69,10 +71,9 @@ constructor(filesDir: String, private val dispatcher: CoroutineDispatcher) :
             throw KeyAlreadyExistsException(
               tryGetId(key)?.toString() ?: "Failed to retrieve key ID"
             )
-          if (!keyFile.delete()) throw KeyDeletionFailedException
         }
 
-        keyFile.writeBytes(key.contents)
+        writeAtomically(keyFile, key.contents)
 
         key
       }
@@ -96,7 +97,7 @@ constructor(filesDir: String, private val dispatcher: CoroutineDispatcher) :
     withContext(dispatcher) {
       runSuspendCatching {
         if (!keyDirExists()) throw KeyDirectoryUnavailableException
-        val keyFiles = keyDir.listFiles()
+        val keyFiles = keyDir.listFiles { file -> file.extension == KEY_EXTENSION }
         if (keyFiles.isNullOrEmpty()) throw NoKeysAvailableException
         val keys = keyFiles.map { file -> PGPKey(file.readBytes()) }
 
@@ -134,7 +135,7 @@ constructor(filesDir: String, private val dispatcher: CoroutineDispatcher) :
     withContext(dispatcher) {
       runSuspendCatching {
         if (!keyDirExists()) throw KeyDirectoryUnavailableException
-        val keyFiles = keyDir.listFiles()
+        val keyFiles = keyDir.listFiles { file -> file.extension == KEY_EXTENSION }
         if (keyFiles.isNullOrEmpty()) return@runSuspendCatching emptyList()
         keyFiles.map { keyFile -> PGPKey(keyFile.readBytes()) }.toList()
       }
@@ -142,6 +143,25 @@ constructor(filesDir: String, private val dispatcher: CoroutineDispatcher) :
 
   /** @see KeyManager.getKeyById */
   override suspend fun getKeyId(key: PGPKey): PGPIdentifier? = tryGetId(key)
+
+  /**
+   * Writes [bytes] to a temporary file next to [file] and moves it over [file] in one step, so a
+   * failed write keeps the key that was there.
+   */
+  private fun writeAtomically(file: File, bytes: ByteArray) {
+    val temp = File(file.parentFile, ".${file.name}.tmp")
+    try {
+      temp.writeBytes(bytes)
+      Files.move(
+        temp.toPath(),
+        file.toPath(),
+        StandardCopyOption.REPLACE_EXISTING,
+        StandardCopyOption.ATOMIC_MOVE,
+      )
+    } finally {
+      temp.delete()
+    }
+  }
 
   /** Checks if [keyDir] exists and attempts to create it if not. */
   private fun keyDirExists(): Boolean {
