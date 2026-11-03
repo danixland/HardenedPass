@@ -122,9 +122,9 @@ class MainActivity : BaseGitActivity() {
               },
               onEdit = {
                 if (nav.currentBackStackEntry?.id == entry.id) {
-                  // Not canonical: a symlinked entry keeps its own folder and name.
-                  val root = PasswordRepository.getRepositoryDirectory()
-                  val dir = file.parentFile?.relativeTo(root)?.path.orEmpty()
+                  // Canonical folder, link's own name: a symlinked entry keeps its name.
+                  val root = PasswordRepository.getRepositoryDirectory().canonicalFile
+                  val dir = file.parentFile?.canonicalFile?.relativeTo(root)?.path.orEmpty()
                   nav.navigate(EditRoute(dir, file.nameWithoutExtension))
                 }
               },

@@ -6,7 +6,6 @@ package app.passwordstore.data.password
 
 import android.content.Context
 import android.content.Intent
-import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.crypto.BasePGPActivity
 import app.passwordstore.ui.main.LaunchActivity
 import java.io.File
@@ -44,7 +43,6 @@ data class PasswordItem(
     val intent = Intent(context, LaunchActivity::class.java)
     intent.putExtra("NAME", toString())
     intent.putExtra("FILE_PATH", file.absolutePath)
-    intent.putExtra("REPO_PATH", PasswordRepository.getRepositoryDirectory().absolutePath)
     intent.action = LaunchActivity.ACTION_DECRYPT_PASS
     return intent
   }
