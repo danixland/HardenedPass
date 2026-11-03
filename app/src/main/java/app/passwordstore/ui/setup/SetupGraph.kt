@@ -33,10 +33,8 @@ import kotlinx.serialization.Serializable
 
 /** The setup screens [MainActivity.setupIntent] opens on their own. */
 enum class SetupStart(val route: Any) {
-  GitServer(GitServerRoute(clone = false)),
   Ssh(SshKeyRoute),
   SshGenerate(SshKeyGenRoute),
-  PgpKeys(PgpKeysRoute()),
   PgpImport(PgpKeysRoute(KeysMode.Need)),
 }
 

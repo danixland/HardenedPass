@@ -34,12 +34,6 @@
     tools:targetApi="s">
 
     <activity
-      android:name=".ui.proxy.ProxySelectorActivity"
-      android:exported="false"
-      android:label="@string/activity_proxy_label"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".ui.main.LaunchActivity"
       android:configChanges="orientation|screenSize"
       android:exported="true"
@@ -66,23 +60,6 @@
       android:theme="@style/zxing_CaptureTheme"
       android:windowSoftInputMode="stateAlwaysHidden"
       tools:node="replace" />
-
-    <activity
-      android:name=".ui.git.config.GitConfigActivity"
-      android:exported="false"
-      android:label="@string/title_activity_git_config"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
-      android:name=".ui.git.log.GitLogActivity"
-      android:exported="false"
-      android:label="@string/title_activity_git_log" />
-
-    <activity
-      android:name=".ui.settings.SettingsActivity"
-      android:exported="false"
-      android:label="@string/action_settings"
-      android:parentActivityName=".ui.main.MainActivity" />
 
     <service
       android:name=".util.services.ClipboardService"

@@ -198,7 +198,6 @@
   <string name="pref_biometric_auth_title">Abilita autenticazione biometrica</string>
   <string name="pref_biometric_auth_summary">Se attiva, HardenedPass chiede l\'impronta digitale all\'avvio dell\'app</string>
   <string name="pref_biometric_auth_summary_error">L\'hardware delle impronte digitali non è accessibile o mancante</string>
-  <string name="pref_title_openkeystore_clear_keyid">Elimina l\'ID della Chiave SSH di OpenKeystore memorizzato</string>
   <string name="your_public_key">La tua chiave pubblica</string>
   <string name="error_generate_ssh_key">Errore durante la generazione della chiave SSH</string>
   <string name="pref_show_hidden_title">Mostra tutti i file e cartelle</string>
@@ -303,7 +302,6 @@
   <string name="pref_passphrase_cache_auto_clear_authenticate_disable">Autenticati per disattivare la cancellazione automatica</string>
   <string name="pref_passphrase_cache_auto_clear_title">Cancella automaticamente le frasi segrete memorizzate</string>
   <string name="pref_passphrase_cache_auto_clear_summary">Cancella le frasi segrete memorizzate allo spegnimento dello schermo</string>
-  <string name="pref_biometric_auth_summary_disabled_platform">Funzione non disponibile a causa di un bug della piattaforma</string>
   <string name="password_creation_encrypt_fail_message">Impossibile cifrare la password, non è stato salvato nulla: %1$s</string>
   <string name="otp_import_failure_no_selection">Nessuna immagine selezionata</string>
   <string name="invalid_gpg_id">Trovato .gpg-id, ma contiene un ID chiave, un\'impronta o un ID utente non valido</string>

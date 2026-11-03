@@ -258,13 +258,13 @@ class MainActivity : BaseGitActivity() {
     private const val EXTRA_SETUP = "SETUP"
 
     /**
-     * Opens one setup screen in an instance of its own, for callers outside the graph (legacy
-     * Settings, autofill, git operations) and for those waiting for a result (the entry view's
+     * Opens one setup screen in an instance of its own, for callers outside the graph (autofill,
+     * the git operations' "No SSH key" dialog) and for those waiting for a result (the entry view's
      * missing key). Leaving that screen finishes the instance; the PGP keys screen sets RESULT_OK
      * once a key was imported.
      */
-    // ponytail: a second instance instead of in-graph navigation, until steps 6 and 7 move
-    // Settings and autofill into the graph.
+    // ponytail: a second instance instead of in-graph navigation, until step 7 moves autofill
+    // into the graph and the git operations' dialogs become Compose dialogs.
     fun setupIntent(context: Context, start: SetupStart): Intent =
       Intent(context, MainActivity::class.java).putExtra(EXTRA_SETUP, start.name)
   }

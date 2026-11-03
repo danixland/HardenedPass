@@ -65,8 +65,22 @@ the maintainer's phone stays on 0.1.4 until then.
   repository is created only then, its `.gpg-id` naming the key by its uppercase long key ID, as
   `pass init <key ID>` does), and imports the key a store needs: after a clone that no
   imported key can decrypt, and when an entry is opened with no key imported.
-- Screens outside the graph (Settings, autofill, git operations) and the entry view's key
-  import open these through a `MainActivity` setup intent until steps 6 and 7.
+- Settings opens these within the graph. Autofill, the git operations' "No SSH key" dialog and
+  the entry view's key import open them through a `MainActivity` setup intent until step 7.
+
+### Settings
+
+- Settings lists its categories (general, autofill, passwords, repository, misc, PGP); each opens
+  a screen of rows (switches, single choices, text values, actions) over the existing preference
+  keys. Switches behind the screen lock store their value only after a successful prompt.
+- Rows that lead elsewhere navigate within `MainActivity`: git server, SSH key, key generation,
+  PGP keys, proxy, and the git configuration screen (author name and email, commit log, abort
+  rebase, hard reset, garbage collection).
+- Destructive actions ask first: deleting the repository (which never follows symlinks out of the
+  store and returns to the welcome screen), clearing a saved password or passphrase, the hard
+  reset.
+- The list's sort orders are folders first and recently used; "files first" and "type
+  independent" are gone, and stored values fall back to folders first.
 
 ## Architecture
 
@@ -102,7 +116,8 @@ the maintainer's phone stays on 0.1.4 until then.
 
 Crypto, git, autofill parsing, preference keys, the Keystore-backed secret storage, clipboard
 handling and the passphrase cache. Existing stores, keys and settings carry over without
-migration.
+migration, with two exceptions from step 6: a stored "files first" or "type independent" sort
+order (both removed) becomes folders first, and the unused OpenKeychain SSH key ID is dropped.
 
 ### Removed at the end
 
