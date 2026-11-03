@@ -17,12 +17,13 @@ import app.passwordstore.util.settings.GitSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-/** A numeric address or a web host name, as the old proxy screen accepted. */
+/** A numeric address or a plain host name: no scheme, port or path, which the port field holds. */
 fun isProxyHost(text: String): Boolean {
   val numeric =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) InetAddresses.isNumericAddress(text)
     else @Suppress("DEPRECATION") Patterns.IP_ADDRESS.matcher(text).matches()
-  return numeric || Patterns.WEB_URL.matcher(text).matches()
+  return numeric ||
+    (!text.contains(':') && !text.contains('/') && Patterns.DOMAIN_NAME.matcher(text).matches())
 }
 
 /**
@@ -43,12 +44,13 @@ constructor(private val gitSettings: GitSettings, private val proxyUtils: ProxyU
   val hostError: Boolean
     get() = host.isNotBlank() && !isProxyHost(host.trim())
 
+  /** Invalid, or empty while a host is set: a proxy without a port is not used at all. */
   val portError: Boolean
-    get() = proxyPort(port) == null
+    get() = proxyPort(port).let { it == null || (it == -1 && host.isNotBlank()) }
 
   /** Stores the proxy and applies it at once; false, storing nothing, when a field is invalid. */
   fun save(): Boolean {
-    if (hostError) return false
+    if (hostError || portError) return false
     val portValue = proxyPort(port) ?: return false
     gitSettings.proxyHost = host.trim().ifEmpty { null }
     gitSettings.proxyPort = portValue
