@@ -366,4 +366,10 @@
   <string name="editor_otp_manual">OTP manuale</string>
   <string name="generator_random">Casuale</string>
   <string name="generator_use">Usa</string>
+
+  <!-- Compose setup -->
+  <string name="ssh_key_state_none">Ancora nessuna chiave SSH</string>
+  <string name="ssh_key_state_imported">Chiave privata importata</string>
+  <string name="ssh_key_state_generated">Generata su questo dispositivo</string>
+  <string name="git_clone_progress">Clonazione…</string>
 </resources>

@@ -401,4 +401,10 @@
   <string name="generator_random">Random</string>
   <string name="generator_diceware" translatable="false">Diceware</string>
   <string name="generator_use">Use</string>
+
+  <!-- Compose setup -->
+  <string name="ssh_key_state_none">No SSH key yet</string>
+  <string name="ssh_key_state_imported">Imported private key</string>
+  <string name="ssh_key_state_generated">Generated on this device</string>
+  <string name="git_clone_progress">Cloning…</string>
 </resources>
