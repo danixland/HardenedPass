@@ -83,13 +83,16 @@ constructor(
   /**
    * Empties the store folder at [root] for a clone, unless it is empty already. Never follows a
    * symlink: `deleteRecursively()` would, and a `store/link -> ../keys` link would take the PGP
-   * keys with it.
+   * keys with it. Returns null, or why it failed as a string resource: then the clone must not
+   * start.
    */
-  suspend fun clearStore(root: File) {
-    if (withContext(dispatcherProvider.io()) { cloneTarget(root) } == CloneTarget.Empty) return
+  suspend fun clearStore(root: File): Int? {
+    if (withContext(dispatcherProvider.io()) { cloneTarget(root) } == CloneTarget.Empty) return null
     progress = R.string.delete_directory_progress_text
-    withContext(dispatcherProvider.io()) { root.deleteWithoutFollowingLinks() }
+    if (!withContext(dispatcherProvider.io()) { root.deleteWithoutFollowingLinks() })
+      return R.string.git_clone_delete_failed
     progress = R.string.git_clone_progress
+    return null
   }
 
   /** Set while [finishClone]'s key check runs: the clone's [progress] stays up until it is done. */

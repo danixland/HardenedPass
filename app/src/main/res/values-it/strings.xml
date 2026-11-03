@@ -372,4 +372,7 @@
   <string name="ssh_key_state_imported">Chiave privata importata</string>
   <string name="ssh_key_state_generated">Generata su questo dispositivo</string>
   <string name="git_clone_progress">Clonazione…</string>
+  <string name="git_clone_delete_failed">Impossibile svuotare la cartella dell\'archivio, la clonazione non è partita.</string>
+  <string name="pgp_key_import_too_large">Il file supera 1 MiB: non è una chiave PGP.</string>
+  <string name="pgp_key_import_downgrade">Una chiave privata con questo ID è già importata. La sola chiave pubblica non può sostituirla: elimina prima la chiave privata, se vuoi davvero farlo.</string>
 </resources>

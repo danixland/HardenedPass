@@ -1555,7 +1555,11 @@ fun GitServerDestination(
     viewModel.progress = R.string.git_clone_progress
     activity.lifecycleScope.launch {
       try {
-        viewModel.clearStore(root)
+        // A folder that could not be emptied is reported as such, not as a vague clone error.
+        viewModel.clearStore(root)?.let { failure ->
+          say(activity.getString(failure))
+          return@launch
+        }
         activity
           .launchGitOperation(GitOp.CLONE)
           .fold(
@@ -3757,7 +3761,7 @@ deleting `$OUT` if a visual check is wanted (copy them elsewhere first).
   `sshKeySummary`, `SshKeyType`, `SshKeyViewModel.import/generate/fail/dismissFailure/announced`,
   `type`, `protect`, `busy`, `version`, `imported`, `generated`, `failure` (Task 2) match Task 4;
   `GitServerViewModel.url/changeUrl/authMode/progress/cloned/hasHostKey/sshKey/refresh/
-  clearHostKey/save/clearStore` (suspend) `/finishClone` (not suspend, launches in
+  clearHostKey/save/clearStore` (suspend, returns null or a failure string resource) `/finishClone` (not suspend, launches in
   `viewModelScope`) `/cloneEnded` (Task 2) match Task 3; `KeyRow(userId, keyId)` (no `gpgId`
   member any more), `KeyImport`, `PgpKeysViewModel.keys/recipients/loadRecipients/busy/
   importResult/done/import/replace/dismissImport/deleteKey/createStore/markDone` (Task 2) match

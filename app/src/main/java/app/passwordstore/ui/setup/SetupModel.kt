@@ -9,8 +9,11 @@ import app.passwordstore.crypto.PGPIdentifier
 import app.passwordstore.util.settings.AuthMode
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
+import java.nio.channels.Channels
 import java.nio.file.Files
 import java.nio.file.LinkOption
+import java.nio.file.StandardOpenOption
 import java.util.Locale
 
 /** Why a repository URL is questioned before it is saved, as the old server screen checked it. */
@@ -73,9 +76,17 @@ fun cloneTarget(dir: File): CloneTarget {
   }
 }
 
-/** The recipients named by a `.gpg-id` file's [text]; blank and unparsable lines are skipped. */
+/**
+ * The recipients named by a `.gpg-id` file's [text], read as pass reads it: a `#` starts a comment,
+ * and a trailing `!` (GnuPG's "this exact subkey") is dropped. Blank and unparsable lines are
+ * skipped.
+ */
 fun storeRecipients(text: String): List<PGPIdentifier> =
-  text.lines().map(String::trim).filter(String::isNotEmpty).mapNotNull(PGPIdentifier::fromString)
+  text
+    .lines()
+    .map { it.substringBefore('#').trim().removeSuffix("!") }
+    .filter(String::isNotEmpty)
+    .mapNotNull(PGPIdentifier::fromString)
 
 /**
  * A `.gpg-id` naming [keys]: each 16-hex long key ID in uppercase on a line of its own, the format
@@ -91,12 +102,34 @@ private const val MAX_GPG_ID_BYTES = 64 * 1024
  * than 64 KiB or unreadable. Blocking: call it off the main thread.
  */
 fun readGpgId(dir: File): String? {
-  val file = File(dir, ".gpg-id")
-  val path = file.toPath()
+  val path = File(dir, ".gpg-id").toPath()
+  if (!Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) return null
+  // Opened without following a link too: one swapped in after the check is refused.
+  val options = setOf(StandardOpenOption.READ, LinkOption.NOFOLLOW_LINKS)
   return try {
-    if (!Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) null
-    else if (Files.size(path) > MAX_GPG_ID_BYTES) null else file.readText()
+    Channels.newInputStream(Files.newByteChannel(path, options))
+      .use { readAtMost(it, MAX_GPG_ID_BYTES) }
+      ?.decodeToString()
   } catch (_: IOException) {
     null
+  }
+}
+
+/**
+ * At most [limit] bytes of [input], or null when it holds more. Reads at most [limit] + 1 bytes,
+ * whatever the stream's size, and zeroes its buffer: the bytes may be a private key.
+ */
+fun readAtMost(input: InputStream, limit: Int): ByteArray? {
+  val buffer = ByteArray(limit + 1)
+  try {
+    var size = 0
+    while (size < buffer.size) {
+      val read = input.read(buffer, size, buffer.size - size)
+      if (read < 0) break
+      size += read
+    }
+    return if (size > limit) null else buffer.copyOf(size)
+  } finally {
+    buffer.fill(0)
   }
 }

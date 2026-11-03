@@ -29,6 +29,8 @@ import com.github.michaelbull.result.getOrElse
 import com.github.michaelbull.result.runCatching
 import java.io.File
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator
@@ -203,15 +205,20 @@ object SshKey {
   }
 
   private fun delete() {
-    androidKeystore.deleteEntry(KEYSTORE_ALIAS)
     if (privateKeyFile.isFile) {
       privateKeyFile.delete()
     }
+    deleteKeyExtras()
+    type = null
+  }
+
+  /** Everything of the current key but its private key file. */
+  private fun deleteKeyExtras() {
+    androidKeystore.deleteEntry(KEYSTORE_ALIAS)
     if (publicKeyFile.isFile) {
       publicKeyFile.delete()
     }
     context.getEncryptedGitPrefs().edit { remove(PreferenceKeys.SSH_KEY_LOCAL_PASSPHRASE) }
-    type = null
   }
 
   fun import(uri: Uri) {
@@ -241,12 +248,23 @@ object SshKey {
       )
 
     // At this point, we are reasonably confident that we have actually been provided a private
-    // key and delete the old key.
-    delete()
-    // Canonicalize line endings to '\n'.
-    privateKeyFile.writeText(lines.joinToString("\n"))
-
+    // key. It replaces the old one atomically (an I/O error keeps the old key), then the old key's
+    // Keystore entry, public key and passphrase go.
+    val temp = File(privateKeyFile.parentFile, ".${privateKeyFile.name}.tmp")
+    try {
+      // Canonicalize line endings to '\n'.
+      temp.writeText(lines.joinToString("\n"))
+      Files.move(
+        temp.toPath(),
+        privateKeyFile.toPath(),
+        StandardCopyOption.REPLACE_EXISTING,
+        StandardCopyOption.ATOMIC_MOVE,
+      )
+    } finally {
+      temp.delete()
+    }
     type = Type.Imported
+    deleteKeyExtras()
   }
 
   /** Deletes an Ed25519 key wrapped by androidx security-crypto, which can no longer be read. */

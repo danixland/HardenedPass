@@ -39,6 +39,10 @@ public class KeyNotFoundException(keyId: String) :
 public class KeyAlreadyExistsException(keyId: String) :
   KeyManagerException("Pre-existing key was found for $keyId")
 
+/** Attempting to replace a stored secret key with a public-only key of the same `keyId`. */
+public class KeyDowngradeException(keyId: String) :
+  KeyManagerException("A secret key is stored for $keyId; a public key cannot replace it")
+
 /** Sealed exception types for [app.passwordstore.crypto.CryptoHandler]. */
 public sealed class CryptoHandlerException(message: String? = null, cause: Throwable? = null) :
   CryptoException(message, cause)

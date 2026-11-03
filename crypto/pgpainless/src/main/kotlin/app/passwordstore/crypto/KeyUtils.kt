@@ -41,6 +41,8 @@ public object KeyUtils {
   }
 
   /** True when [key] parses as a secret key ring, the only kind that can decrypt. */
+  // ponytail: GnuPG stub and smartcard keyrings (no usable secret material) count as secret too.
+  // Upgrade path: check for a secret subkey usable for decryption.
   public fun isSecretKey(key: PGPKey): Boolean = tryParseKeyring(key) is PGPSecretKeyRing
 
   /**

@@ -17,10 +17,8 @@ import app.passwordstore.R
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.git.sshj.SshKey
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.IOException
-import java.security.GeneralSecurityException
-import java.security.ProviderException
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -83,11 +81,10 @@ class SshKeyViewModel @Inject constructor(private val dispatcherProvider: Dispat
         withContext(dispatcherProvider.io()) { SshKey.import(uri) }
         imported = true
         version++
-      } catch (e: IOException) {
-        failure = e.message.orEmpty()
-      } catch (e: IllegalArgumentException) {
-        failure = e.message.orEmpty()
-      } catch (e: SecurityException) {
+      } catch (e: CancellationException) {
+        throw e
+      } catch (e: Exception) {
+        // Any failure of a provider or of sshj, not only I/O: an uncaught one would crash the app.
         failure = e.message.orEmpty()
       } finally {
         busy = false
@@ -114,11 +111,10 @@ class SshKeyViewModel @Inject constructor(private val dispatcherProvider: Dispat
             SshKey.sshPublicKey.orEmpty()
           }
         version++
-      } catch (e: GeneralSecurityException) {
-        failure = e.message.orEmpty()
-      } catch (e: ProviderException) {
-        failure = e.message.orEmpty()
-      } catch (e: IOException) {
+      } catch (e: CancellationException) {
+        throw e
+      } catch (e: Exception) {
+        // Keystore and provider failures come as many exception types; none may crash the app.
         failure = e.message.orEmpty()
       } finally {
         busy = false

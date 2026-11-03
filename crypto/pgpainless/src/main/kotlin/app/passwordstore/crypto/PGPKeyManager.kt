@@ -14,6 +14,7 @@ import app.passwordstore.crypto.errors.InvalidKeyException
 import app.passwordstore.crypto.errors.KeyAlreadyExistsException
 import app.passwordstore.crypto.errors.KeyDeletionFailedException
 import app.passwordstore.crypto.errors.KeyDirectoryUnavailableException
+import app.passwordstore.crypto.errors.KeyDowngradeException
 import app.passwordstore.crypto.errors.KeyNotFoundException
 import app.passwordstore.crypto.errors.NoKeysAvailableException
 import app.passwordstore.crypto.errors.UnusableKeyException
@@ -59,6 +60,9 @@ constructor(filesDir: String, private val dispatcher: CoroutineDispatcher) :
               keyFile.writeBytes(keyBytes)
               return@runSuspendCatching key
             }
+            // Never with replace either: it would delete the only copy of the private key.
+            existingKeyRing is PGPSecretKeyRing && incomingKeyRing is PGPPublicKeyRing ->
+              throw KeyDowngradeException(tryGetId(key)?.toString() ?: "Failed to retrieve key ID")
           }
           // Check for replace flag first and if it is false, throw an error
           if (!replace)

@@ -89,6 +89,25 @@ class SetupModelTest {
   }
 
   @Test
+  fun storeRecipientsDropCommentsAndExactSubkeyMarks() {
+    val ids =
+      storeRecipients(
+        "# store key\nF8993A789CDFB014! # laptop\n79E8208280490C77!\nalice@example.org#work\n  # \n"
+      )
+    assertEquals(
+      listOf("f8993a789cdfb014", "79e8208280490c77", "alice@example.org"),
+      ids.map(PGPIdentifier::toString),
+    )
+  }
+
+  @Test
+  fun readAtMostRefusesMoreThanTheLimit() {
+    assertEquals("abc", readAtMost("abc".byteInputStream(), 3)?.decodeToString())
+    assertEquals("", readAtMost("".byteInputStream(), 3)?.decodeToString())
+    assertNull(readAtMost("abcd".byteInputStream(), 3))
+  }
+
+  @Test
   fun gpgIdTextIsUppercaseKeyIdsOnePerLine() {
     val ids =
       listOf("f8993a789cdfb014", "0x79E8208280490C77").map {

@@ -13,11 +13,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.passwordstore.R
 import app.passwordstore.crypto.KeyUtils
 import app.passwordstore.crypto.PGPIdentifier
 import app.passwordstore.crypto.PGPKey
 import app.passwordstore.crypto.PGPKeyManager
 import app.passwordstore.crypto.errors.KeyAlreadyExistsException
+import app.passwordstore.crypto.errors.KeyDowngradeException
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.util.coroutines.DispatcherProvider
 import com.github.michaelbull.result.onSuccess
@@ -126,18 +128,23 @@ constructor(
     }
   }
 
-  /** Reads the key file at [uri] and imports it. */
+  /** Reads the key file at [uri] (at most [MAX_KEY_BYTES]) and imports it. */
   fun import(uri: Uri, context: Context) {
     if (busy) return
     busy = true
     val resolver = context.applicationContext.contentResolver
+    val tooLarge = context.getString(R.string.pgp_key_import_too_large)
+    val downgrade = context.getString(R.string.pgp_key_import_downgrade)
     viewModelScope.launch {
       try {
         val bytes =
           withContext(dispatcherProvider.io()) {
-            resolver.openInputStream(uri)?.use { it.readBytes() }
+            resolver.openInputStream(uri)?.use {
+              readAtMost(it, MAX_KEY_BYTES) ?: throw IOException(tooLarge)
+            }
           }
-        if (bytes == null) importResult = KeyImport.Failed(null) else add(bytes, replace = false)
+        if (bytes == null) importResult = KeyImport.Failed(null)
+        else add(bytes, replace = false, downgrade)
       } catch (e: IOException) {
         importResult = KeyImport.Failed(e.message)
       } catch (e: SecurityException) {
@@ -168,22 +175,34 @@ constructor(
     importResult = null
   }
 
-  /** Imports [bytes]; they are zeroed afterwards unless the replace question keeps them. */
-  private suspend fun add(bytes: ByteArray, replace: Boolean) {
-    val result = keyManager.addKey(PGPKey(bytes), replace)
-    if (!replace && result.isErr && result.error is KeyAlreadyExistsException) {
-      pending = bytes
-      importResult = KeyImport.Exists
-      return
+  /**
+   * Imports [bytes]; they are zeroed afterwards, also on failure or cancellation, unless the
+   * replace question keeps them. [downgrade] is the message for a public key over a secret one.
+   */
+  private suspend fun add(bytes: ByteArray, replace: Boolean, downgrade: String? = null) {
+    var keep = false
+    try {
+      val result = keyManager.addKey(PGPKey(bytes), replace)
+      if (!replace && result.isErr && result.error is KeyAlreadyExistsException) {
+        // A question still open from an earlier pick is superseded: zero its bytes first.
+        dropPending()
+        pending = bytes
+        keep = true
+        importResult = KeyImport.Exists
+        return
+      }
+      // The ID is read before the bytes are zeroed: the returned key shares them.
+      importResult =
+        if (result.isOk) {
+          val id = withContext(dispatcherProvider.default()) { KeyUtils.tryGetId(result.value) }
+          KeyImport.Imported(id?.toString().orEmpty())
+        } else if (result.error is KeyDowngradeException) {
+          KeyImport.Failed(downgrade ?: result.error.message)
+        } else KeyImport.Failed(result.error.message)
+      if (result.isOk) updateKeySet()
+    } finally {
+      if (!keep) bytes.fill(0)
     }
-    // The ID is read before the bytes are zeroed: the returned key shares them.
-    importResult =
-      if (result.isOk) {
-        val id = withContext(dispatcherProvider.default()) { KeyUtils.tryGetId(result.value) }
-        KeyImport.Imported(id?.toString().orEmpty())
-      } else KeyImport.Failed(result.error.message)
-    bytes.fill(0)
-    if (result.isOk) updateKeySet()
   }
 
   /**
@@ -223,3 +242,6 @@ constructor(
     dropPending()
   }
 }
+
+/** The largest key file imported: far above any real key, small enough to hold in memory. */
+private const val MAX_KEY_BYTES = 1024 * 1024
