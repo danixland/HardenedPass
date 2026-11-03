@@ -123,14 +123,18 @@ suspend fun BaseGitActivity.moveItems(files: List<File>, target: File) {
 /** Renames the folder [from] to [to], keeps its recently-used time, then commits. */
 suspend fun BaseGitActivity.renameFolder(from: File, to: File) {
   if (!moveFile(from, to)) return
-  val history = getSharedPreferences(HISTORY, Context.MODE_PRIVATE)
-  val time = history.getString(from.absolutePath.base64())
-  if (time != null)
-    history.edit {
-      remove(from.absolutePath.base64())
-      putString(to.absolutePath.base64(), time)
-    }
+  moveHistory(from, to)
   commitChange(getString(R.string.git_commit_move_text, from.name, to.name))
+}
+
+/** Carries the "recently used" time of [from] over to [to]. */
+fun Context.moveHistory(from: File, to: File) {
+  val history = getSharedPreferences(HISTORY, Context.MODE_PRIVATE)
+  val time = history.getString(from.absolutePath.base64()) ?: return
+  history.edit {
+    remove(from.absolutePath.base64())
+    putString(to.absolutePath.base64(), time)
+  }
 }
 
 private suspend fun BaseGitActivity.moveFile(source: File, destination: File): Boolean {
