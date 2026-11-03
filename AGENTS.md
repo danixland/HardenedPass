@@ -117,6 +117,10 @@ passed.
   and hash included. A dependency bump that moves a baselined jar needs the path updated.
 - `LaunchActivity` is exported and forwards `FILE_PATH` to `DecryptActivity` (not exported)
   only after `isFileInRepo` checks it canonically resolves inside the store.
+- sshj gets Ed25519 keys from Bouncy Castle: `SshjConfig.kt` pins `KeyFactory.Ed25519` to it at
+  provider position 1. Conscrypt from Android 14 mainline updates serves that factory with keys
+  sshj maps to `KeyType.UNKNOWN` ("Don't know how to encode key"), breaking every Ed25519 host
+  and user key. The emulator image does not show it; a 2026-03 Android 14 tablet does.
 - AGP 9 applies packaging excludes (`AndroidCommon`, e.g. `**/*.txt`) to unit-test java
   resources as well. A module whose tests load such a file must remove the exclude locally
   (see `passgen/diceware/build.gradle.kts`).
