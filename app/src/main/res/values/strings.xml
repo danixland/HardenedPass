@@ -397,4 +397,16 @@
   <string name="folder_picker_title">Choose a folder</string>
   <string name="folder_creation_err_failed">Could not create the folder</string>
   <string name="folder_picker_new">New folder</string>
+
+  <!-- Compose editor -->
+  <string name="editor_new_title">New entry</string>
+  <string name="editor_edit_title">Edit entry</string>
+  <string name="editor_close">Close</string>
+  <string name="editor_folder">Folder</string>
+  <string name="editor_change_folder">Change</string>
+  <string name="editor_otp_qr">OTP from QR</string>
+  <string name="editor_otp_manual">Manual OTP</string>
+  <string name="generator_random">Random</string>
+  <string name="generator_diceware" translatable="false">Diceware</string>
+  <string name="generator_use">Use</string>
 </resources>

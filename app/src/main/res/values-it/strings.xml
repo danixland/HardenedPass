@@ -363,4 +363,15 @@
   <string name="folder_picker_title">Scegli una cartella</string>
   <string name="folder_creation_err_failed">Impossibile creare la cartella</string>
   <string name="folder_picker_new">Nuova cartella</string>
+
+  <!-- Compose editor -->
+  <string name="editor_new_title">Nuova voce</string>
+  <string name="editor_edit_title">Modifica voce</string>
+  <string name="editor_close">Chiudi</string>
+  <string name="editor_folder">Cartella</string>
+  <string name="editor_change_folder">Cambia</string>
+  <string name="editor_otp_qr">OTP da QR</string>
+  <string name="editor_otp_manual">OTP manuale</string>
+  <string name="generator_random">Casuale</string>
+  <string name="generator_use">Usa</string>
 </resources>
