@@ -379,5 +379,6 @@
   <!-- Compose settings -->
   <string name="store_delete_failed">Impossibile eliminare tutto il contenuto della cartella dell\'archivio.</string>
   <string name="clear_saved_secret_message">Verrà chiesto di nuovo alla prossima operazione Git.</string>
+  <string name="invalid_proxy_port">Inserisci una porta da 1 a 65535, oppure niente</string>
   <string name="store_delete_confirm">Eliminare l\'archivio locale? Le voci di cui non è stato fatto il push sul remote vanno perse.</string>
 </resources>
