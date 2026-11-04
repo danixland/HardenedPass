@@ -181,7 +181,7 @@
   <string name="oreo_autofill_save_passwords_dont_match">As senhas não coincidem</string>
   <string name="oreo_autofill_generate_password">Gerar senha…</string>
   <string name="oreo_autofill_max_matches_reached">Número máximo de correspondências (%1$d) atingidas; limpar correspondências antes de adicionar novas.</string>
-  <string name="oreo_autofill_warning_publisher_header">O editor deste aplicativo mudou desde a primeira vez que você associou uma entrada no Password Store:</string>
+  <string name="oreo_autofill_warning_publisher_header">O editor deste aplicativo mudou desde a primeira vez que você associou uma entrada no HardenedPass:</string>
   <string name="oreo_autofill_warning_publisher_footer"><b>O aplicativo atualmente instalado pode estar tentando roubar suas credenciais fingindo ser um aplicativo confiável.</b>\n\nTente desinstalar e reinstalar o aplicativo de uma fonte confiável, como a Play Store, Amazon Appstore, F-Droid ou a loja do fabricante do seu telefone.</string>
   <string name="oreo_autofill_warning_publisher_install_time">Instalado: %1$s</string>
   <string name="oreo_autofill_warning_publisher_advanced_info_button">Informações avançadas</string>
@@ -195,8 +195,8 @@
   <string name="oreo_autofill_password_fill_support">Preencher as senhas</string>
   <string name="oreo_autofill_flaky_fill_support">Preencher senhas (pode ser necessário reiniciar o navegador de vez em quando)</string>
   <string name="oreo_autofill_no_support">Sem suporte</string>
-  <string name="oreo_autofill_enable_dialog_description">O Password Store pode oferecer para preencher formulários de login e até mesmo salvar credenciais inseridas em aplicativos ou em sites.</string>
-  <string name="oreo_autofill_enable_dialog_instructions">Para ativar esse recurso, toque em OK para ir para as configurações de preenchimento automático. Lá, selecione Password Store na lista e confirme na tela confirmação com OK.</string>
+  <string name="oreo_autofill_enable_dialog_description">O HardenedPass pode oferecer para preencher formulários de login e até mesmo salvar credenciais inseridas em aplicativos ou em sites.</string>
+  <string name="oreo_autofill_enable_dialog_instructions">Para ativar esse recurso, toque em OK para ir para as configurações de preenchimento automático. Lá, selecione HardenedPass na lista e confirme na tela confirmação com OK.</string>
   <string name="oreo_autofill_enable_dialog_installed_browsers">Suporte ao preenchimento automático com navegadores instalados:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Não foi possível abrir a chave privada ssh, por favor verifique se o arquivo existe</string>
@@ -213,7 +213,7 @@
   <string name="biometric_prompt_title">Confirmação Biométrica</string>
   <string name="biometric_auth_error_reason">Falha de autenticação: %s</string>
   <string name="pref_biometric_auth_title">Ativar autenticação biométrica</string>
-  <string name="pref_biometric_auth_summary">Quando ativado, o Password Store irá pedir a sua impressão digital ao iniciar o aplicativo</string>
+  <string name="pref_biometric_auth_summary">Quando ativado, o HardenedPass irá pedir a sua impressão digital ao iniciar o aplicativo</string>
   <string name="pref_biometric_auth_summary_error">Hardware de impressão digital não acessível ou ausente</string>
   <string name="your_public_key">Sua chave pública</string>
   <string name="error_generate_ssh_key">Erro ao tentar gerar a chave SSH</string>

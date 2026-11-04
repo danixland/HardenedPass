@@ -195,8 +195,8 @@
   <string name="oreo_autofill_password_fill_support">Passwörter ausfüllen</string>
   <string name="oreo_autofill_flaky_fill_support">Passwörter ausfüllen (manchmal kann ein Neustart des Browsers erforderlich sein)</string>
   <string name="oreo_autofill_no_support">Kein Support</string>
-  <string name="oreo_autofill_enable_dialog_description">Password Store kann das Ausfüllen von Anmeldeformularen und sogar das Speichern von Anmeldedaten in Apps oder auf Webseiten übernehmen.</string>
-  <string name="oreo_autofill_enable_dialog_instructions">Tippen Sie auf OK, um diese Funktion zu aktivieren und um zu den Autofill-Einstellungen zu gelangen. Dort wählen Sie \"Password Store\" aus der Liste und bestätigen mit \"OK\".</string>
+  <string name="oreo_autofill_enable_dialog_description">HardenedPass kann das Ausfüllen von Anmeldeformularen und sogar das Speichern von Anmeldedaten in Apps oder auf Webseiten übernehmen.</string>
+  <string name="oreo_autofill_enable_dialog_instructions">Tippen Sie auf OK, um diese Funktion zu aktivieren und um zu den Autofill-Einstellungen zu gelangen. Dort wählen Sie \"HardenedPass\" aus der Liste und bestätigen mit \"OK\".</string>
   <string name="oreo_autofill_enable_dialog_installed_browsers">Autofill-Unterstützung mit installierten Browsern:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Der private SSH-Schlüssel konnte nicht geöffnet werden. Bitte überprüfen Sie, ob die Datei existiert.</string>
@@ -256,8 +256,8 @@
   <string name="preference_custom_public_suffixes_hint">company.com\npersonal.com</string>
   <!-- Password creation failure -->
   <string name="password_creation_file_fail_title">Fehler</string>
-  <string name="password_creation_file_write_fail_message">Fehler beim Speichern der Passwortdatei im Password Store, bitte versuchen Sie es erneut.</string>
-  <string name="password_creation_file_delete_fail_message">Fehler beim Löschen der Passwortdatei %1$s aus dem Password Store, bitte löschen Sie die Datei von Hand.</string>
+  <string name="password_creation_file_write_fail_message">Fehler beim Speichern der Passwortdatei im Repository, bitte versuchen Sie es erneut.</string>
+  <string name="password_creation_file_delete_fail_message">Fehler beim Löschen der Passwortdatei %1$s aus dem Repository, bitte löschen Sie die Datei von Hand.</string>
   <string name="password_creation_duplicate_error">Datei existiert bereits, bitte benutzen Sie einen anderen Dateinamen.</string>
   <string name="add_otp">OTP hinzufügen</string>
   <string name="otp_import_success">TOTP-Konfiguration erfolgreich importiert</string>

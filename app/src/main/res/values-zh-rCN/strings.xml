@@ -214,7 +214,7 @@
   <string name="biometric_prompt_title">生物识别提示</string>
   <string name="biometric_auth_error_reason">验证失败: %s</string>
   <string name="pref_biometric_auth_title">启用生物识别认证</string>
-  <string name="pref_biometric_auth_summary">如果启用，Password Store 将在启动应用时提示您使用指纹进行身份验证</string>
+  <string name="pref_biometric_auth_summary">如果启用，HardenedPass 将在启动应用时提示您使用指纹进行身份验证</string>
   <string name="pref_biometric_auth_summary_error">指纹硬件无法访问或丢失</string>
   <string name="your_public_key">你的公开密钥</string>
   <string name="error_generate_ssh_key">尝试生成SSH密钥时出错</string>
