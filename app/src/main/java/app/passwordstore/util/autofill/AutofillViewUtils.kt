@@ -20,7 +20,7 @@ import androidx.autofill.inline.UiVersions
 import androidx.autofill.inline.v1.InlineSuggestionUi
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
-import app.passwordstore.ui.passwords.PasswordStore
+import app.passwordstore.ui.main.LaunchActivity
 import java.io.File
 
 data class DatasetMetadata(val title: String, val subtitle: String?, @DrawableRes val iconRes: Int)
@@ -55,7 +55,7 @@ fun makeInlinePresentation(
     PendingIntent.getActivity(
       context,
       0,
-      Intent(context, PasswordStore::class.java),
+      Intent(context, LaunchActivity::class.java),
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         PendingIntent.FLAG_MUTABLE
       } else {

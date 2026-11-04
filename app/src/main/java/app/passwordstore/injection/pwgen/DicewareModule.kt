@@ -13,14 +13,14 @@ import app.passwordstore.passgen.diceware.RandomIntGenerator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
 import java.security.SecureRandom
 import javax.inject.Qualifier
 
 @Module
-@InstallIn(FragmentComponent::class)
+@InstallIn(ViewModelComponent::class)
 object DicewareModule {
 
   @Provides

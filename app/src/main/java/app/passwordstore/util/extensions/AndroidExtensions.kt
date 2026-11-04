@@ -8,7 +8,6 @@ package app.passwordstore.util.extensions
 import android.app.KeyguardManager
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
@@ -17,12 +16,8 @@ import android.content.pm.PackageManager.ApplicationInfoFlags
 import android.content.pm.PackageManager.PackageInfoFlags
 import android.os.Build
 import android.util.Base64
-import android.util.TypedValue
 import android.view.View
 import android.view.autofill.AutofillManager
-import androidx.activity.ComponentActivity
-import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.BuildConfig
@@ -56,13 +51,6 @@ val Context.keyguardManager: KeyguardManager
 val Context.sharedPrefs: SharedPreferences
   get() = getSharedPreferences("${BuildConfig.APPLICATION_ID}_preferences", 0)
 
-/** Resolve [attr] from the [Context]'s theme */
-fun Context.resolveAttribute(attr: Int): Int {
-  val typedValue = TypedValue()
-  this.theme.resolveAttribute(attr, typedValue, true)
-  return typedValue.data
-}
-
 /**
  * Commit changes to the store from a [FragmentActivity] using a custom implementation of
  * [GitOperation]
@@ -90,30 +78,15 @@ suspend fun FragmentActivity.commitChange(message: String): Result<Unit, Throwab
     .execute()
 }
 
-/** Check if [permission] has been granted to the app. */
-fun FragmentActivity.isPermissionGranted(permission: String): Boolean {
-  return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-}
-
-/**
- * Show a [Snackbar] in a [FragmentActivity] and correctly anchor it to a
- * [com.google.android.material.floatingactionbutton.FloatingActionButton] if one exists in the
- * [view]
- */
+/** Show a [Snackbar] in a [FragmentActivity]. */
 fun FragmentActivity.snackbar(
   view: View = findViewById(android.R.id.content),
   message: String,
   length: Int = Snackbar.LENGTH_SHORT,
 ): Snackbar {
   val snackbar = Snackbar.make(view, message, length)
-  snackbar.anchorView = findViewById(R.id.fab)
   snackbar.show()
   return snackbar
-}
-
-/** Launch an activity denoted by [clazz]. */
-fun <T : ComponentActivity> ComponentActivity.launchActivity(clazz: Class<T>) {
-  startActivity(Intent(this, clazz).setAction(Intent.ACTION_VIEW))
 }
 
 /** Simplifies the common `getString(key, null) ?: defaultValue` case slightly */
@@ -137,14 +110,5 @@ fun PackageManager.getApplicationInfoCompat(packageName: String, flags: Int): Ap
     getApplicationInfo(packageName, ApplicationInfoFlags.of(flags.toLong()))
   } else {
     getApplicationInfo(packageName, flags)
-  }
-}
-
-/** Allows conditionally applying the given [modifier] if [isEnabled] is `true`. */
-fun Modifier.conditional(isEnabled: Boolean, modifier: Modifier.() -> Modifier): Modifier {
-  return if (isEnabled) {
-    then(modifier())
-  } else {
-    this
   }
 }

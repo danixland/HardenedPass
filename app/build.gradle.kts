@@ -12,6 +12,7 @@ plugins {
   alias(libs.plugins.hilt)
   alias(libs.plugins.ksp)
   alias(libs.plugins.kotlin.composeCompiler)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -59,35 +60,32 @@ dependencies {
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.autofill)
   implementation(libs.androidx.biometricKtx)
-  implementation(libs.androidx.constraintlayout)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.documentfile)
+  // Pins androidx.fragment (FragmentActivity, BiometricPrompt): appcompat alone resolves 1.5.4.
   implementation(libs.androidx.fragment.ktx)
+  implementation(libs.androidx.hilt.navigation.compose)
   implementation(libs.bundles.androidxLifecycle)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
+  implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.androidx.material)
-  implementation(libs.androidx.preference)
-  implementation(libs.androidx.recyclerview)
-  implementation(libs.androidx.recyclerviewSelection)
-  implementation(libs.androidx.swiperefreshlayout)
+  implementation(libs.androidx.navigation.compose)
   implementation(libs.compose.ui.tooling)
   implementation(libs.dagger.hilt.android)
 
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.serialization.core)
 
   implementation(libs.aps.sublimeFuzzy)
   implementation(libs.aps.zxingAndroidEmbedded)
 
-  implementation(libs.thirdparty.fastscroll)
-  implementation(libs.thirdparty.flowbinding.android)
   implementation(libs.thirdparty.jgit) {
     exclude(group = "org.apache.httpcomponents", module = "httpclient")
   }
   implementation(libs.thirdparty.kotlinResult)
   implementation(libs.thirdparty.logcat)
-  implementation(libs.thirdparty.modernAndroidPrefs)
   implementation(libs.thirdparty.leakcanary.plumber)
   implementation(libs.thirdparty.sshj)
   implementation(libs.thirdparty.bouncycastle.bcprov)

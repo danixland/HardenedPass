@@ -10,6 +10,7 @@ import app.passwordstore.crypto.PGPIdentifier.UserId
 import com.github.michaelbull.result.get
 import com.github.michaelbull.result.runCatching
 import org.bouncycastle.openpgp.PGPKeyRing
+import org.bouncycastle.openpgp.PGPSecretKeyRing
 import org.pgpainless.PGPainless
 import org.pgpainless.key.parsing.KeyRingReader
 
@@ -35,8 +36,14 @@ public object KeyUtils {
    */
   public fun tryGetEmail(key: PGPKey): UserId? {
     val keyRing = tryParseKeyring(key) ?: return null
-    return UserId(keyRing.publicKey.userIDs.next())
+    // A key may carry no user ID at all: next() threw NoSuchElementException there.
+    return keyRing.publicKey.userIDs.asSequence().firstOrNull()?.let(::UserId)
   }
+
+  /** True when [key] parses as a secret key ring, the only kind that can decrypt. */
+  // ponytail: GnuPG stub and smartcard keyrings (no usable secret material) count as secret too.
+  // Upgrade path: check for a secret subkey usable for decryption.
+  public fun isSecretKey(key: PGPKey): Boolean = tryParseKeyring(key) is PGPSecretKeyRing
 
   /**
    * Tests if the given [key] can be used for encryption, which is a bare minimum necessity for the

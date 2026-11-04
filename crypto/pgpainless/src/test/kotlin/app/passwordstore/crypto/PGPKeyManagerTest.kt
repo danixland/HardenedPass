@@ -9,6 +9,7 @@ import app.passwordstore.crypto.KeyUtils.tryGetId
 import app.passwordstore.crypto.PGPIdentifier.KeyId
 import app.passwordstore.crypto.PGPIdentifier.UserId
 import app.passwordstore.crypto.errors.KeyAlreadyExistsException
+import app.passwordstore.crypto.errors.KeyDowngradeException
 import app.passwordstore.crypto.errors.KeyNotFoundException
 import app.passwordstore.crypto.errors.NoKeysAvailableException
 import app.passwordstore.crypto.errors.UnusableKeyException
@@ -71,6 +72,11 @@ class PGPKeyManagerTest {
       val keyId = keyManager.getKeyId(keyManager.addKey(secretKey, true).unwrap())
 
       assertEquals(KeyId(CryptoConstants.KEY_ID), keyId)
+      // Replaced through a temporary file that does not stay behind.
+      assertEquals(listOf("$keyId.${PGPKeyManager.KEY_EXTENSION}"), keysDir.list()?.toList())
+      // A stray temporary file left by a crash is not listed as a key.
+      File(keysDir, ".$keyId.${PGPKeyManager.KEY_EXTENSION}.tmp").writeText("partial")
+      assertEquals(1, keyManager.getAllKeys().unwrap().size)
     }
 
   @Test
@@ -174,6 +180,16 @@ class PGPKeyManagerTest {
     runTest(dispatcher) {
       assertTrue(keyManager.addKey(secretKey).isOk)
       assertTrue(keyManager.addKey(publicKey).isErr)
+    }
+
+  @Test
+  fun replaceSecretKeyWithPublicKeyIsRefusedEvenWithReplace() =
+    runTest(dispatcher) {
+      keyManager.addKey(secretKey).unwrap()
+      assertIs<KeyDowngradeException>(keyManager.addKey(publicKey, replace = true).unwrapError())
+      assertIs<KeyDowngradeException>(keyManager.addKey(publicKey, replace = false).unwrapError())
+      // The private key is still the stored one.
+      assertContentEquals(secretKey.contents, keyManager.getAllKeys().unwrap().single().contents)
     }
 
   @Test

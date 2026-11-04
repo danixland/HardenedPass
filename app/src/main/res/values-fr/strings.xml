@@ -24,7 +24,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Suppression…</string>
   <string name="move">Déplacer</string>
-  <string name="edit">Éditer</string>
   <string name="delete">Supprimer</string>
   <string name="password_exists_title">Le mot de passe existe!</string>
   <string name="password_exists_message">Cela écrasera %1$s avec %2$s.</string>
@@ -39,7 +38,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Copié dans le presse-papiers</string>
   <string name="file_toast_text">Veuillez fournir un nom de fichier</string>
-  <string name="path_toast_text">Veuillez fournir un chemin d\'accès au fichier</string>
   <string name="empty_toast_text">Vous ne pouvez pas utiliser un mot de passe vide ou des données supplémentaires vide</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Une erreur c\'est produite lors d\'une opération Git</string>
@@ -63,7 +61,6 @@
   <string name="crypto_name_hint">Nom</string>
   <string name="crypto_pass_label">Mot de passe</string>
   <string name="crypto_extra_label">Extra</string>
-  <string name="crypto_encrypt_username_label">Chiffrer le nom d\'utilisateur</string>
   <string name="crypto_select">Sélectionner</string>
   <string name="crypto_save">Sauvegarder</string>
   <string name="crypto_save_and_copy">Enregistrer et copier</string>
@@ -97,8 +94,6 @@
   <string name="pref_recursive_filter_summary">Cherche le mot de passe dans tous les sous-répertoires du répertoire actuel.</string>
   <string name="pref_sort_order_title">Ordre de tri des mots de passe</string>
   <string name="pref_folder_first_sort_order">Dossiers en premier</string>
-  <string name="pref_file_first_sort_order">Fichiers en premier</string>
-  <string name="pref_type_independent_sort_order">Indifférent au type d\'entrée</string>
   <string name="pref_recently_used_sort_order">Récemment utilisé</string>
   <string name="pref_category_autofill_title">Saisie automatique</string>
   <string name="pref_autofill_enable_title">Saisie automatique</string>
@@ -114,7 +109,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Générer un mot de passe</string>
   <string name="pwgen_generate">Générer</string>
-  <string name="pwgen_include">Inclure</string>
   <string name="pwgen_length">Longueur</string>
   <string name="pwgen_numerals">Chiffres</string>
   <string name="pwgen_symbols">Symboles</string>
@@ -155,7 +149,6 @@
   <string name="dialog_yes">Oui</string>
   <string name="dialog_no">Non</string>
   <string name="dialog_cancel">Annuler</string>
-  <string name="dialog_skip">Ignorer</string>
   <string name="git_sync">Synchronisation du dépôt</string>
   <string name="git_pull">Importer du serveur</string>
   <string name="git_push">Pousser sur le serveur</string>
@@ -163,10 +156,7 @@
   <string name="git_log">Afficher l\'historique des commits</string>
   <string name="show_password_pref_title">Montrer le mot de passe</string>
   <string name="show_password_pref_summary">Contrôle la visibilité des mots de passe une fois déchifrées, ceci n\'empêche pas de copier le mot de passe</string>
-  <string name="pwd_generate_button">Générer</string>
-  <string name="refresh_list">Rafraichir la liste</string>
   <string name="send_plaintext_password_to">Envoyer le mot de passe en clair via…</string>
-  <string name="app_icon_hint">Icône de l\'application</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Sélectionnez l\'entrée à remplir</string>
   <string name="oreo_autofill_strict_domain_search">Recherche protégée contre le hameçonnage</string>
@@ -193,12 +183,11 @@
   <string name="oreo_autofill_password_fill_support">Remplir le mot de passe</string>
   <string name="oreo_autofill_flaky_fill_support">Remplir les mots de passe (peut nécessiter un redémarrage du navigateur de temps à autre)</string>
   <string name="oreo_autofill_no_support">Pas de support</string>
-  <string name="oreo_autofill_enable_dialog_description">Password Store vous permet de remplir des formulaires de connexion ainsi que d\'enregistrer vos identifiants d\'applications ou de sites Web.</string>
-  <string name="oreo_autofill_enable_dialog_instructions">Pour activer cette fonctionnalité, appuyez sur OK pour aller dans les paramètres de saisie automatique, sélectionnez Password Store dans la liste puis confirmez avec OK.</string>
+  <string name="oreo_autofill_enable_dialog_description">HardenedPass vous permet de remplir des formulaires de connexion ainsi que d\'enregistrer vos identifiants d\'applications ou de sites Web.</string>
+  <string name="oreo_autofill_enable_dialog_instructions">Pour activer cette fonctionnalité, appuyez sur OK pour aller dans les paramètres de saisie automatique, sélectionnez HardenedPass dans la liste puis confirmez avec OK.</string>
   <string name="oreo_autofill_enable_dialog_installed_browsers">Prise en charge du remplissage automatique avec les navigateurs installés:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Impossible d\'ouvrir la clef ssh, merci de vérifier que le ficher existe</string>
-  <string name="new_password_title">Nouveau mot de passe</string>
   <string name="clear_saved_passphrase_ssh">Effacer le mot de passe enregistrée pour la clé SSH locale</string>
   <string name="clear_saved_passphrase_https">Effacer le mot de passe HTTPS enregistré</string>
   <string name="git_operation_remember_passphrase">Se rappeler de la phrase secrète dans la configuration de l\'application (peu sûr)</string>
@@ -212,9 +201,8 @@
   <string name="biometric_prompt_title">Identification biométrique</string>
   <string name="biometric_auth_error_reason">Échec de l\'authentification : %s</string>
   <string name="pref_biometric_auth_title">Activer l\'authentification biométrique</string>
-  <string name="pref_biometric_auth_summary">Lorsque cette option est activée, Password Store vous demandera votre empreinte digitale au lancement</string>
+  <string name="pref_biometric_auth_summary">Lorsque cette option est activée, HardenedPass vous demandera votre empreinte digitale au lancement</string>
   <string name="pref_biometric_auth_summary_error">Lecteur d\'empreinte digitale non accessible ou manquant</string>
-  <string name="pref_title_openkeystore_clear_keyid">Effacer la clé d\'identification SSH d\'OpenKeystore mémorisée</string>
   <string name="your_public_key">Votre clé publique</string>
   <string name="error_generate_ssh_key">Une erreur est survenue pendant la génération de la clé ssh</string>
   <string name="pref_show_hidden_title">Afficher tous les fichiers et dossiers</string>
@@ -222,7 +210,6 @@
   <string name="title_create_folder">Créer un dossier</string>
   <string name="title_rename_folder">Renommer le dossier</string>
   <string name="message_category_error_empty_field">Le nom de la catégorie ne peut pas être vide</string>
-  <string name="message_category_error_category_exists">Une catégorie du même nom existe déjà</string>
   <string name="message_error_destination_outside_repo">La destination doit être à l\'intérieur du dépôt</string>
   <string name="message_rename_folder">Entrez le chemin pour %1$s</string>
   <string name="button_create">Créer</string>
@@ -265,11 +252,9 @@
   <string name="otp_import_failure_generic">Impossible d\'importer la configuration TOTP</string>
   <string name="exporting_passwords">Exportation des mots de passe…</string>
   <string name="invalid_filename_text">Le nom du fichier ne doit pas contenir \'/\', définir le répertoire parent</string>
-  <string name="directory_hint">Dossier</string>
-  <string name="new_folder_set_gpg_key">Définir la clé GPG pour le dossier</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Erreur inconnue</string>
-  <string name="git_pull_rebase_fail_error">Tirer a échoué, vous êtes dans un \'head\' détaché. En utilisant \"settings &gt; git utils\", enregistrez vos modifications sur le dépôt distant dans une nouvelle branche et résolvez le conflit sur votre ordinateur.</string>
+  <string name="git_pull_rebase_fail_error">Tirer a échoué, vous êtes dans un \'head\' détaché. En utilisant \"Paramètres &gt; Dépôt &gt; Configuration locale de Git &amp; utilitaires\", enregistrez vos modifications sur le dépôt distant dans une nouvelle branche et résolvez le conflit sur votre ordinateur.</string>
   <string name="git_pull_merge_fail_error">La fusion a échoué, vous êtes dans un état de conflit.</string>
   <string name="git_push_nff_error">La poussée a été rejetée par le dépôt distant, exécutez une tirée avant de pousser à nouveau. Vous pouvez utiliser Synchroniser plutôt que de tirer/pousser car il implémente les deux.</string>
   <string name="git_push_generic_error">L\'envoi a été rejeté par le dépôt distant, raison : %1$s</string>
@@ -282,12 +267,9 @@
   <string name="folder_creation_err_file_exists">Un fichier portant ce nom existe déjà</string>
   <string name="folder_creation_err_folder_exists">Un dossier portant ce nom existe déjà</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">Allons-y</string>
-  <string name="select_n_repository_type">Sélectionnez le type de dépôt \n</string>
   <string name="select_repo_type_text">Sélectionnez si vous voulez créer un dépôt local ou cloner un dépôt distant.</string>
   <string name="clone_remote_repo">Cloner le dépôt distant</string>
   <string name="create_local_repo">Créer un dépôt local</string>
-  <string name="select_gpg_key_title">Sélectionnez\nla clé GPG</string>
   <string name="select_gpg_key_message">Sélectionnez une clé GPG pour initialiser votre magasin</string>
   <string name="gpg_key_select">Sélectionner la clé</string>
   <!-- SSH port validation -->
@@ -305,10 +287,8 @@
   <string name="clear_saved_host_key_success">La clé d\'hôte a été effacée avec succès!</string>
   <string name="otp_import_qr_code">Scanner le code QR</string>
   <string name="otp_import_from_file">Choisissez une image</string>
-  <string name="otp_import_manual_entry">Saisir manuellement</string>
   <string name="otp_import_manual_hint_secret">Secret</string>
   <string name="otp_import_manual_hint_account">Compte</string>
-  <string name="password_list_fab_content_description">Créer un nouveau mot de passe ou dossier</string>
   <string name="pgp_key_import_failed">Impossible d\'importer la clé PGP</string>
   <string name="pgp_key_import_succeeded">Clé PGP importée avec succès</string>
   <string name="pgp_key_import_succeeded_message">La clé d\'identification de la clé importée est donné ci-dessous, veuillez la vérifier pour qu\'elle soit correcte :\n%1$s</string>

@@ -108,7 +108,7 @@ constructor(
     }
 
   var proxyUsername
-    get() = settings.getString(PreferenceKeys.PROXY_USERNAME)
+    get() = proxySettings.getString(PreferenceKeys.PROXY_USERNAME)
     set(value) {
       proxySettings.edit { putString(PreferenceKeys.PROXY_USERNAME, value) }
     }

@@ -23,7 +23,6 @@
   <string name="creation_dialog_text">Zanim dodasz hasło lub rozpoczniesz synchronizację, stwórz albo sklonuj poniżej nowe repozytorium.</string>
   <string name="delete_directory_progress_text">Usuwanie…</string>
   <string name="move">Przenieś</string>
-  <string name="edit">Edytuj</string>
   <string name="delete">Usuń</string>
   <string name="password_exists_title">Hasło już istnieje!</string>
   <string name="password_exists_message">%1$s zostanie nadpisane przez %2$s.</string>
@@ -38,7 +37,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Skopiowano do schowka</string>
   <string name="file_toast_text">Podaj nazwę pliku</string>
-  <string name="path_toast_text">Podaj ścieżkę do pliku</string>
   <string name="empty_toast_text">Nie możesz użyć pustego hasła lub pustej dodatkowej zawartości</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Wystąpił błąd podczas operacji Git</string>
@@ -62,7 +60,6 @@
   <string name="crypto_name_hint">Nazwa</string>
   <string name="crypto_pass_label">Hasło</string>
   <string name="crypto_extra_label">Treść dodatkowa</string>
-  <string name="crypto_encrypt_username_label">Szyfruj nazwę użytkownika</string>
   <string name="crypto_select">Wybierz</string>
   <string name="crypto_save">Zapisz</string>
   <string name="crypto_save_and_copy">Zapisz i skopiuj</string>
@@ -97,8 +94,6 @@
   <string name="pref_directory_structure">Organizacja plików haseł</string>
   <string name="pref_sort_order_title">Kolejność sortowania haseł</string>
   <string name="pref_folder_first_sort_order">Najpierw foldery</string>
-  <string name="pref_file_first_sort_order">Najpierw pliki</string>
-  <string name="pref_type_independent_sort_order">Niezależnie od typu</string>
   <string name="pref_recently_used_sort_order">Ostatnio używane</string>
   <string name="pref_category_autofill_title">Autouzupełnianie</string>
   <string name="pref_autofill_enable_title">Włącz autouzupełnianie</string>
@@ -123,7 +118,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Generuj hasło</string>
   <string name="pwgen_generate">Wygeneruj</string>
-  <string name="pwgen_include">Załącz</string>
   <string name="pwgen_length">Długość</string>
   <string name="pwgen_numerals">Cyfry</string>
   <string name="pwgen_symbols">Symbole</string>
@@ -164,7 +158,6 @@
   <string name="dialog_yes">Tak</string>
   <string name="dialog_no">Nie</string>
   <string name="dialog_cancel">Anuluj</string>
-  <string name="dialog_skip">Pomiń</string>
   <string name="git_sync">Synchronizuj repozytorium</string>
   <string name="git_pull">Pobierz ze zdalnego repozytorium</string>
   <string name="git_push">Wypchnij do zdalnego repozytorium</string>
@@ -172,10 +165,7 @@
   <string name="git_log">Pokaż dziennik commitów</string>
   <string name="show_password_pref_title">Pokaż hasło</string>
   <string name="show_password_pref_summary">Kontroluj widoczność haseł po odszyfrowaniu. To nie wyłącza kopiowania do schowka.</string>
-  <string name="pwd_generate_button">Generuj</string>
-  <string name="refresh_list">Odśwież listę</string>
   <string name="send_plaintext_password_to">Wyślij niezaszyfrowane hasło, używając…</string>
-  <string name="app_icon_hint">Ikona aplikacji</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Wybierz wpis do wypełnienia</string>
   <string name="oreo_autofill_strict_domain_search">Wyszukiwanie odporne na wyłudzenie</string>
@@ -200,12 +190,11 @@
   <string name="oreo_autofill_password_fill_support">Wypełnij hasła</string>
   <string name="oreo_autofill_flaky_fill_support">Wypełnij hasła (może wymagać ponownego uruchomienia przeglądarki od czasu do czasu)</string>
   <string name="oreo_autofill_no_support">Brak wsparcia</string>
-  <string name="oreo_autofill_enable_dialog_description">Password Store może zaoferować wypełnianie formularzy logowania, a nawet zapisywanie danych logowania, które wpisujesz w aplikacjach lub na stronach internetowych.</string>
-  <string name="oreo_autofill_enable_dialog_instructions">Aby włączyć tę funkcję, naciśnij przycisk OK, aby przejść do ustawień autouzupełniania. Następnie wybierz Password Store z listy i potwierdź przyciskiem OK.</string>
+  <string name="oreo_autofill_enable_dialog_description">HardenedPass może zaoferować wypełnianie formularzy logowania, a nawet zapisywanie danych logowania, które wpisujesz w aplikacjach lub na stronach internetowych.</string>
+  <string name="oreo_autofill_enable_dialog_instructions">Aby włączyć tę funkcję, naciśnij przycisk OK, aby przejść do ustawień autouzupełniania. Następnie wybierz HardenedPass z listy i potwierdź przyciskiem OK.</string>
   <string name="oreo_autofill_enable_dialog_installed_browsers">Obsługa autouzupełniania w zainstalowanych przeglądarkach:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Nie można otworzyć klucza prywatnego ssh, sprawdź czy plik istnieje</string>
-  <string name="new_password_title">Nowe hasło</string>
   <string name="clear_saved_passphrase_ssh">Wyczyść zapisane hasło dla lokalnego klucza SSH</string>
   <string name="clear_saved_passphrase_https">Wyczyść zapisane hasło HTTPS</string>
   <string name="git_operation_remember_passphrase">Zapamiętaj hasło klucza</string>
@@ -219,9 +208,8 @@
   <string name="biometric_prompt_title">Weryfikacja biometryczna</string>
   <string name="biometric_auth_error_reason">Błąd uwierzytelnienia: %s</string>
   <string name="pref_biometric_auth_title">Włącz uwierzytelnianie biometryczne</string>
-  <string name="pref_biometric_auth_summary">Gdy włączone, Password Store zapyta Cię o odcisk palca podczas uruchamiania aplikacji</string>
+  <string name="pref_biometric_auth_summary">Gdy włączone, HardenedPass zapyta Cię o odcisk palca podczas uruchamiania aplikacji</string>
   <string name="pref_biometric_auth_summary_error">Czytnik linii papilarnych jest niedostępny</string>
-  <string name="pref_title_openkeystore_clear_keyid">Wyczyść zapamiętany identyfikator klucza SSH OpenKeystore</string>
   <string name="your_public_key">Twój klucz publiczny</string>
   <string name="error_generate_ssh_key">Błąd podczas generowania klucza SSH</string>
   <string name="pref_show_hidden_title">Pokaż ukryte pliki i foldery</string>
@@ -229,7 +217,6 @@
   <string name="title_create_folder">Utwórz katalog</string>
   <string name="title_rename_folder">Zmień nazwę katalogu</string>
   <string name="message_category_error_empty_field">Nazwa kategorii nie może być pusta</string>
-  <string name="message_category_error_category_exists">Kategoria już istnieje</string>
   <string name="message_error_destination_outside_repo">Miejsce docelowe musi znajdować się w repozytorium</string>
   <string name="message_rename_folder">Wprowadź miejsce docelowe dla %1$s</string>
   <string name="button_create">Utwórz</string>
@@ -272,11 +259,9 @@
   <string name="invalid_gpg_id">Znaleziono .gpg-id, ale zawiera nieprawidłowy identyfikator klucza, odcisk palca lub identyfikator użytkownika</string>
   <string name="short_gpg_id">Znaleziono .gpg-id, ale zawarty w nim skrócony identyfikator nie jest obsługiwany</string>
   <string name="invalid_filename_text">Nazwa pliku nie może zawierać \'/\', ustaw katalog powyżej</string>
-  <string name="directory_hint">Katalog</string>
-  <string name="new_folder_set_gpg_key">Ustaw klucz GPG dla katalogu</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Nieznany błąd</string>
-  <string name="git_pull_rebase_fail_error">Zaciąganie zmian nie powiodło się, nie jesteś na żadnej gałęzi (detached head). Używając \"Ustawienia &gt; narzędzia Git\", wyślij lokalne zmiany do zdalnego repozytorium na nowej gałęzi i rozwiąż konflikt na komputerze.</string>
+  <string name="git_pull_rebase_fail_error">Zaciąganie zmian nie powiodło się, nie jesteś na żadnej gałęzi (detached head). Używając \"Ustawienia &gt; Repozytorium &gt; Konfiguracja lokalnego repo Git &amp; narzędzia\", wyślij lokalne zmiany do zdalnego repozytorium na nowej gałęzi i rozwiąż konflikt na komputerze.</string>
   <string name="git_pull_merge_fail_error">Scalanie nie powiodło się, jesteś w stanie konfliktu.</string>
   <string name="git_push_nff_error">Operacja wypchnięcia zmian została odrzucona przez zdalne repozytorium. Zaciągnij zmiany przed ponownym wysłaniem. Możesz użyć synchronizacji zamiast pull/push ponieważ zawiera obu te kroki</string>
   <string name="git_push_generic_error">Operacja wypchnięcia zmian została odrzucona przez zdalne repozytorium, powód: %1$s</string>
@@ -289,12 +274,9 @@
   <string name="folder_creation_err_file_exists">Plik o tej nazwie już istnieje</string>
   <string name="folder_creation_err_folder_exists">Folder o tej nazwie już istnieje</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">Zaczynajmy</string>
-  <string name="select_n_repository_type">Wybierz \ntyp repozytorium</string>
   <string name="select_repo_type_text">Zaznacz, czy chcesz utworzyć lokalne repozytorium, czy sklonować zdalne repozytorium.</string>
   <string name="clone_remote_repo">Klonuj zdalne repozytorium</string>
   <string name="create_local_repo">Utwórz lokalne repozytorium</string>
-  <string name="select_gpg_key_title">Wybierz\nklucz GPG</string>
   <string name="select_gpg_key_message">Wybierz klucz GPG, którym zainicjować swoje repozytorium</string>
   <string name="gpg_key_select">Wybierz klucz</string>
   <!-- SSH port validation -->
@@ -314,11 +296,9 @@
   <string name="clear_saved_host_key_success">Pomyślnie wyczyszczono zapisany klucz hosta!</string>
   <string name="otp_import_qr_code">Skanuj kod QR</string>
   <string name="otp_import_from_file">Wybierz obraz</string>
-  <string name="otp_import_manual_entry">Wprowadź ręcznie</string>
   <string name="otp_import_manual_hint_secret">Sekret</string>
   <string name="otp_import_manual_hint_account">Konto</string>
   <string name="place_shortcut_on_home_screen">Utwórz skrót na pulpicie</string>
-  <string name="password_list_fab_content_description">Utwórz nowe hasło lub folder</string>
   <string name="pgp_key_import_failed">Nie udało się zaimportować klucza PGP</string>
   <string name="pgp_key_import_failed_replace_message">Znaleziono istniejący klucz z tym identyfikatorem, czy chcesz go zastąpić?</string>
   <string name="pgp_key_import_succeeded">Pomyślnie zaimportowano klucz PGP</string>

@@ -24,7 +24,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Eliminazione…</string>
   <string name="move">Sposta</string>
-  <string name="edit">Modifica</string>
   <string name="delete">Elimina</string>
   <string name="password_exists_title">La password esiste già!</string>
   <string name="password_exists_message">Questo sovrascriverà %1$s con %2$s.</string>
@@ -39,7 +38,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Copiato negli appunti</string>
   <string name="file_toast_text">Inserisci un nome per il file</string>
-  <string name="path_toast_text">Inserisci il percorso del file</string>
   <string name="empty_toast_text">Non puoi usare una password vuota o dei contenuti extra vuoti</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Si è verificato un errore durante un\'operazione Git</string>
@@ -63,7 +61,6 @@
   <string name="crypto_name_hint">Nome</string>
   <string name="crypto_pass_label">Password</string>
   <string name="crypto_extra_label">Contenuto extra</string>
-  <string name="crypto_encrypt_username_label">Crittografa nome utente</string>
   <string name="crypto_select">Seleziona</string>
   <string name="crypto_save">Salva</string>
   <string name="crypto_save_and_copy">Salva e Copia</string>
@@ -97,8 +94,6 @@
   <string name="pref_recursive_filter_summary">Trova ricorsivamente le password della directory corrente.</string>
   <string name="pref_sort_order_title">Ordine password</string>
   <string name="pref_folder_first_sort_order">Prima le cartelle</string>
-  <string name="pref_file_first_sort_order">Prima i file</string>
-  <string name="pref_type_independent_sort_order">Indipendente dal tipo</string>
   <string name="pref_recently_used_sort_order">Usato di recente</string>
   <string name="pref_category_autofill_title">Compilazione automatica</string>
   <string name="pref_autofill_enable_title">Attiva la compilazione automatica</string>
@@ -109,7 +104,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Genera Password</string>
   <string name="pwgen_generate">Genera</string>
-  <string name="pwgen_include">Includi</string>
   <string name="pwgen_length">Lunghezza</string>
   <string name="pwgen_numerals">Numeri</string>
   <string name="pwgen_symbols">Simboli</string>
@@ -150,7 +144,6 @@
   <string name="dialog_yes">Sì</string>
   <string name="dialog_no">No</string>
   <string name="dialog_cancel">Annulla</string>
-  <string name="dialog_skip">Salta</string>
   <string name="git_sync">Sincronizza repository</string>
   <string name="git_pull">Pull dal remote</string>
   <string name="git_push">Push sul remote</string>
@@ -158,10 +151,7 @@
   <string name="git_log">Mostra registro dei commit</string>
   <string name="show_password_pref_title">Mostra la password</string>
   <string name="show_password_pref_summary">Controlla la visibilità delle password una volta decrittografate. Questo non disabilita la copia negli appunti.</string>
-  <string name="pwd_generate_button">Genera</string>
-  <string name="refresh_list">Aggiorna elenco</string>
   <string name="send_plaintext_password_to">Invia password come testo semplice usando…</string>
-  <string name="app_icon_hint">Icona app</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Seleziona la voce da compilare</string>
   <string name="oreo_autofill_strict_domain_search">Ricerca resistente al phishing</string>
@@ -193,7 +183,6 @@
   <string name="oreo_autofill_enable_dialog_installed_browsers">Supporto alla compilazione automatica nei browser installati:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Impossibile aprire la chiave privata SSH, controlla che il file esista</string>
-  <string name="new_password_title">Nuova password</string>
   <string name="clear_saved_passphrase_ssh">Cancella la frase segreta salvata per la chiave SSH locale</string>
   <string name="clear_saved_passphrase_https">Cancella la password HTTPS salvata</string>
   <string name="git_operation_remember_passphrase">Ricorda la frase segreta della chiave</string>
@@ -209,7 +198,6 @@
   <string name="pref_biometric_auth_title">Abilita autenticazione biometrica</string>
   <string name="pref_biometric_auth_summary">Se attiva, HardenedPass chiede l\'impronta digitale all\'avvio dell\'app</string>
   <string name="pref_biometric_auth_summary_error">L\'hardware delle impronte digitali non è accessibile o mancante</string>
-  <string name="pref_title_openkeystore_clear_keyid">Elimina l\'ID della Chiave SSH di OpenKeystore memorizzato</string>
   <string name="your_public_key">La tua chiave pubblica</string>
   <string name="error_generate_ssh_key">Errore durante la generazione della chiave SSH</string>
   <string name="pref_show_hidden_title">Mostra tutti i file e cartelle</string>
@@ -217,7 +205,6 @@
   <string name="title_create_folder">Crea cartella</string>
   <string name="title_rename_folder">Rinomina cartella</string>
   <string name="message_category_error_empty_field">Il nome della categoria non può essere vuoto</string>
-  <string name="message_category_error_category_exists">Il nome della categoria esiste già</string>
   <string name="message_error_destination_outside_repo">La destinazione deve essere nel repository</string>
   <string name="message_rename_folder">Inserisci la destinazione per %1$s</string>
   <string name="button_create">Crea</string>
@@ -260,11 +247,9 @@
   <string name="otp_import_failure_generic">Impossibile importare la configurazione di TOTP</string>
   <string name="exporting_passwords">Esportazione delle password…</string>
   <string name="invalid_filename_text">Il nome del file non deve contenere \'/\', imposta la directory qui sopra</string>
-  <string name="directory_hint">Directory</string>
-  <string name="new_folder_set_gpg_key">Imposta la chiave GPG per la directory</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Errore sconosciuto</string>
-  <string name="git_pull_rebase_fail_error">Pull non riuscito, sei in detached HEAD. Da \"Impostazioni > Utilità Git\" esegui il push delle modifiche sul remote in un nuovo branch e risolvi il conflitto dal computer.</string>
+  <string name="git_pull_rebase_fail_error">Pull non riuscito, sei in detached HEAD. Da \"Impostazioni > Repository > Configurazione Git locale e utilità\" esegui il push delle modifiche sul remote in un nuovo branch e risolvi il conflitto dal computer.</string>
   <string name="git_push_nff_error">Push rifiutato dal remote: esegui un pull prima di riprovare. Puoi usare Sincronizza, che esegue sia il pull sia il push</string>
   <string name="git_push_generic_error">Push rifiutato dal remote, motivo: %1$s</string>
   <string name="git_push_other_error">Il remote ha rifiutato un push non fast-forward. Controlla la variabile receive.denyNonFastForwards nella configurazione del repository di destinazione.</string>
@@ -276,12 +261,9 @@
   <string name="folder_creation_err_file_exists">Un file con quel nome esiste già</string>
   <string name="folder_creation_err_folder_exists">Una cartella con quel nome esiste già</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">Andiamo</string>
-  <string name="select_n_repository_type">Seleziona \nTipo di repository</string>
   <string name="select_repo_type_text">Seleziona se vuoi creare un repo locale o clonarne uno remoto.</string>
   <string name="clone_remote_repo">Clona repo remoto</string>
   <string name="create_local_repo">Crea repo locale</string>
-  <string name="select_gpg_key_title">Seleziona\nChiave\nGPG</string>
   <string name="select_gpg_key_message">Seleziona una chiave GPG con cui inizializzare il tuo archivio</string>
   <string name="gpg_key_select">Seleziona chiave</string>
   <!-- SSH port validation -->
@@ -298,7 +280,6 @@
   <string name="clear_saved_host_key">Cancella la chiave host salvata</string>
   <string name="clear_saved_host_key_success">Chiave host cancellata con successo!</string>
   <string name="otp_import_from_file">Scegli un\'immagine</string>
-  <string name="password_list_fab_content_description">Crea nuova password o cartella</string>
   <string name="git_commit_gpg_id">Inizializza gli ID GPG in %1$s.</string>
   <string name="crypto_username_hint">Nome utente</string>
   <string name="otp_label_format">OTP (scade tra %ds)</string>
@@ -321,18 +302,15 @@
   <string name="pref_passphrase_cache_auto_clear_authenticate_disable">Autenticati per disattivare la cancellazione automatica</string>
   <string name="pref_passphrase_cache_auto_clear_title">Cancella automaticamente le frasi segrete memorizzate</string>
   <string name="pref_passphrase_cache_auto_clear_summary">Cancella le frasi segrete memorizzate allo spegnimento dello schermo</string>
-  <string name="pref_biometric_auth_summary_disabled_platform">Funzione non disponibile a causa di un bug della piattaforma</string>
   <string name="password_creation_encrypt_fail_message">Impossibile cifrare la password, non è stato salvato nulla: %1$s</string>
   <string name="otp_import_failure_no_selection">Nessuna immagine selezionata</string>
   <string name="invalid_gpg_id">Trovato .gpg-id, ma contiene un ID chiave, un\'impronta o un ID utente non valido</string>
   <string name="short_gpg_id">Trovato .gpg-id, ma contiene un ID esadecimale corto, che non è supportato</string>
   <string name="git_pull_merge_fail_error">Merge non riuscito, il repository è in conflitto.</string>
-  <string name="gpg_key_select_mandatory">Per proseguire devi selezionare una chiave GPG</string>
   <string name="git_scheme_disallowed_title">Il protocollo git:// è sconsigliato</string>
   <string name="git_scheme_disallowed_message">Il protocollo git di git-daemon non cifra il trasporto e non è adatto a operazioni sicure.</string>
   <string name="activity_proxy_label">Impostazioni proxy</string>
   <string name="otp_import_qr_code">Scansiona codice QR</string>
-  <string name="otp_import_manual_entry">Inserisci manualmente</string>
   <string name="otp_import_manual_hint_secret">Segreto</string>
   <string name="otp_import_manual_hint_account">Account</string>
   <string name="place_shortcut_on_home_screen">Aggiungi scorciatoia alla schermata Home</string>
@@ -351,4 +329,56 @@
   <string name="no_keys_imported_dialog_message">Nell\'app non è ancora stata importata nessuna chiave PGP: premi il pulsante qui sotto per scegliere un file di chiave</string>
   <string name="biometric_prompt_title_gpg_passphrase_cache">Sblocca le frasi segrete memorizzate</string>
   <string name="clear_cached_password_on_screen_off">Cancella la password memorizzata allo spegnimento dello schermo</string>
+
+  <!-- Compose password list -->
+  <string name="list_new_entry">Nuova voce</string>
+  <string name="list_store_root">Archivio password</string>
+  <string name="list_more_options">Altre opzioni</string>
+  <string name="list_clear_search">Cancella ricerca</string>
+
+  <!-- Compose entry view -->
+  <string name="entry_back">Indietro</string>
+  <string name="entry_show_password">Mostra password</string>
+  <string name="entry_hide_password">Nascondi password</string>
+  <string name="entry_copy_name">Copia nome</string>
+
+  <!-- Compose folder picker -->
+  <string name="folder_picker_title">Scegli una cartella</string>
+  <string name="folder_creation_err_failed">Impossibile creare la cartella</string>
+  <string name="folder_picker_new">Nuova cartella</string>
+
+  <!-- Compose editor -->
+  <string name="editor_new_title">Nuova voce</string>
+  <string name="editor_edit_title">Modifica voce</string>
+  <string name="editor_close">Chiudi</string>
+  <string name="editor_folder">Cartella</string>
+  <string name="editor_change_folder">Cambia</string>
+  <string name="editor_otp_qr">OTP da QR</string>
+  <string name="editor_otp_manual">OTP manuale</string>
+  <string name="generator_random">Casuale</string>
+  <string name="generator_use">Usa</string>
+
+  <!-- Compose setup -->
+  <string name="ssh_key_state_none">Ancora nessuna chiave SSH</string>
+  <string name="ssh_key_state_imported">Chiave privata importata</string>
+  <string name="ssh_key_state_generated">Generata su questo dispositivo</string>
+  <string name="git_clone_progress">Clonazione…</string>
+  <string name="connection_mode_none">Nessuna</string>
+  <string name="ssh_key_manage">Gestisci</string>
+  <string name="ssh_key_public_hint">Fornisci questa chiave pubblica al tuo server Git.</string>
+  <string name="pgp_key_needed_message">Importa la chiave privata per cui è cifrato questo archivio, così le sue voci si possono leggere e salvare.</string>
+  <string name="pgp_key_needed_recipients">Destinatari dell\'archivio</string>
+  <string name="store_create_failed">Impossibile creare l\'archivio: %1$s</string>
+  <string name="store_not_empty">la cartella contiene già un archivio</string>
+  <string name="git_clone_delete_failed">Impossibile svuotare la cartella dell\'archivio, la clonazione non è partita.</string>
+  <string name="pgp_key_import_too_large">Il file supera 1 MiB: non è una chiave PGP.</string>
+  <string name="pgp_key_import_downgrade">Una chiave privata con questo ID è già importata. La sola chiave pubblica non può sostituirla: elimina prima la chiave privata, se vuoi davvero farlo.</string>
+
+  <!-- Compose settings -->
+  <string name="store_delete_failed">Impossibile eliminare tutto il contenuto della cartella dell\'archivio.</string>
+  <string name="clear_saved_secret_message">Verrà chiesto di nuovo alla prossima operazione Git.</string>
+  <string name="invalid_proxy_port">Inserisci una porta da 1 a 65535, oppure niente</string>
+  <string name="git_reset_confirm_message">I commit e le modifiche locali che non sono su questo remote branch vengono scartati.</string>
+  <string name="git_tool_done">%1$s: completato</string>
+  <string name="store_delete_confirm">Eliminare l\'archivio locale? Le voci di cui non è stato fatto il push sul remote vanno perse.</string>
 </resources>

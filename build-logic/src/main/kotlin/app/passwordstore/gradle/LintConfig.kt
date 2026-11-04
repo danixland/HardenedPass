@@ -33,8 +33,6 @@ object LintConfig {
     disable += "SyntheticAccessor"
     // Noisy, not particularly actionable
     disable += "TypographyQuotes"
-    // False-positives abound due to use of ViewBinding
-    disable += "UnusedIds"
     // False-positive, not relevant on the API levels we support
     disable += "TrulyRandom"
     // I can't do anything about this
@@ -45,8 +43,6 @@ object LintConfig {
       error += "ComposeM2Api"
       // slack-lint-checks' checker for deprecations is useless to me
       disable += "DeprecatedCall"
-      // Hilt only does field injection for fragments
-      disable += "FragmentFieldInjection"
       // Too pedantic
       disable += "ArgInFormattedQuantityStringRes"
     }

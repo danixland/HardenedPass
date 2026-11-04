@@ -16,6 +16,7 @@ import android.util.Base64
 import androidx.core.content.edit
 import app.passwordstore.Application
 import app.passwordstore.R
+import app.passwordstore.ui.setup.readAtMost
 import app.passwordstore.util.crypto.keystoreAesKey
 import app.passwordstore.util.crypto.requireUserAuthentication
 import app.passwordstore.util.crypto.seal
@@ -29,6 +30,8 @@ import com.github.michaelbull.result.getOrElse
 import com.github.michaelbull.result.runCatching
 import java.io.File
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator
@@ -46,7 +49,9 @@ import net.schmizz.sshj.SSHClient
 import net.schmizz.sshj.common.Buffer
 import net.schmizz.sshj.common.Ed25519KeyFactory
 import net.schmizz.sshj.common.KeyType
+import net.schmizz.sshj.userauth.keyprovider.KeyFormat
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider
+import net.schmizz.sshj.userauth.keyprovider.KeyProviderUtil
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters
 
 private const val PROVIDER_ANDROID_KEY_STORE = "AndroidKeyStore"
@@ -81,6 +86,25 @@ internal fun ed25519KeyPair(seed: ByteArray) =
     Ed25519KeyFactory.getPublicKey(Ed25519PrivateKeyParameters(seed).generatePublicKey().encoded),
     Ed25519KeyFactory.getPrivateKey(seed),
   )
+
+/**
+ * True when [lines] look like an SSH private key sshj can load: private key markers on the first
+ * and last line, in a format sshj recognizes. An OpenPGP private key block has the same markers and
+ * is refused by the format check.
+ */
+internal fun isSshPrivateKey(lines: List<String>): Boolean {
+  if (
+    lines.size < 2 ||
+      !Regex("BEGIN .* PRIVATE KEY").containsMatchIn(lines.first()) ||
+      !Regex("END .* PRIVATE KEY").containsMatchIn(lines.last())
+  )
+    return false
+  return try {
+    KeyProviderUtil.detectKeyFileFormat(lines.joinToString("\n"), false) != KeyFormat.Unknown
+  } catch (_: IOException) {
+    false
+  }
+}
 
 object SshKey {
 
@@ -182,15 +206,20 @@ object SshKey {
   }
 
   private fun delete() {
-    androidKeystore.deleteEntry(KEYSTORE_ALIAS)
     if (privateKeyFile.isFile) {
       privateKeyFile.delete()
     }
+    deleteKeyExtras()
+    type = null
+  }
+
+  /** Everything of the current key but its private key file. */
+  private fun deleteKeyExtras() {
+    androidKeystore.deleteEntry(KEYSTORE_ALIAS)
     if (publicKeyFile.isFile) {
       publicKeyFile.delete()
     }
     context.getEncryptedGitPrefs().edit { remove(PreferenceKeys.SSH_KEY_LOCAL_PASSPHRASE) }
-    type = null
   }
 
   fun import(uri: Uri) {
@@ -198,9 +227,8 @@ object SshKey {
     val fileSize =
       context.contentResolver.query(uri, arrayOf(OpenableColumns.SIZE), null, null, null)?.use {
         cursor ->
-        // Cursor returns only a single row.
-        cursor.moveToFirst()
-        cursor.getInt(0)
+        // A single row; none when the provider cannot tell: the IOException below.
+        if (cursor.moveToFirst()) cursor.getInt(0) else null
       } ?: throw IOException(context.getString(R.string.ssh_key_does_not_exist))
 
     // We assume that an SSH key's ideal size is > 0 bytes && < 100 kilobytes.
@@ -212,26 +240,43 @@ object SshKey {
     val sshKeyInputStream =
       context.contentResolver.openInputStream(uri)
         ?: throw IOException(context.getString(R.string.ssh_key_does_not_exist))
-    val lines = sshKeyInputStream.use { `is` -> `is`.bufferedReader().readLines() }
+    // Bounded whatever the provider claimed above: a larger stream is refused, not read whole.
+    val bytes =
+      sshKeyInputStream.use { readAtMost(it, 100_000) }
+        ?: throw IllegalArgumentException(
+          context.getString(R.string.ssh_key_import_error_not_an_ssh_key_message)
+        )
+    val lines =
+      try {
+        bytes.inputStream().bufferedReader().readLines()
+      } finally {
+        bytes.fill(0)
+      }
 
-    // The file must have more than 2 lines, and the first and last line must have private key
-    // markers.
-    if (
-      lines.size < 2 ||
-        !Regex("BEGIN .* PRIVATE KEY").containsMatchIn(lines.first()) ||
-        !Regex("END .* PRIVATE KEY").containsMatchIn(lines.last())
-    )
+    // Private key markers and a format sshj can read; the current key stays when this fails.
+    if (!isSshPrivateKey(lines))
       throw IllegalArgumentException(
         context.getString(R.string.ssh_key_import_error_not_an_ssh_key_message)
       )
 
     // At this point, we are reasonably confident that we have actually been provided a private
-    // key and delete the old key.
-    delete()
-    // Canonicalize line endings to '\n'.
-    privateKeyFile.writeText(lines.joinToString("\n"))
-
+    // key. It replaces the old one atomically (an I/O error keeps the old key), then the old key's
+    // Keystore entry, public key and passphrase go.
+    val temp = File(privateKeyFile.parentFile, ".${privateKeyFile.name}.tmp")
+    try {
+      // Canonicalize line endings to '\n'.
+      temp.writeText(lines.joinToString("\n"))
+      Files.move(
+        temp.toPath(),
+        privateKeyFile.toPath(),
+        StandardCopyOption.REPLACE_EXISTING,
+        StandardCopyOption.ATOMIC_MOVE,
+      )
+    } finally {
+      temp.delete()
+    }
     type = Type.Imported
+    deleteKeyExtras()
   }
 
   /** Deletes an Ed25519 key wrapped by androidx security-crypto, which can no longer be read. */

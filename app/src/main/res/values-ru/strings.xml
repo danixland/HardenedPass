@@ -28,7 +28,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Удаляется…</string>
   <string name="move">Переместить</string>
-  <string name="edit">Редактировать</string>
   <string name="delete">Удалить</string>
   <string name="password_exists_title">Пароль уже существует!</string>
   <string name="password_exists_message">Это перезапишет %1$s на %2$s</string>
@@ -44,7 +43,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Скопировано в буфер обмена</string>
   <string name="file_toast_text">Пожалуйста, укажите имя файла</string>
-  <string name="path_toast_text">Пожалуйста, задайте путь к файлу</string>
   <string name="empty_toast_text">Вы не можете использовать пустой пароль или пустое поле информации</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Произошла ошибка выполнения операции Git</string>
@@ -68,7 +66,6 @@
   <string name="crypto_name_hint">название</string>
   <string name="crypto_pass_label">Пароль</string>
   <string name="crypto_extra_label">Дополнительно</string>
-  <string name="crypto_encrypt_username_label">Зашифровать имя пользователя</string>
   <string name="crypto_select">Выбрать</string>
   <string name="crypto_save">Сохранить</string>
   <string name="crypto_save_and_copy">Сохранить и скопировать</string>
@@ -102,8 +99,6 @@
   <string name="pref_recursive_filter_summary">Рекурсивный поиск паролей в текущей директории</string>
   <string name="pref_sort_order_title">Порядок сортировки паролей</string>
   <string name="pref_folder_first_sort_order">Сначала папки</string>
-  <string name="pref_file_first_sort_order">Сначала файлы</string>
-  <string name="pref_type_independent_sort_order">Типонезависимый</string>
   <string name="pref_recently_used_sort_order">Недавно использованные</string>
   <string name="pref_category_autofill_title">Автозаполнение</string>
   <string name="pref_autofill_enable_title">Включить автозаполнение</string>
@@ -119,7 +114,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Сгенерировать пароль</string>
   <string name="pwgen_generate">Сгенерировать</string>
-  <string name="pwgen_include">Включая</string>
   <string name="pwgen_length">Длина</string>
   <string name="pwgen_numerals">Цифры</string>
   <string name="pwgen_symbols">Символы</string>
@@ -160,7 +154,6 @@
   <string name="dialog_yes">Да</string>
   <string name="dialog_no">Нет</string>
   <string name="dialog_cancel">Отмена</string>
-  <string name="dialog_skip">Пропустить</string>
   <string name="git_sync">Синхронизировать репозиторий</string>
   <string name="git_pull">Пулл с удаленного сервера</string>
   <string name="git_push">Пуш на удаленный сервер</string>
@@ -168,10 +161,7 @@
   <string name="git_log">Показать журнал изменений</string>
   <string name="show_password_pref_title">Показывать пароли</string>
   <string name="show_password_pref_summary">Видимость расшифрованных паролей, не влияет на копирование в буфер.</string>
-  <string name="pwd_generate_button">Сгенерировать</string>
-  <string name="refresh_list">Обновить список</string>
   <string name="send_plaintext_password_to">Поделиться паролем в открытом виде с помощью</string>
-  <string name="app_icon_hint">Иконка приложения</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Выберите запись для заполнения</string>
   <string name="oreo_autofill_strict_domain_search">Устойчивый к фишингу поиск</string>
@@ -199,11 +189,10 @@
   <string name="oreo_autofill_flaky_fill_support">Заполнить учетные данные (время от времени может требоваться перезапуск браузера)</string>
   <string name="oreo_autofill_no_support">Не поддерживается</string>
   <string name="oreo_autofill_enable_dialog_description">Хранилище паролей может предложить заполнить формы входа и даже сохранить учетные данные в приложениях или на веб-сайтах.</string>
-  <string name="oreo_autofill_enable_dialog_instructions">Чтобы включить эту функцию, нажмите ОК, чтобы перейти к настройкам автозаполнения. Там выберите Password Store из списка и подтвердите запрос подтверждения, нажав ОК.</string>
+  <string name="oreo_autofill_enable_dialog_instructions">Чтобы включить эту функцию, нажмите ОК, чтобы перейти к настройкам автозаполнения. Там выберите HardenedPass из списка и подтвердите запрос подтверждения, нажав ОК.</string>
   <string name="oreo_autofill_enable_dialog_installed_browsers">Поддержка автозаполнения установленными браузерами:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Невозможно открыть приватный ключ ssh, пожалуйста проверьте, что файл существует</string>
-  <string name="new_password_title">Новый пароль</string>
   <string name="clear_saved_passphrase_ssh">Очистить сохраненную кодовую фразу для локального SSH ключа</string>
   <string name="clear_saved_passphrase_https">Удалить сохраненный пароль HTTPS</string>
   <string name="git_operation_remember_passphrase">Запомнить кодовую фразу</string>
@@ -217,9 +206,8 @@
   <string name="biometric_prompt_title">Запрос биометрии</string>
   <string name="biometric_auth_error_reason">Ошибка аутентификации: %s</string>
   <string name="pref_biometric_auth_title">Включить биометрическую аутентификацию</string>
-  <string name="pref_biometric_auth_summary">Когда ключено, Password Store будет запрашивать ваш опечаток пальца при каждом запуске приложения</string>
+  <string name="pref_biometric_auth_summary">Когда ключено, HardenedPass будет запрашивать ваш опечаток пальца при каждом запуске приложения</string>
   <string name="pref_biometric_auth_summary_error">Сенсор отпечатка пальца не доступен или отсутствует</string>
-  <string name="pref_title_openkeystore_clear_keyid">Очистить сохраненный SSH Key идентификатор OpenKystortore</string>
   <string name="your_public_key">Ваш публичный ключ</string>
   <string name="error_generate_ssh_key">Возникла ошибка при попытке генерации ssh ключа</string>
   <string name="pref_show_hidden_title">Показать все файлы и директории</string>
@@ -227,7 +215,6 @@
   <string name="title_create_folder">Создать папку</string>
   <string name="title_rename_folder">Переименовать папку</string>
   <string name="message_category_error_empty_field">Название категории не может быть пустым</string>
-  <string name="message_category_error_category_exists">Название категории уже существует</string>
   <string name="message_error_destination_outside_repo">Путь должен указывать на область внутри репозитория</string>
   <string name="message_rename_folder">Введите адрес назначения для %1$s</string>
   <string name="button_create">Создать</string>
@@ -272,11 +259,9 @@
   <string name="exporting_passwords">Экспорт паролей…</string>
   <string name="invalid_gpg_id">Найден .gpg-id, но он содержит неверный ID ключа, fingerprint или ID пользователя</string>
   <string name="invalid_filename_text">Имя файла не должно содержать \'/\', укажите директорию выше</string>
-  <string name="directory_hint">Директория</string>
-  <string name="new_folder_set_gpg_key">Установить GPG ключ для каталога</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Неизвестная ошибка</string>
-  <string name="git_pull_rebase_fail_error">Не удалось получить изменения, вы находитесь в состоянии \"оторванной головы\". Используйте \"настройки &gt; утилиты git\", сохраните ваши изменения в новую удаленную ветку и разрешите конфликты на своем компьютере.</string>
+  <string name="git_pull_rebase_fail_error">Не удалось получить изменения, вы находитесь в состоянии \"оторванной головы\". Используйте \"Настройки &gt; Репозиторий &gt; Конфигурация локального Git\", сохраните ваши изменения в новую удаленную ветку и разрешите конфликты на своем компьютере.</string>
   <string name="git_pull_merge_fail_error">Слияние не удалось, вы находитесь в конфликтующем состоянии. ВТО: Добавьте метод восстановления.</string>
   <string name="git_push_nff_error">Запись изменений была отклонена удаленным репозиторием, сначала пполучите изменения перед повторной записью. Вы можете использовать Синхронизацию вместо получения/записи изменений, т.к. она реализует оба подхда.</string>
   <string name="git_push_generic_error">Запись изменений была отклонена удаленным репозиторием, причина: %1$s</string>
@@ -286,16 +271,12 @@
   <string name="git_break_out_of_detached_success">При попытке rebase\'а возник конфликт. Ваша локальная ветка %1$s была запушена %2$s\n Используйте эту ветку для разрешения конфликтов с помощью компьютера</string>
   <string name="git_break_out_of_detached_unneeded">Не нужно пушить в другую ветку - rebase не был запущен</string>
   <!-- GPG key selection in folder creation -->
-  <string name="gpg_key_select_mandatory">Для продолжения необходимо выбрать GPG-ключ</string>
   <string name="folder_creation_err_file_exists">Файл с таким именем уже существует</string>
   <string name="folder_creation_err_folder_exists">Папка с таким именем уже существует</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">Поехали</string>
-  <string name="select_n_repository_type">Выберите \nтип репозитория</string>
   <string name="select_repo_type_text">Создать локальное хранилище, или клонировать удаленный репозиторий.</string>
   <string name="clone_remote_repo">Клонировать удаленный репозиторий</string>
   <string name="create_local_repo">Создать локальное хранилище</string>
-  <string name="select_gpg_key_title">Выберите\nGPG ключ</string>
   <string name="select_gpg_key_message">Выберите GPG ключ для инициализации хранилища</string>
   <string name="gpg_key_select">Выберите ключ</string>
   <!-- SSH port validation -->
@@ -316,10 +297,8 @@
   <string name="clear_saved_host_key_success">Сохраненный ключ хоста был успешно удален!</string>
   <string name="otp_import_qr_code">Отсканировать QR-код</string>
   <string name="otp_import_from_file">Выберите изображение</string>
-  <string name="otp_import_manual_entry">Ввести вручную</string>
   <string name="otp_import_manual_hint_account">Учетная запись</string>
   <string name="place_shortcut_on_home_screen">Разместить ярлык на рабочем столе</string>
-  <string name="password_list_fab_content_description">Создать новый пароль или папку</string>
   <string name="pgp_key_import_failed">Не удалось импортировать PGP-ключ</string>
   <string name="pgp_key_import_succeeded">PGP ключ успешно импортирован</string>
 </resources>

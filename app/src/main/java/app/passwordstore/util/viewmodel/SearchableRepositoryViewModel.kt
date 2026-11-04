@@ -6,24 +6,12 @@ package app.passwordstore.util.viewmodel
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.os.Parcelable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AndroidViewModel
-import androidx.recyclerview.selection.ItemDetailsLookup
-import androidx.recyclerview.selection.ItemKeyProvider
-import androidx.recyclerview.selection.Selection
-import androidx.recyclerview.selection.SelectionPredicates
-import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.selection.StorageStrategy
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import app.passwordstore.data.password.PasswordItem
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.injection.prefs.SettingsPreferences
+import app.passwordstore.ui.list.listRows
 import app.passwordstore.util.autofill.AutofillPreferences
 import app.passwordstore.util.checkMainThread
 import app.passwordstore.util.coroutines.DispatcherProvider
@@ -34,9 +22,7 @@ import com.github.androidpasswordstore.sublimefuzzy.Fuzzy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 import java.text.Collator
-import java.util.Locale
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,9 +36,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
-import me.zhanghai.android.fastscroll.PopupTextProvider
 
 private fun File.toPasswordItem() =
   if (isFile) PasswordItem.newPassword(name, this, PasswordRepository.getRepositoryDirectory())
@@ -70,12 +54,7 @@ private fun PasswordItem.Companion.makeComparator(
   directoryStructure: DirectoryStructure,
 ): Comparator<PasswordItem> {
   return when (typeSortOrder) {
-      PasswordSortOrder.FOLDER_FIRST -> compareBy { it.type }
-      // In order to let INDEPENDENT not distinguish between items based on their type, we
-      // simply
-      // declare them all equal at this stage.
-      PasswordSortOrder.INDEPENDENT -> Comparator { _, _ -> 0 }
-      PasswordSortOrder.FILE_FIRST -> compareByDescending { it.type }
+      PasswordSortOrder.FOLDER_FIRST -> compareBy<PasswordItem> { it.type }
       PasswordSortOrder.RECENTLY_USED -> PasswordSortOrder.RECENTLY_USED.comparator
     }
     .then(
@@ -87,9 +66,6 @@ private fun PasswordItem.Companion.makeComparator(
       compareBy(nullsLast(CaseInsensitiveComparator)) { directoryStructure.getUsernameFor(it.file) }
     )
 }
-
-val PasswordItem.stableId: String
-  get() = file.absolutePath
 
 enum class FilterMode {
   NoFilter,
@@ -105,7 +81,6 @@ enum class SearchMode {
 
 enum class ListMode {
   FilesOnly,
-  DirectoriesOnly,
   AllEntries,
 }
 
@@ -191,7 +166,7 @@ constructor(
       )
     )
 
-  data class SearchResult(val passwordItems: List<PasswordItem>, val isFiltered: Boolean)
+  data class SearchResult(val passwordItems: List<PasswordItem>)
 
   val searchResult =
     searchActionFlow
@@ -207,8 +182,6 @@ constructor(
           when (searchAction.listMode) {
             ListMode.FilesOnly ->
               listResultFlow.filter { it.isFile }.flowOn(dispatcherProvider.io())
-            ListMode.DirectoriesOnly ->
-              listResultFlow.filter { it.isDirectory }.flowOn(dispatcherProvider.io())
             ListMode.AllEntries -> listResultFlow
           }
         val passwordList =
@@ -264,7 +237,7 @@ constructor(
                 .map { it.second }
             }
           }
-        SearchResult(passwordList, isFiltered = searchAction.filterMode != FilterMode.NoFilter)
+        SearchResult(passwordList)
       }
       .flowOn(dispatcherProvider.io())
 
@@ -302,53 +275,26 @@ constructor(
   private val _currentDir = MutableStateFlow(root)
   val currentDir = _currentDir.asStateFlow()
 
-  data class NavigationStackEntry(val dir: File, val recyclerViewState: Parcelable?)
+  /** [searchResult] as folder and entry rows for the Compose list, built off the main thread. */
+  val rows =
+    searchResult
+      .map { result -> listRows(result.passwordItems.map { it.file }, currentDir.value) }
+      .flowOn(dispatcherProvider.io())
 
-  private val navigationStack = ArrayDeque<NavigationStackEntry>()
-
-  fun navigateTo(
-    newDirectory: File = root,
-    listMode: ListMode = ListMode.AllEntries,
-    recyclerViewState: Parcelable? = null,
-    pushPreviousLocation: Boolean = true,
-  ) {
+  /** Lists [newDirectory]; the Compose list keeps the back stack (one route per folder). */
+  fun navigateTo(newDirectory: File) {
     if (!newDirectory.exists()) return
     require(newDirectory.isDirectory) { "Can only navigate to a directory" }
-    if (pushPreviousLocation) {
-      navigationStack.addFirst(NavigationStackEntry(_currentDir.value, recyclerViewState))
-    }
     searchActionFlow.update {
       makeSearchAction(
         filter = "",
         baseDirectory = newDirectory,
         filterMode = FilterMode.NoFilter,
         searchMode = SearchMode.InCurrentDirectoryOnly,
-        listMode = listMode,
+        listMode = ListMode.AllEntries,
       )
     }
     _currentDir.update { newDirectory }
-  }
-
-  val canNavigateBack
-    get() = navigationStack.isNotEmpty()
-
-  /**
-   * Navigate back to the last location on the [navigationStack] and restore a cached scroll
-   * position if possible.
-   *
-   * Returns the old RecyclerView's LinearLayoutManager state as a [Parcelable] if it was cached.
-   */
-  fun navigateBack(): Parcelable? {
-    if (!canNavigateBack) return null
-    val (oldDir, oldRecyclerViewState) = navigationStack.removeFirst()
-    navigateTo(oldDir, pushPreviousLocation = false)
-    return oldRecyclerViewState
-  }
-
-  fun reset() {
-    navigationStack.clear()
-    forceUpdateOnNextSearchAction()
-    navigateTo(pushPreviousLocation = false)
   }
 
   fun search(
@@ -395,116 +341,5 @@ constructor(
       // Match any relative path with a component that is a subdomain of the filter.
       return Regex(prefix + subdomain + suffix)
     }
-  }
-}
-
-private object PasswordItemDiffCallback : DiffUtil.ItemCallback<PasswordItem>() {
-
-  override fun areItemsTheSame(oldItem: PasswordItem, newItem: PasswordItem) =
-    oldItem.file.absolutePath == newItem.file.absolutePath
-
-  override fun areContentsTheSame(oldItem: PasswordItem, newItem: PasswordItem) = oldItem == newItem
-}
-
-open class SearchableRepositoryAdapter<T : RecyclerView.ViewHolder>(
-  private val layoutRes: Int,
-  private val viewHolderCreator: (view: View) -> T,
-  private val coroutineScope: CoroutineScope,
-  private val dispatcherProvider: DispatcherProvider,
-  private val viewHolderBinder:
-    suspend T.(item: PasswordItem, dispatcherProvider: DispatcherProvider) -> Unit,
-) : ListAdapter<PasswordItem, T>(PasswordItemDiffCallback), PopupTextProvider {
-
-  fun <T : ItemDetailsLookup<String>> makeSelectable(
-    recyclerView: RecyclerView,
-    itemDetailsLookupCreator: (recyclerView: RecyclerView) -> T,
-  ) {
-    selectionTracker =
-      SelectionTracker.Builder(
-          "SearchableRepositoryAdapter",
-          recyclerView,
-          itemKeyProvider,
-          itemDetailsLookupCreator(recyclerView),
-          StorageStrategy.createStringStorage(),
-        )
-        .withSelectionPredicate(SelectionPredicates.createSelectAnything())
-        .build()
-        .apply {
-          addObserver(
-            object : SelectionTracker.SelectionObserver<String>() {
-              override fun onSelectionChanged() {
-                this@SearchableRepositoryAdapter.onSelectionChangedListener?.invoke(
-                  requireSelectionTracker().selection
-                )
-              }
-            }
-          )
-        }
-  }
-
-  private var onItemClickedListener: ((holder: T, item: PasswordItem) -> Unit)? = null
-
-  open fun onItemClicked(
-    listener: (holder: T, item: PasswordItem) -> Unit
-  ): SearchableRepositoryAdapter<T> {
-    check(onItemClickedListener == null) {
-      "Only a single listener can be registered for onItemClicked"
-    }
-    onItemClickedListener = listener
-    return this
-  }
-
-  private var onSelectionChangedListener: ((selection: Selection<String>) -> Unit)? = null
-
-  open fun onSelectionChanged(
-    listener: (selection: Selection<String>) -> Unit
-  ): SearchableRepositoryAdapter<T> {
-    check(onSelectionChangedListener == null) {
-      "Only a single listener can be registered for onSelectionChanged"
-    }
-    onSelectionChangedListener = listener
-    return this
-  }
-
-  private val itemKeyProvider =
-    object : ItemKeyProvider<String>(SCOPE_MAPPED) {
-      override fun getKey(position: Int) = getItem(position).stableId
-
-      override fun getPosition(key: String) =
-        (0 until itemCount).firstOrNull { getItem(it).stableId == key } ?: RecyclerView.NO_POSITION
-    }
-
-  private var selectionTracker: SelectionTracker<String>? = null
-
-  fun requireSelectionTracker() = selectionTracker!!
-
-  private val selectedFiles
-    get() = requireSelectionTracker().selection.map { File(it) }
-
-  fun getSelectedItems() = selectedFiles.map { it.toPasswordItem() }
-
-  fun getPositionForFile(file: File) = itemKeyProvider.getPosition(file.absolutePath)
-
-  final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T {
-    val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
-    return viewHolderCreator(view)
-  }
-
-  final override fun onBindViewHolder(holder: T, position: Int) {
-    val item = getItem(position)
-    holder.apply {
-      coroutineScope.launch(dispatcherProvider.mainImmediate()) {
-        viewHolderBinder.invoke(holder, item, dispatcherProvider)
-      }
-      selectionTracker?.let { itemView.isSelected = it.isSelected(item.stableId) }
-      itemView.setOnClickListener {
-        // Do not emit custom click events while the user is selecting items.
-        if (selectionTracker?.hasSelection() != true) onItemClickedListener?.invoke(holder, item)
-      }
-    }
-  }
-
-  final override fun getPopupText(view: View, position: Int): String {
-    return getItem(position).name[0].toString().uppercase(Locale.getDefault())
   }
 }

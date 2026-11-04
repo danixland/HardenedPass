@@ -24,7 +24,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Excluindo…</string>
   <string name="move">Mover</string>
-  <string name="edit">Editar</string>
   <string name="delete">Excluir</string>
   <string name="password_exists_title">Senha já existe!</string>
   <string name="password_exists_message">Isso irá sobrescrever %1$s com %2$s.</string>
@@ -40,7 +39,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Copiado para a área de transferência</string>
   <string name="file_toast_text">Por favor, informe um nome de arquivo</string>
-  <string name="path_toast_text">Por favor, forneça o caminho do arquivo</string>
   <string name="empty_toast_text">Você não pode usar uma senha vazia ou conteúdo extra vazio</string>
   <!-- Git Async Task -->
   <string name="jgit_error_dialog_title">Ocorreu um erro durante uma operação do Git</string>
@@ -64,7 +62,6 @@
   <string name="crypto_name_hint">Nome</string>
   <string name="crypto_pass_label">Senha</string>
   <string name="crypto_extra_label">Conteúdo extra</string>
-  <string name="crypto_encrypt_username_label">Criptografar nome de usuário</string>
   <string name="crypto_select">Selecionar</string>
   <string name="crypto_save">Salvar</string>
   <string name="crypto_save_and_copy">Salvar e Copiar</string>
@@ -99,8 +96,6 @@
   <string name="pref_recursive_filter_summary">Encontrar senhas do diretório corrente recursivamente.</string>
   <string name="pref_sort_order_title">Ordenação da Senha</string>
   <string name="pref_folder_first_sort_order">Pastas primeiro</string>
-  <string name="pref_file_first_sort_order">Arquivos primeiro</string>
-  <string name="pref_type_independent_sort_order">Tipo independente</string>
   <string name="pref_recently_used_sort_order">Usado recentemente</string>
   <string name="pref_category_autofill_title">Preenchimento Automático</string>
   <string name="pref_autofill_enable_title">Ativar preenchimento automático</string>
@@ -126,7 +121,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Gerar Senha</string>
   <string name="pwgen_generate">Gerar</string>
-  <string name="pwgen_include">Incluir</string>
   <string name="pwgen_length">Tamanho</string>
   <string name="pwgen_numerals">Numerais</string>
   <string name="pwgen_symbols">Símbolos</string>
@@ -167,7 +161,6 @@
   <string name="dialog_yes">Sim</string>
   <string name="dialog_no">Não</string>
   <string name="dialog_cancel">Cancelar</string>
-  <string name="dialog_skip">Pular</string>
   <string name="git_sync">Sincronizar repositório</string>
   <string name="git_pull">Pull do remoto</string>
   <string name="git_push">Push do remoto</string>
@@ -175,10 +168,7 @@
   <string name="git_log">Mostrar log de commit</string>
   <string name="show_password_pref_title">Mostrar a senha</string>
   <string name="show_password_pref_summary">Controle a visibilidade das senhas quando descriptografadas. Isso não desativa a cópia para a área de transferência.</string>
-  <string name="pwd_generate_button">Gerar</string>
-  <string name="refresh_list">Atualizar lista</string>
   <string name="send_plaintext_password_to">Enviar senha como texto simples usando…</string>
-  <string name="app_icon_hint">Ícone do aplicativo</string>
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Selecione a entrada para preencher</string>
   <string name="oreo_autofill_strict_domain_search">Busca resistente a phishing</string>
@@ -191,7 +181,7 @@
   <string name="oreo_autofill_save_passwords_dont_match">As senhas não coincidem</string>
   <string name="oreo_autofill_generate_password">Gerar senha…</string>
   <string name="oreo_autofill_max_matches_reached">Número máximo de correspondências (%1$d) atingidas; limpar correspondências antes de adicionar novas.</string>
-  <string name="oreo_autofill_warning_publisher_header">O editor deste aplicativo mudou desde a primeira vez que você associou uma entrada no Password Store:</string>
+  <string name="oreo_autofill_warning_publisher_header">O editor deste aplicativo mudou desde a primeira vez que você associou uma entrada no HardenedPass:</string>
   <string name="oreo_autofill_warning_publisher_footer"><b>O aplicativo atualmente instalado pode estar tentando roubar suas credenciais fingindo ser um aplicativo confiável.</b>\n\nTente desinstalar e reinstalar o aplicativo de uma fonte confiável, como a Play Store, Amazon Appstore, F-Droid ou a loja do fabricante do seu telefone.</string>
   <string name="oreo_autofill_warning_publisher_install_time">Instalado: %1$s</string>
   <string name="oreo_autofill_warning_publisher_advanced_info_button">Informações avançadas</string>
@@ -205,12 +195,11 @@
   <string name="oreo_autofill_password_fill_support">Preencher as senhas</string>
   <string name="oreo_autofill_flaky_fill_support">Preencher senhas (pode ser necessário reiniciar o navegador de vez em quando)</string>
   <string name="oreo_autofill_no_support">Sem suporte</string>
-  <string name="oreo_autofill_enable_dialog_description">O Password Store pode oferecer para preencher formulários de login e até mesmo salvar credenciais inseridas em aplicativos ou em sites.</string>
-  <string name="oreo_autofill_enable_dialog_instructions">Para ativar esse recurso, toque em OK para ir para as configurações de preenchimento automático. Lá, selecione Password Store na lista e confirme na tela confirmação com OK.</string>
+  <string name="oreo_autofill_enable_dialog_description">O HardenedPass pode oferecer para preencher formulários de login e até mesmo salvar credenciais inseridas em aplicativos ou em sites.</string>
+  <string name="oreo_autofill_enable_dialog_instructions">Para ativar esse recurso, toque em OK para ir para as configurações de preenchimento automático. Lá, selecione HardenedPass na lista e confirme na tela confirmação com OK.</string>
   <string name="oreo_autofill_enable_dialog_installed_browsers">Suporte ao preenchimento automático com navegadores instalados:</string>
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Não foi possível abrir a chave privada ssh, por favor verifique se o arquivo existe</string>
-  <string name="new_password_title">Nova senha</string>
   <string name="clear_saved_passphrase_ssh">Limpar a frase secreta salva para chave SSH local</string>
   <string name="clear_saved_passphrase_https">Limpar senha HTTPS salva</string>
   <string name="git_operation_remember_passphrase">Lembrar senha da chave</string>
@@ -224,9 +213,8 @@
   <string name="biometric_prompt_title">Confirmação Biométrica</string>
   <string name="biometric_auth_error_reason">Falha de autenticação: %s</string>
   <string name="pref_biometric_auth_title">Ativar autenticação biométrica</string>
-  <string name="pref_biometric_auth_summary">Quando ativado, o Password Store irá pedir a sua impressão digital ao iniciar o aplicativo</string>
+  <string name="pref_biometric_auth_summary">Quando ativado, o HardenedPass irá pedir a sua impressão digital ao iniciar o aplicativo</string>
   <string name="pref_biometric_auth_summary_error">Hardware de impressão digital não acessível ou ausente</string>
-  <string name="pref_title_openkeystore_clear_keyid">Limpar ID de chave SSH lembrada do OpenKeystore</string>
   <string name="your_public_key">Sua chave pública</string>
   <string name="error_generate_ssh_key">Erro ao tentar gerar a chave SSH</string>
   <string name="pref_show_hidden_title">Mostrar todos os arquivos e pastas</string>
@@ -234,7 +222,6 @@
   <string name="title_create_folder">Criar pasta</string>
   <string name="title_rename_folder">Renomear pasta</string>
   <string name="message_category_error_empty_field">O nome da categoria não pode ser vazio</string>
-  <string name="message_category_error_category_exists">Nome da categoria já existe</string>
   <string name="message_error_destination_outside_repo">O destino deve estar dentro do repositório</string>
   <string name="message_rename_folder">Insira o destino para %1$s</string>
   <string name="button_create">Criar</string>
@@ -280,11 +267,9 @@
   <string name="invalid_gpg_id">Encontrado .gpg-id, mas contém um ID de chave, fingerprint ou ID de usuário inválidos</string>
   <string name="short_gpg_id">Encontrado .gpg-id, mas contém uma ID hexadecimal curta, que não é suportada</string>
   <string name="invalid_filename_text">Nome do arquivo não deve conter \'/\', defina o diretório acima</string>
-  <string name="directory_hint">Diretório</string>
-  <string name="new_folder_set_gpg_key">Definir chave GPG para diretório</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Erro desconhecido</string>
-  <string name="git_pull_rebase_fail_error">O pull falhou, você está em uma Head avulsa. Usando \"configurações &gt; utils\" do git, salve suas alterações no remoto em uma nova branch e resolva o conflito no seu computador.</string>
+  <string name="git_pull_rebase_fail_error">O pull falhou, você está em uma Head avulsa. Usando \"Configurações &gt; Repositório &gt; Configuração local do Git &amp; utilitários\", salve suas alterações no remoto em uma nova branch e resolva o conflito no seu computador.</string>
   <string name="git_pull_merge_fail_error">Falha ao realizar o merge, você está em estado de conflito.</string>
   <string name="git_push_nff_error">Push rejeitado pelo remoto, execute o pull antes de fazer push novamente. Você pode usar Sincronização em vez de pull/push conforme implementa ambos</string>
   <string name="git_push_generic_error">Push rejeitado pelo remoto, razão: %1$s</string>
@@ -294,16 +279,12 @@
   <string name="git_break_out_of_detached_success">Houve um conflito ao executar o rebase. Houve um push de branch %1$s local para outra branch chamada %2$s\n Use esta branch para resolver o conflito no seu computador</string>
   <string name="git_break_out_of_detached_unneeded">O repositório não está sendo rebased, não há necessidade de fazer push para outro branch</string>
   <!-- GPG key selection in folder creation -->
-  <string name="gpg_key_select_mandatory">A seleção de uma chave GPG é necessária para prosseguir</string>
   <string name="folder_creation_err_file_exists">Já existe um arquivo com esse nome</string>
   <string name="folder_creation_err_folder_exists">Já existe uma pasta com esse nome</string>
   <!-- Onboarding flow -->
-  <string name="let_s_go">Vamos lá</string>
-  <string name="select_n_repository_type">Selecione \nTipo de Repositório</string>
   <string name="select_repo_type_text">Selecione se você quer criar um repositório local ou clonar um repositório remoto.</string>
   <string name="clone_remote_repo">Clonar repositório remoto</string>
   <string name="create_local_repo">Criar repositório local</string>
-  <string name="select_gpg_key_title">Selecione\nChave GPG</string>
   <string name="select_gpg_key_message">Selecione uma chave GPG para inicializar o armazenamento com</string>
   <string name="gpg_key_select">Selecione a chave</string>
   <!-- SSH port validation -->
@@ -324,11 +305,9 @@
   <string name="clear_saved_host_key_success">Chave de host limpa com sucesso!</string>
   <string name="otp_import_qr_code">Escanear QR code</string>
   <string name="otp_import_from_file">Selecione uma imagem</string>
-  <string name="otp_import_manual_entry">Inserir manualmente</string>
   <string name="otp_import_manual_hint_secret">Segredo</string>
   <string name="otp_import_manual_hint_account">Conta</string>
   <string name="place_shortcut_on_home_screen">Criar atalho na tela inicial</string>
-  <string name="password_list_fab_content_description">Criar nova senha ou pasta</string>
   <string name="pgp_key_import_failed">Falha ao importar a chave PGP</string>
   <string name="pgp_key_import_failed_replace_message">Uma chave existente com esse ID foi encontrada, você deseja substituí-lo?</string>
   <string name="pgp_key_import_succeeded">Chave PGP importada com sucesso</string>

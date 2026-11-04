@@ -18,11 +18,6 @@ enum class PasswordSortOrder(val comparator: java.util.Comparator<PasswordItem>)
       (p1.type + p1.name).compareTo(p2.type + p2.name, ignoreCase = true)
     }
   ),
-  INDEPENDENT(
-    Comparator { p1: PasswordItem, p2: PasswordItem ->
-      p1.name.compareTo(p2.name, ignoreCase = true)
-    }
-  ),
   RECENTLY_USED(
     Comparator { p1: PasswordItem, p2: PasswordItem ->
       val recentHistory =
@@ -36,18 +31,18 @@ enum class PasswordSortOrder(val comparator: java.util.Comparator<PasswordItem>)
         else -> p1.name.compareTo(p2.name, ignoreCase = true)
       }
     }
-  ),
-  FILE_FIRST(
-    Comparator { p1: PasswordItem, p2: PasswordItem ->
-      (p2.type + p1.name).compareTo(p1.type + p2.name, ignoreCase = true)
-    }
   );
 
   companion object {
 
+    /**
+     * The stored sort order; anything else (the removed "files first" and "type independent", a
+     * value from another version) reads as [FOLDER_FIRST].
+     */
     @JvmStatic
     fun getSortOrder(settings: SharedPreferences): PasswordSortOrder {
-      return valueOf(settings.getString(PreferenceKeys.SORT_ORDER) ?: FOLDER_FIRST.name)
+      val stored = settings.getString(PreferenceKeys.SORT_ORDER)
+      return entries.firstOrNull { it.name == stored } ?: FOLDER_FIRST
     }
   }
 }

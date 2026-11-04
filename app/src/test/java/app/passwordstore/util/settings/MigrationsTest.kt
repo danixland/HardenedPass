@@ -184,4 +184,29 @@ class MigrationsTest {
     assertFalse { sharedPrefs.contains(PreferenceKeys.GIT_EXTERNAL_REPO) }
     assertTrue { sharedPrefs.getBoolean(PreferenceKeys.GIT_EXTERNAL_MIGRATED, false) }
   }
+
+  @Test
+  fun removedSortOrdersFallBackToFoldersFirst() {
+    val gitSettings =
+      GitSettings(sharedPrefs, encryptedSharedPreferences, proxySharedPreferences, filesDir)
+    for (removed in listOf("FILE_FIRST", "INDEPENDENT")) {
+      sharedPrefs.edit { putString(PreferenceKeys.SORT_ORDER, removed) }
+      runMigrations(filesDir, sharedPrefs, gitSettings)
+      assertEquals("FOLDER_FIRST", sharedPrefs.getString(PreferenceKeys.SORT_ORDER))
+    }
+    sharedPrefs.edit { putString(PreferenceKeys.SORT_ORDER, "RECENTLY_USED") }
+    runMigrations(filesDir, sharedPrefs, gitSettings)
+    assertEquals("RECENTLY_USED", sharedPrefs.getString(PreferenceKeys.SORT_ORDER))
+  }
+
+  @Test
+  fun staleOpenKeystoreKeyIdIsRemoved() {
+    sharedPrefs.edit { putString(PreferenceKeys.SSH_OPENKEYSTORE_KEYID, "0123456789ABCDEF") }
+    runMigrations(
+      filesDir,
+      sharedPrefs,
+      GitSettings(sharedPrefs, encryptedSharedPreferences, proxySharedPreferences, filesDir),
+    )
+    assertFalse(sharedPrefs.contains(PreferenceKeys.SSH_OPENKEYSTORE_KEYID))
+  }
 }

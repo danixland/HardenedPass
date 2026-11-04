@@ -1,6 +1,6 @@
 # Compose UI overhaul: design
 
-Date: 2026-11-02. Status: approved, not started.
+Date: 2026-11-02. Status: complete (2026-11-04); merges into `master` after the maintainer's phone test.
 
 ## Goal
 
@@ -11,8 +11,8 @@ the maintainer's phone stays on 0.1.4 until then.
 
 ## Visual direction
 
-- Material 3 "Material You": dynamic color on Android 12+, a fixed purple scheme on Android 8 to
-  11 (minSdk 26). Light and dark follow the system.
+- Material 3 "Material You": dynamic color on Android 12+, the existing fixed `APSTheme` scheme
+  on Android 8 to 11 (minSdk 26). Light and dark follow the system.
 - Pill-shaped search bar at the top of the list, grouped rounded surfaces, letter avatars on
   entries, extended FAB ("New entry").
 - Folder location shown as breadcrumb chips (root, then each folder); the last chip is
@@ -22,7 +22,10 @@ the maintainer's phone stays on 0.1.4 until then.
 
 - Breadcrumb chips under the search bar.
 - Folders in one grouped surface, entries in another below it. Folder rows show their entry
-  count; entry rows show the username, plus "OTP" when the entry has one.
+  count; in search results, entry rows show their folder. Username and OTP are not shown: both
+  live inside the encrypted file, and the list never decrypts.
+- One back stack entry per folder level (`ListRoute(path)`): system back goes up one folder and
+  leaves the app at the root.
 - Pull to sync. Long-press starts multi-select (move, delete). FAB opens the create sheet
   (entry or folder).
 
@@ -32,6 +35,9 @@ the maintainer's phone stays on 0.1.4 until then.
 - First group: password (masked, reveal toggle, copy), username (copy), one-time code with a
   countdown bar (copy).
 - Second group: remaining extra fields, copy where it makes sense.
+- Overflow: copy name, share as plaintext. The password starts masked or shown per the existing
+  "Show the password" setting. Saving in the editor returns to the list. Password and one-time
+  code copies are cleared from the clipboard after the timeout.
 
 ### Editor
 
@@ -40,14 +46,66 @@ the maintainer's phone stays on 0.1.4 until then.
 - Password with reveal and a generator button; the generator is a bottom sheet with random and
   diceware tabs.
 - Username field, free-text extra content (pass format kept as text, nothing hidden).
-- "OTP from QR" and "OTP manual" actions.
+- "OTP from QR" (camera or image) and "OTP manual" actions.
+- "Save and copy" in the overflow. Saving returns to the list; closing returns to where the
+  editor was opened. The folder picker is a dialog, shared with the list's move action. The
+  autofill save flow (`AutofillSaveActivity`) hosts the same editor.
+
+### Setup
+
+- Without a store the app opens on a welcome screen: clone a remote repository or create a
+  local store; Settings is reachable from it.
+- The git server screen serves the clone and later edits: URL, authentication mode (SSH key or
+  password; none or password for HTTP(S)), the SSH key's state with "Manage", "Clear saved host
+  key". A failed clone stays on the screen, so URL or key can be fixed and the clone retried.
+- The SSH key screen shows the key's state and, for a key generated on the device, the public
+  key (copy, share); it imports a key file (refusing files sshj cannot read, such as OpenPGP
+  keys) and opens key generation (RSA, ECDSA, Ed25519, optionally behind the screen lock).
+- One PGP keys screen manages keys (import, delete), picks the key of a new local store (the
+  repository is created only then, its `.gpg-id` naming the key by its uppercase long key ID, as
+  `pass init <key ID>` does), and imports the key a store needs: after a clone that no
+  imported key can decrypt, and when an entry is opened with no key imported.
+- Settings opens these within the graph. Autofill, the git operations' "No SSH key" dialog and
+  the entry view's key import open them through a `MainActivity` setup intent: the autofill
+  activities live outside the graph, and the other two wait for a result.
+
+### Settings
+
+- Settings lists its categories (general, autofill, passwords, repository, misc, PGP); each opens
+  a screen of rows (switches, single choices, text values, actions) over the existing preference
+  keys. Switches behind the screen lock store their value only after a successful prompt.
+- Rows that lead elsewhere navigate within `MainActivity`: git server, SSH key, key generation,
+  PGP keys, proxy, and the git configuration screen (author name and email, commit log, abort
+  rebase, hard reset, garbage collection).
+- Destructive actions ask first: deleting the repository (which never follows symlinks out of the
+  store and returns to the welcome screen), clearing a saved password or passphrase, the hard
+  reset.
+- The list's sort orders are folders first and recently used; "files first" and "type
+  independent" are gone, and stored values fall back to folders first.
+
+### Autofill
+
+- The autofill service's activities keep their windows (floating picker and warning, transparent
+  decryption) and draw them with the shared theme. The picker shows the site or app being filled,
+  a search prefilled with it, entry rows named by their origin identifier, and the
+  phishing-resistant search, match and clear-matches switches.
+- The publisher warning offers "Keep Autofill disabled" first; re-enabling stays behind "Advanced
+  information", which shows the package and certificate details above the "Re-enable Autofill"
+  button, so a double tap cannot re-enable autofill. Touches through another app's window are
+  ignored.
+- The decryption shows only the "no keys" and passphrase dialogs and starts once the window has
+  focus. It caches only a passphrase the user typed, and only after a successful screen lock
+  prompt, as the entry view does. An invalid `.gpg-id` closes it without filling. Saving and
+  generating host the editor.
+- Intents, extras, results and matching are unchanged.
 
 ## Architecture
 
 ### Activities
 
-- `MainActivity` (new, not exported, extends `FragmentActivity` for `BiometricPrompt`, uses no
-  fragments) hosts a Compose `NavHost`. It replaces `PasswordStore`, `DecryptActivity`,
+- `MainActivity` (new, not exported, extends `BaseGitActivity`: an `AppCompatActivity`, as the
+  git operations require, and so a `FragmentActivity` for `BiometricPrompt`; uses no fragments)
+  hosts a Compose `NavHost`. It replaces `PasswordStore`, `DecryptActivity`,
   `PasswordCreationActivity`, `SelectFolderActivity`, `OnboardingActivity`, `SettingsActivity`,
   `GitServerConfigActivity`, `GitConfigActivity`, `GitLogActivity`, `ProxySelectorActivity`,
   `SshKeyGenActivity`, `SshKeyImportActivity`, `PGPKeyImportActivity` and `PGPKeyListActivity`.
@@ -75,19 +133,25 @@ the maintainer's phone stays on 0.1.4 until then.
 
 Crypto, git, autofill parsing, preference keys, the Keystore-backed secret storage, clipboard
 handling and the passphrase cache. Existing stores, keys and settings carry over without
-migration.
+migration, with two exceptions from step 6: a stored "files first" or "type independent" sort
+order (both removed) becomes folders first, and the unused OpenKeychain SSH key ID is dropped.
 
 ### Removed at the end
 
-`fragment-ktx`, `recyclerview`, `recyclerview-selection`, `swiperefreshlayout`,
-`modernandroidpreferences`, the view-binding helpers (`FragmentViewBindingDelegate`,
-`FragmentExtensions`), all layout XML files, and Material Components (Views) if nothing still
-needs it.
+`recyclerview`, `recyclerview-selection`, `swiperefreshlayout`, `modernandroidpreferences`,
+`preference`, `constraintlayout`, fastscroll, view binding and its helpers
+(`FragmentViewBindingDelegate`, `FragmentExtensions`), `BasePGPActivity` and every layout XML
+file but two. Kept: `oreo_autofill_dataset.xml` (fill suggestions are `RemoteViews`, drawn by the
+system) and `git_credential_layout.xml` (the git credential prompt), with Material Components
+(Views): the window themes, the git operations' dialogs and the snackbars still need it. Moving
+those to Compose is a separate change. `fragment-ktx` stays declared as the version pin of
+`androidx.fragment`.
 
 ## Security
 
 - `FLAG_SECURE` is set on the window while the entry view or editor destination is shown and
-  cleared when leaving it, so secrets stay out of screenshots and recents.
+  cleared when leaving it, so secrets stay out of screenshots and recents. It is counted, so
+  moving between the two never clears it.
 - `MainActivity` is not exported. Routes come only from `LaunchActivity` after its checks; an
   entry route is still validated with `isFileInRepo`.
 
@@ -102,7 +166,9 @@ Work happens on a temporary `compose` branch, an explicit exception to the maste
 AGENTS.md (recorded there when the branch is created, removed at merge). `master` stays
 releasable for the monthly public suffix list update and hotfixes to 0.1.4. The branch is pushed
 to `origin` as a backup. CI is not extended to the branch: the local pre-commit check from
-AGENTS.md runs before every commit, and CI runs at the merge.
+AGENTS.md runs before every commit, and CI runs at the merge. `master` stays at its last release
+until the maintainer has tested a release build of `compose` on the phone and says go; then
+`compose` merges with one signed `--no-ff` merge commit and is deleted.
 
 ## Migration order
 
@@ -130,4 +196,5 @@ graph through their old intents.
   (`scripts/e2e-env.sh`).
 - Before merge: the full device checklist from AGENTS.md (clone over SSH, PGP import, decrypt,
   TOTP, create and push, conflict recovery, hard reset, fingerprint unlock, Firefox autofill),
-  then the maintainer tests on the phone.
+  then the maintainer tests a release build of `compose` on the phone; the merge waits for the
+  maintainer's go.

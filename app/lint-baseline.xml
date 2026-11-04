@@ -36,52 +36,8 @@
         errorLine2="                ~~~~~~~~~~~~~~">
         <location
             file="src/main/java/app/passwordstore/util/git/sshj/SshKey.kt"
-            line="238"
+            line="249"
             column="17"/>
-    </issue>
-
-    <issue
-        id="RawDispatchersUse"
-        message="Use SlackDispatchers."
-        errorLine1="    withContext(Dispatchers.IO) {"
-        errorLine2="                ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/util/git/sshj/SshKey.kt"
-            line="247"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="RawDispatchersUse"
-        message="Use SlackDispatchers."
-        errorLine1="    withContext(Dispatchers.IO) {"
-        errorLine2="                ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/util/git/sshj/SshKey.kt"
-            line="259"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="DenyListedApi"
-        message="Use Context#getDrawableCompat() instead"
-        errorLine1="                ContextCompat.getDrawable(itemView.context, R.drawable.ic_content_copy)"
-        errorLine2="                              ~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/ui/adapters/FieldItemAdapter.kt"
-            line="69"
-            column="31"/>
-    </issue>
-
-    <issue
-        id="DenyListedApi"
-        message="Use Context#getDrawableCompat() instead"
-        errorLine1="                ContextCompat.getDrawable(itemView.context, R.drawable.ic_content_copy)"
-        errorLine2="                              ~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/ui/adapters/FieldItemAdapter.kt"
-            line="69"
-            column="31"/>
     </issue>
 
     <issue
@@ -145,39 +101,6 @@
     <issue
         id="SelectableText"
         message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
-        errorLine1="  &lt;TextView"
-        errorLine2="   ~~~~~~~~">
-        <location
-            file="src/main/res/layout/activity_oreo_autofill_filter.xml"
-            line="27"
-            column="4"/>
-    </issue>
-
-    <issue
-        id="SelectableText"
-        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
-        errorLine1="  &lt;TextView"
-        errorLine2="   ~~~~~~~~">
-        <location
-            file="src/main/res/layout/activity_oreo_autofill_publisher_changed.xml"
-            line="66"
-            column="4"/>
-    </issue>
-
-    <issue
-        id="SelectableText"
-        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
-        errorLine1="  &lt;TextView"
-        errorLine2="   ~~~~~~~~">
-        <location
-            file="src/main/res/layout/activity_oreo_autofill_publisher_changed.xml"
-            line="81"
-            column="4"/>
-    </issue>
-
-    <issue
-        id="SelectableText"
-        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
         errorLine1="    &lt;TextView"
         errorLine2="     ~~~~~~~~">
         <location
@@ -195,50 +118,6 @@
             file="src/main/res/layout/oreo_autofill_dataset.xml"
             line="46"
             column="6"/>
-    </issue>
-
-    <issue
-        id="SelectableText"
-        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
-        errorLine1="  &lt;TextView"
-        errorLine2="   ~~~~~~~~">
-        <location
-            file="src/main/res/layout/oreo_autofill_filter_row.xml"
-            line="29"
-            column="4"/>
-    </issue>
-
-    <issue
-        id="SelectableText"
-        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
-        errorLine1="  &lt;TextView"
-        errorLine2="   ~~~~~~~~">
-        <location
-            file="src/main/res/layout/oreo_autofill_filter_row.xml"
-            line="43"
-            column="4"/>
-    </issue>
-
-    <issue
-        id="SetTextI18n"
-        message="Number formatting does not take into account locale settings. Consider using `String.format` instead."
-        errorLine1="    binding.passwordLengthText.setText(prefs.getInt(DICEWARE_LENGTH, 5).toString())"
-        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/ui/dialogs/DicewarePasswordGeneratorDialogFragment.kt"
-            line="46"
-            column="40"/>
-    </issue>
-
-    <issue
-        id="SetTextI18n"
-        message="Number formatting does not take into account locale settings. Consider using `String.format` instead."
-        errorLine1="    binding.lengthNumber.setText(prefs.getInt(PreferenceKeys.LENGTH, 20).toString())"
-        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/app/passwordstore/ui/dialogs/PasswordGeneratorDialogFragment.kt"
-            line="54"
-            column="34"/>
     </issue>
 
 </issues>

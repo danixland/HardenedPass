@@ -10,8 +10,12 @@
     <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
     <item name="android:statusBarColor">?android:colorBackground</item>
     <item name="android:navigationBarColor">?android:colorBackground</item>
-    <item name="toolbarStyle">@style/APSThemeM3.Toolbar</item>
-    <item name="bottomSheetDialogTheme">@style/APSThemeM3.BottomSheetDialog</item>
+  </style>
+
+  <!-- AppCompat activities whose whole UI is Compose -->
+  <style name="NoActionBarThemeM3" parent="AppThemeM3">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
   </style>
 
   <style name="NoBackgroundThemeM3" parent="@style/AppThemeM3">
@@ -35,12 +39,6 @@
     <item name="android:backgroundDimEnabled">true</item>
     <!-- Needs to be set without android: prefix as per https://stackoverflow.com/a/33417456 -->
     <item name="windowNoTitle">true</item>
-  </style>
-
-  <style name="APSThemeM3.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-    <item name="android:windowIsFloating">false</item>
-    <item name="android:statusBarColor">@android:color/transparent</item>
-    <item name="android:navigationBarColor">@android:color/transparent</item>
   </style>
 
   <style name="APSThemeM3" parent="Theme.Material3.DayNight">

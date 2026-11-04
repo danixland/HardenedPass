@@ -19,7 +19,6 @@
   <string name="dialog_delete">Delete directory</string>
   <string name="dialog_do_not_delete">Cancel</string>
   <string name="title_activity_git_clone">Repository information</string>
-  <string name="title_activity_git_config" translatable="false">Git configuration</string>
   <string name="title_activity_git_log">Commit log</string>
 
   <!-- Password Store -->
@@ -30,7 +29,6 @@
   </plurals>
   <string name="delete_directory_progress_text">Deleting…</string>
   <string name="move">Move</string>
-  <string name="edit">Edit</string>
   <string name="delete">Delete</string>
   <string name="password_exists_title">Password already exists!</string>
   <string name="password_exists_message">This will overwrite %1$s with %2$s.</string>
@@ -48,7 +46,6 @@
   <!-- PGPHandler -->
   <string name="clipboard_copied_text">Copied to clipboard</string>
   <string name="file_toast_text">Please provide a file name</string>
-  <string name="path_toast_text">Please provide a file path</string>
   <string name="empty_toast_text">You cannot use an empty password or empty extra content</string>
 
   <!-- Git Async Task -->
@@ -80,7 +77,6 @@
   <string name="crypto_username_hint">Username</string>
   <string name="crypto_pass_label">Password</string>
   <string name="crypto_extra_label">Extra content</string>
-  <string name="crypto_encrypt_username_label">Encrypt username</string>
   <string name="crypto_select">Select</string>
   <string name="crypto_save">Save</string>
   <string name="crypto_save_and_copy">Save and Copy</string>
@@ -119,8 +115,6 @@
   <string name="pref_directory_structure">Password file organization</string>
   <string name="pref_sort_order_title">Password sort order</string>
   <string name="pref_folder_first_sort_order">Folders first</string>
-  <string name="pref_file_first_sort_order">Files first</string>
-  <string name="pref_type_independent_sort_order">Type independent</string>
   <string name="pref_recently_used_sort_order">Recently used</string>
   <string name="pref_category_autofill_title">Autofill</string>
   <string name="pref_autofill_enable_title">Enable Autofill</string>
@@ -149,7 +143,6 @@
   <!-- PasswordGenerator fragment -->
   <string name="pwgen_title">Generate Password</string>
   <string name="pwgen_generate">Generate</string>
-  <string name="pwgen_include">Include</string>
   <string name="pwgen_length">Length</string>
   <string name="pwgen_numerals">Numerals</string>
   <string name="pwgen_symbols">Symbols</string>
@@ -195,7 +188,6 @@
   <string name="dialog_yes">Yes</string>
   <string name="dialog_no">No</string>
   <string name="dialog_cancel">Cancel</string>
-  <string name="dialog_skip">Skip</string>
   <string name="git_sync">Synchronize repository</string>
   <string name="git_pull">Pull from remote</string>
   <string name="git_push">Push to remote</string>
@@ -203,10 +195,7 @@
   <string name="git_log">Show commit log</string>
   <string name="show_password_pref_title">Show the password</string>
   <string name="show_password_pref_summary">Control the visibility of the passwords once decrypted. This does not disable copying to clipboard.</string>
-  <string name="pwd_generate_button">Generate</string>
-  <string name="refresh_list">Refresh list</string>
   <string name="send_plaintext_password_to">Send password as plaintext using…</string>
-  <string name="app_icon_hint">App icon</string>
 
   <!-- Oreo Autofill -->
   <string name="oreo_autofill_select_and_fill_into">Select entry to fill into</string>
@@ -223,7 +212,7 @@
   <string name="oreo_autofill_warning_publisher_header">This app\'s publisher has changed since you first associated a HardenedPass entry with it:</string>
   <string name="oreo_autofill_warning_publisher_footer"><b>The currently installed app may be trying to steal your credentials by pretending to be a trusted app.</b>\n\nTry to uninstall and reinstall the app from a trusted source, such as the Play Store, Amazon Appstore, F-Droid, or your phone manufacturer\'s store.</string>
   <string name="oreo_autofill_warning_publisher_install_time">Installed: %1$s</string>
-  <string name="oreo_autofill_warning_publisher_app_name" translatable="false">“%1$s“</string>
+  <string name="oreo_autofill_warning_publisher_app_name" translatable="false">“%1$s”</string>
   <string name="oreo_autofill_warning_publisher_advanced_info_template" translatable="false">Package:\n%1$s\n\nHash:\n%2$s</string>
   <string name="oreo_autofill_warning_publisher_advanced_info_button">Advanced information</string>
   <string name="oreo_autofill_warning_publisher_changed_disable_autofill_button">Keep Autofill disabled</string>
@@ -242,7 +231,6 @@
 
   <!-- Autofill -->
   <string name="ssh_key_does_not_exist">Unable to open the ssh private key, please check that the file exists</string>
-  <string name="new_password_title">New password</string>
   <string name="clear_saved_passphrase_ssh">Clear saved passphrase for local SSH key</string>
   <string name="clear_saved_passphrase_https">Clear saved HTTPS password</string>
   <string name="git_operation_remember_passphrase">Remember key passphrase</string>
@@ -258,8 +246,6 @@
   <string name="pref_biometric_auth_title">Enable biometric authentication</string>
   <string name="pref_biometric_auth_summary">When enabled, HardenedPass will prompt you for your fingerprint when launching the app</string>
   <string name="pref_biometric_auth_summary_error">Fingerprint hardware not accessible or missing</string>
-  <string name="pref_biometric_auth_summary_disabled_platform">Feature unavailable due to a platform bug</string>
-  <string name="pref_title_openkeystore_clear_keyid">Clear remembered OpenKeystore SSH Key ID</string>
   <string name="your_public_key">Your public key</string>
   <string name="error_generate_ssh_key">Error while trying to generate the ssh-key</string>
   <string name="pref_show_hidden_title">Show all files and folders</string>
@@ -267,7 +253,6 @@
   <string name="title_create_folder">Create folder</string>
   <string name="title_rename_folder">Rename folder</string>
   <string name="message_category_error_empty_field">Category name can\'t be empty</string>
-  <string name="message_category_error_category_exists">Category name already exists</string>
   <string name="message_error_destination_outside_repo">Destination must be within the repository</string>
   <string name="message_rename_folder">Enter destination for %1$s</string>
   <string name="button_create">Create</string>
@@ -315,12 +300,10 @@
   <string name="invalid_gpg_id">Found .gpg-id, but it contains an invalid key ID, fingerprint or user ID</string>
   <string name="short_gpg_id">Found .gpg-id, but it contains a short hex ID, which is not supported</string>
   <string name="invalid_filename_text">File name must not contain \'/\', set directory above</string>
-  <string name="directory_hint">Directory</string>
-  <string name="new_folder_set_gpg_key">Set GPG key for directory</string>
 
   <!-- GitException messages -->
   <string name="git_unknown_error">Unknown error</string>
-  <string name="git_pull_rebase_fail_error">Pull has failed, you\'re in a detached head. Using "settings > git utils", save your changes to the remote in a new branch and resolve the conflict on your computer.</string>
+  <string name="git_pull_rebase_fail_error">Pull has failed, you\'re in a detached head. Using \"Settings > Repository > Local Git config &amp; utilities\", save your changes to the remote in a new branch and resolve the conflict on your computer.</string>
   <string name="git_pull_merge_fail_error">Merge has failed, you\'re in a conflicting state.</string>
 
   <string name="git_push_nff_error">Push was rejected by remote, run pull before pushing again. You can use Synchronize rather than pull/push as it implements both</string>
@@ -332,17 +315,13 @@
   <string name="git_break_out_of_detached_unneeded">The repository is not rebasing, no need to push to another branch</string>
 
   <!-- GPG key selection in folder creation -->
-  <string name="gpg_key_select_mandatory">Selecting a GPG key is necessary to proceed</string>
   <string name="folder_creation_err_file_exists">A file by that name already exists</string>
   <string name="folder_creation_err_folder_exists">A folder by that name already exists</string>
 
   <!-- Onboarding flow -->
-  <string name="let_s_go">Let\'s Go</string>
-  <string name="select_n_repository_type">Select \nRepository Type</string>
   <string name="select_repo_type_text">Select if you want to create a local repo or clone a remote repo.</string>
   <string name="clone_remote_repo">Clone Remote Repo</string>
   <string name="create_local_repo">Create Local Repo</string>
-  <string name="select_gpg_key_title">Select\nGPG Key</string>
   <string name="select_gpg_key_message">Select a GPG key to initialize your store with</string>
   <string name="gpg_key_select">Select key</string>
 
@@ -365,11 +344,9 @@
   <string name="clear_saved_host_key_success">Successfully cleared saved host key!</string>
   <string name="otp_import_qr_code">Scan QR code</string>
   <string name="otp_import_from_file">Choose an image</string>
-  <string name="otp_import_manual_entry">Enter manually</string>
   <string name="otp_import_manual_hint_secret">Secret</string>
   <string name="otp_import_manual_hint_account">Account</string>
   <string name="place_shortcut_on_home_screen">Place shortcut on home screen</string>
-  <string name="password_list_fab_content_description">Create new password or folder</string>
   <string name="pgp_key_import_failed">Failed to import PGP key</string>
   <string name="pgp_key_import_failed_replace_message">An existing key with this ID was found, do you want to replace it?</string>
   <string name="pgp_key_import_succeeded">Successfully imported PGP key</string>
@@ -385,4 +362,57 @@
   <string name="no_keys_imported_dialog_message">There are no PGP keys imported in the app yet, press the button below to pick a key file</string>
   <string name="biometric_prompt_title_gpg_passphrase_cache">Unlock passphrase cache</string>
   <string name="clear_cached_password_on_screen_off">Clear cached password on screen-off</string>
+
+  <!-- Compose password list -->
+  <string name="list_new_entry">New entry</string>
+  <string name="list_store_root">Password store</string>
+  <string name="list_more_options">More options</string>
+  <string name="list_clear_search">Clear search</string>
+
+  <!-- Compose entry view -->
+  <string name="entry_back">Back</string>
+  <string name="entry_show_password">Show password</string>
+  <string name="entry_hide_password">Hide password</string>
+  <string name="entry_copy_name">Copy name</string>
+
+  <!-- Compose folder picker -->
+  <string name="folder_picker_title">Choose a folder</string>
+  <string name="folder_creation_err_failed">Could not create the folder</string>
+  <string name="folder_picker_new">New folder</string>
+
+  <!-- Compose editor -->
+  <string name="editor_new_title">New entry</string>
+  <string name="editor_edit_title">Edit entry</string>
+  <string name="editor_close">Close</string>
+  <string name="editor_folder">Folder</string>
+  <string name="editor_change_folder">Change</string>
+  <string name="editor_otp_qr">OTP from QR</string>
+  <string name="editor_otp_manual">Manual OTP</string>
+  <string name="generator_random">Random</string>
+  <string name="generator_diceware" translatable="false">Diceware</string>
+  <string name="generator_use">Use</string>
+
+  <!-- Compose setup -->
+  <string name="ssh_key_state_none">No SSH key yet</string>
+  <string name="ssh_key_state_imported">Imported private key</string>
+  <string name="ssh_key_state_generated">Generated on this device</string>
+  <string name="git_clone_progress">Cloning…</string>
+  <string name="connection_mode_none">None</string>
+  <string name="ssh_key_manage">Manage</string>
+  <string name="ssh_key_public_hint">Provide this public key to your Git server.</string>
+  <string name="pgp_key_needed_message">Import the private key this store is encrypted for, so its entries can be read and saved.</string>
+  <string name="pgp_key_needed_recipients">Store recipients</string>
+  <string name="store_create_failed">Could not create the store: %1$s</string>
+  <string name="store_not_empty">the folder already holds a store</string>
+  <string name="git_clone_delete_failed">Could not empty the store folder, so the clone did not start.</string>
+  <string name="pgp_key_import_too_large">The file is larger than 1 MiB: not a PGP key.</string>
+  <string name="pgp_key_import_downgrade">A private key with this ID is already imported. Its public key alone cannot replace it: delete the private key first if you really want to.</string>
+
+  <!-- Compose settings -->
+  <string name="store_delete_failed">Could not delete everything in the store folder.</string>
+  <string name="clear_saved_secret_message">It will be asked again at the next Git operation.</string>
+  <string name="invalid_proxy_port">Enter a port from 1 to 65535, or nothing</string>
+  <string name="git_reset_confirm_message">Local commits and changes that are not on this remote branch are discarded.</string>
+  <string name="git_tool_done">%1$s: done</string>
+  <string name="store_delete_confirm">Delete the local store? Entries not pushed to the remote are lost.</string>
 </resources>

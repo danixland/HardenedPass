@@ -14,6 +14,12 @@ Modules: `app` (UI, git sync, autofill service), `autofill-parser`, `crypto:comm
 `crypto:pgpainless`, `format:common`, `passgen:diceware`, `passgen:random`, `ui:compose`,
 `coroutine-utils`. Build conventions live in `build-logic/`.
 
+The UI is Jetpack Compose with Material 3. `MainActivity` hosts every screen in one `NavHost`
+(list, entry, editor, setup, settings); `LaunchActivity` is the only exported activity. The
+autofill service starts its four activities (`AutofillFilterView`, `AutofillDecryptActivity`,
+`AutofillSaveActivity`, `AutofillPublisherChangedActivity`) directly, so they stay separate and
+draw with the same theme.
+
 `applicationId` is `xyz.danix.hardenedpass` (debug: `.debug` suffix, label "HardenedPass
 Debug"), so it installs next to upstream's `app.passwordstore` and never updates over it. The
 Kotlin package stays `app.passwordstore`; renaming it is churn with no user-visible effect.
@@ -65,10 +71,23 @@ in `local.properties`:
 
     $ANDROID_HOME/emulator/emulator -avd aps-test -no-window -no-audio -no-boot-anim \
       -no-snapshot-save -gpu swiftshader_indirect &
-    ./gradlew installDebug
+    ./gradlew :app:installDebug
 
-Drive it with `adb shell input`, `uiautomator dump` and `screencap`. Decrypt screens set
-`FLAG_SECURE`, so screenshots of them are black; read them from the `uiautomator` dump.
+If a physical device is connected too, `export ANDROID_SERIAL=emulator-5554` first, so every
+`adb` and Gradle install command targets the emulator. Agent shells keep no functions or
+variables between calls: keep that export and any helpers in a sourced file, and prefix helper
+names (`e2e_pass`, not `pass`, which is the real `pass` and reaches a real store). Drive it with
+`adb shell input`, `uiautomator dump` and `screencap`; Compose nodes carry `text` and
+`content-desc` in the dump, no resource ids, so match on those. FABs ("Import PGP key", "New
+entry") carry only `content-desc`, and the list's search bar is itself an `EditText`. The entry
+view, the editor and its generator sheet, the proxy screen, the passphrase dialogs and the
+autofill decryption and save windows set `FLAG_SECURE`, so screenshots of them are black; read
+them from the `uiautomator` dump. After boot, wait until the keyguard is dismissed and user
+storage is unlocked before `adb uninstall` or `push-keys`: earlier, uninstall fails with
+`DELETE_FAILED_INTERNAL_ERROR` and `/sdcard/Download` does not exist yet. In a Compose text
+field, wait about a second after the tap before clearing it (Ctrl+A, DEL), or the clear misses.
+`adb shell run-as <pkg> sh -c '...'` needs the whole command quoted as one `adb` argument
+(`adb shell "run-as <pkg> sh -c '...'"`), or the device shell splits it.
 Fingerprint: `adb emu finger touch 1` after enrolling one in Settings (needs a lock PIN:
 `adb shell locksettings set-pin 1234` on the emulator only). Disable animations
 (`settings put global animator_duration_scale 0`, same for `transition_` and `window_`)
@@ -81,8 +100,11 @@ worktree with `~/.android/debug.keystore`, so an in-place upgrade between them n
 re-signing.
 
 Autofill cannot be tested on the emulator image: Settings is denylisted in
-`OreoAutofillService`, and the only browser (WebView Shell) is not a trusted browser. Use a
-real device with a trusted browser (e.g. Firefox) instead:
+`OreoAutofillService`, and the only browser (WebView Shell) is not a trusted browser. Its
+activities are not exported; after `adb root` (the AOSP image allows it), `am start -n` opens the
+picker, the publisher warning and the save editor with test extras, but not a real decryption
+(it needs a client state `Bundle`). Use a real device with a trusted browser (e.g. Firefox)
+instead:
 
 - `adb reverse tcp:2222 tcp:2222` lets the device clone `ssh://git@127.0.0.1:2222/...` from the
   e2e server over USB; serve a local login page the same way (`python3 -m http.server` on
@@ -98,9 +120,10 @@ real device with a trusted browser (e.g. Firefox) instead:
 - Only read screens of the debug app, the test page and the autofill UI; the device holds the
   owner's real data.
 
-Last full device run (2026-11-02): clone over SSH, PGP import, decrypt, TOTP, create and push,
-conflict recovery, hard reset, fingerprint unlock (emulator) and Firefox autofill (tablet) all
-passed.
+Last full emulator run (2026-11-04, Compose UI): clone over SSH, PGP import, decrypt, TOTP,
+create and push, conflict recovery (abort rebase, push a new branch), hard reset and
+fingerprint unlock passed. Last Firefox autofill run on the tablet: 2026-11-04 (fill, passphrase
+cache rule, no keys flow, picker, settings dialog), all passed.
 
 ## Verified facts and gotchas
 
@@ -115,8 +138,16 @@ passed.
   (`<path>:private-key:<line>`). Never allowlist anything but generated test keys.
 - `app/lint-baseline.xml` entries for library jars are keyed on the jar's cache path, version
   and hash included. A dependency bump that moves a baselined jar needs the path updated.
-- `LaunchActivity` is exported and forwards `FILE_PATH` to `DecryptActivity` (not exported)
-  only after `isFileInRepo` checks it canonically resolves inside the store.
+- `LaunchActivity` is exported and forwards `FILE_PATH` to `MainActivity` (not exported) only
+  after `isFileInRepo` checks it canonically resolves inside the store; `MainActivity` opens it as
+  `EntryRoute`, whose destination checks it again before decrypting.
+- Material Components (Views) stays after the Compose overhaul: the window themes derive from
+  `Theme.Material3.DayNight` (the AppCompat activities need it), and the git operations' View
+  dialogs (`BaseGitActivity`, `GitOperation`, `CredentialFinder` with
+  `git_credential_layout.xml`, `BreakOutOfDetached`, `StoreActions`), `DynamicColors` and the
+  `snackbar` helper use it. `oreo_autofill_dataset.xml` stays a layout: fill suggestions are
+  `RemoteViews` drawn by the system. `fragment-ktx` is declared only to pin `androidx.fragment`
+  (appcompat alone resolves an older one).
 - sshj gets Ed25519 keys from Bouncy Castle: `SshjConfig.kt` pins `KeyFactory.Ed25519` to it at
   provider position 1. Conscrypt from Android 14 mainline updates serves that factory with keys
   sshj maps to `KeyType.UNKNOWN` ("Don't know how to encode key"), breaking every Ed25519 host

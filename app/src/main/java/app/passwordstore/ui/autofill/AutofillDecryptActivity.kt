@@ -8,24 +8,42 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import android.view.autofill.AutofillManager
+import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.edit
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import app.passwordstore.Application.Companion.screenWasOff
 import app.passwordstore.R
 import app.passwordstore.crypto.PGPIdentifier
+import app.passwordstore.data.crypto.CryptoRepository
 import app.passwordstore.data.crypto.PGPPassphraseCache
 import app.passwordstore.data.passfile.PasswordEntry
 import app.passwordstore.data.repo.PasswordRepository
-import app.passwordstore.ui.crypto.BasePGPActivity
-import app.passwordstore.ui.crypto.PasswordDialog
+import app.passwordstore.injection.prefs.SettingsPreferences
+import app.passwordstore.ui.compose.theme.APSTheme
+import app.passwordstore.ui.crypto.getPGPIdentifiers
+import app.passwordstore.ui.crypto.getParentPath
+import app.passwordstore.ui.entry.PassphraseDialog
+import app.passwordstore.ui.main.MainActivity
+import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result as BiometricResult
 import app.passwordstore.util.autofill.AutofillPreferences
 import app.passwordstore.util.autofill.AutofillResponseBuilder
+import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.asLog
 import app.passwordstore.util.features.Feature.EnablePGPPassphraseCache
 import app.passwordstore.util.features.Features
@@ -47,62 +65,157 @@ import logcat.LogPriority.ERROR
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Decrypts one entry for the autofill service and returns the dataset to fill. Its transparent,
+ * FLAG_SECURE window shows only the "no keys" and passphrase dialogs.
+ */
 @AndroidEntryPoint
-class AutofillDecryptActivity : BasePGPActivity() {
+class AutofillDecryptActivity : AppCompatActivity() {
 
+  @SettingsPreferences @Inject lateinit var settings: SharedPreferences
+  @Inject lateinit var repository: CryptoRepository
+  @Inject lateinit var dispatcherProvider: DispatcherProvider
   @Inject lateinit var passwordEntryFactory: PasswordEntry.Factory
   @Inject lateinit var features: Features
   @Inject lateinit var passphraseCache: PGPPassphraseCache
 
   private lateinit var directoryStructure: DirectoryStructure
+  private lateinit var filePath: String
+  private lateinit var clientState: Bundle
+  private lateinit var action: AutofillAction
   private var clearCache = true
 
-  override fun onStart() {
-    super.onStart()
-    val filePath =
+  /** The screen lock prompt's outcome: the passphrase is cached only after a success. */
+  private var auth: BiometricResult = BiometricResult.CanceledByUser
+
+  /** Set once the flow started; reset after a key import, so the next window focus restarts it. */
+  private var started = false
+
+  /** Shows the "No keys imported" dialog. */
+  private var noKeys by mutableStateOf(false)
+
+  /** The recipients the passphrase dialog asks for; null while it is not shown. */
+  private var passphraseFor by mutableStateOf<List<PGPIdentifier>?>(null)
+
+  // The import's activity is still on top when its result arrives: the flow restarts on the next
+  // window focus, so the screen lock prompt is not shown (and evicted) behind it.
+  private val keyImport =
+    registerForActivityResult(StartActivityForResult()) { result ->
+      if (result.resultCode == RESULT_OK) started = false else finish()
+    }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    // Before anything is drawn: the passphrase dialog's parent stays out of screenshots and
+    // recents.
+    window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    // ponytail: a recreation (theme or locale change; rotation and resizing do not recreate, see
+    // the manifest) cancels the fill instead of resuming a half-done flow; the user taps the field
+    // again. Keep the flow's state in a ViewModel if this ever matters.
+    if (savedInstanceState != null) {
+      finish()
+      return
+    }
+    filePath =
       intent?.getStringExtra(EXTRA_FILE_PATH)
         ?: run {
           logcat(ERROR) { "AutofillDecryptActivity started without EXTRA_FILE_PATH" }
           finish()
           return
         }
-    val clientState =
+    clientState =
       intent?.getBundleExtra(AutofillManager.EXTRA_CLIENT_STATE)
         ?: run {
           logcat(ERROR) { "AutofillDecryptActivity started without EXTRA_CLIENT_STATE" }
           finish()
           return
         }
-    val isSearchAction = intent?.getBooleanExtra(EXTRA_SEARCH_ACTION, true)!!
-    val action = if (isSearchAction) AutofillAction.Search else AutofillAction.Match
+    val isSearchAction = intent.getBooleanExtra(EXTRA_SEARCH_ACTION, true)
+    action = if (isSearchAction) AutofillAction.Search else AutofillAction.Match
     directoryStructure = AutofillPreferences.directoryStructure(this)
     logcat { action.toString() }
-    requireKeysExist {
-      if (
-        features.isEnabled(EnablePGPPassphraseCache) && BiometricAuthenticator.canAuthenticate(this)
-      ) {
-        BiometricAuthenticator.authenticate(
-          this,
-          R.string.biometric_prompt_title_gpg_passphrase_cache,
-        ) { authResult ->
-          decrypt(filePath, clientState, action, authResult)
-        }
-      } else {
-        decrypt(filePath, clientState, action, BiometricResult.CanceledByUser)
+    setContent {
+      APSTheme {
+        if (noKeys)
+          AlertDialog(
+            onDismissRequest = { finish() },
+            title = { Text(stringResource(R.string.no_keys_imported_dialog_title)) },
+            text = { Text(stringResource(R.string.no_keys_imported_dialog_message)) },
+            confirmButton = {
+              TextButton(
+                onClick = {
+                  noKeys = false
+                  keyImport.launch(
+                    MainActivity.setupIntent(this@AutofillDecryptActivity, SetupStart.PgpImport)
+                  )
+                }
+              ) {
+                Text(stringResource(R.string.button_label_import))
+              }
+            },
+          )
+        val identifiers = passphraseFor
+        if (identifiers != null)
+          PassphraseDialog(
+            wrong = false,
+            cacheEnabled = features.isEnabled(EnablePGPPassphraseCache),
+            clearCache = clearCache,
+            onSubmit = onSubmit@{ passphrase, clear ->
+                // Cleared before decrypting: a second submit in the same frame does nothing.
+                if (passphraseFor == null) return@onSubmit
+                passphraseFor = null
+                clearCache = clear
+                lifecycleScope.launch(dispatcherProvider.main()) {
+                  decryptWithPassphrase(identifiers, passphrase, typed = true)
+                }
+              },
+            onCancel = { finish() },
+          )
       }
     }
   }
 
-  private fun decrypt(
-    filePath: String,
-    clientState: Bundle,
-    action: AutofillAction,
-    authResult: BiometricResult,
-  ) {
+  // The flow waits for window focus, as LaunchActivity's prompt does: Android 14's SystemUI
+  // dismisses a screen lock prompt shown before its activity is on top. It runs once (again only
+  // after a key import); the old onStart start ran it on every return to this activity.
+  override fun onWindowFocusChanged(hasFocus: Boolean) {
+    super.onWindowFocusChanged(hasFocus)
+    if (!hasFocus || started || isFinishing) return
+    started = true
+    start()
+  }
+
+  /** Asks for a key import first while no PGP key is imported. */
+  private fun start() {
+    if (isFinishing) return
+    lifecycleScope.launch { if (repository.hasKeys()) unlock() else noKeys = true }
+  }
+
+  private fun unlock() {
+    if (
+      features.isEnabled(EnablePGPPassphraseCache) && BiometricAuthenticator.canAuthenticate(this)
+    ) {
+      BiometricAuthenticator.authenticate(
+        this,
+        R.string.biometric_prompt_title_gpg_passphrase_cache,
+      ) { authResult ->
+        decrypt(authResult)
+      }
+    } else {
+      decrypt(BiometricResult.CanceledByUser)
+    }
+  }
+
+  private fun decrypt(authResult: BiometricResult) {
+    auth = authResult
     val gpgIdentifiers =
       getPGPIdentifiers(
         getParentPath(filePath, PasswordRepository.getRepositoryDirectory().toString())
-      ) ?: return
+      )
+        ?: run {
+          finish()
+          return
+        }
     lifecycleScope.launch(dispatcherProvider.main()) {
       when (authResult) {
         // Internally handled by the prompt dialog
@@ -111,8 +224,7 @@ class AutofillDecryptActivity : BasePGPActivity() {
         is BiometricResult.CanceledBySystem,
         is BiometricResult.CanceledByUser,
         is BiometricResult.Failure,
-        is BiometricResult.HardwareUnavailableOrDisabled ->
-          askPassphrase(filePath, gpgIdentifiers, clientState, action)
+        is BiometricResult.HardwareUnavailableOrDisabled -> askPassphrase(gpgIdentifiers)
         is BiometricResult.Success -> {
           /* clear passphrase cache on first use after application startup or if screen was off;
           also make sure to purge a stale cache after caching has been disabled via PGP settings */
@@ -127,56 +239,30 @@ class AutofillDecryptActivity : BasePGPActivity() {
               gpgIdentifiers.first(),
             )
           if (cachedPassphrase != null) {
-            decryptWithPassphrase(
-              File(filePath),
-              gpgIdentifiers,
-              clientState,
-              action,
-              cachedPassphrase,
-            )
+            decryptWithPassphrase(gpgIdentifiers, cachedPassphrase)
           } else {
-            askPassphrase(filePath, gpgIdentifiers, clientState, action)
+            askPassphrase(gpgIdentifiers)
           }
         }
       }
     }
   }
 
-  private suspend fun askPassphrase(
-    filePath: String,
-    identifiers: List<PGPIdentifier>,
-    clientState: Bundle,
-    action: AutofillAction,
-  ) {
+  private suspend fun askPassphrase(identifiers: List<PGPIdentifier>) {
     if (!repository.isPasswordProtected(identifiers)) {
-      decryptWithPassphrase(File(filePath), identifiers, clientState, action, password = "")
+      decryptWithPassphrase(identifiers, password = "")
       return
     }
-    val dialog =
-      PasswordDialog.newInstance(
-        cacheEnabled = features.isEnabled(EnablePGPPassphraseCache),
-        clearCache = clearCache,
-      )
-    dialog.show(supportFragmentManager, "PASSWORD_DIALOG")
-    dialog.setFragmentResultListener(PasswordDialog.PASSWORD_RESULT_KEY) { key, bundle ->
-      if (key == PasswordDialog.PASSWORD_RESULT_KEY) {
-        val value = bundle.getString(PasswordDialog.PASSWORD_PHRASE_KEY)!!
-        clearCache = bundle.getBoolean(PasswordDialog.PASSWORD_CLEAR_KEY)
-        lifecycleScope.launch(dispatcherProvider.main()) {
-          decryptWithPassphrase(File(filePath), identifiers, clientState, action, value)
-        }
-      }
-    }
+    passphraseFor = identifiers
   }
 
+  /** Caches [password] only when the user [typed] it, as the entry view does. */
   private suspend fun decryptWithPassphrase(
-    filePath: File,
     identifiers: List<PGPIdentifier>,
-    clientState: Bundle,
-    action: AutofillAction,
     password: String,
+    typed: Boolean = false,
   ) {
-    val credentials = decryptCredential(filePath, password, identifiers)
+    val credentials = decryptCredential(File(filePath), password, identifiers, typed)
     if (credentials == null) {
       setResult(RESULT_CANCELED)
     } else {
@@ -201,6 +287,7 @@ class AutofillDecryptActivity : BasePGPActivity() {
     file: File,
     password: String,
     identifiers: List<PGPIdentifier>,
+    typed: Boolean,
   ): Credentials? {
     runCatching { file.readBytes().inputStream() }
       .onFailure { e ->
@@ -218,7 +305,9 @@ class AutofillDecryptActivity : BasePGPActivity() {
           .onSuccess { result ->
             return runCatching {
                 runCatching {
-                    if (features.isEnabled(EnablePGPPassphraseCache)) {
+                    if (
+                      typed && cachesPassphrase(features.isEnabled(EnablePGPPassphraseCache), auth)
+                    ) {
                       passphraseCache.cachePassphrase(this, identifiers.first(), password)
                       settings.edit {
                         putBoolean(PreferenceKeys.CLEAR_PASSPHRASE_CACHE, clearCache)

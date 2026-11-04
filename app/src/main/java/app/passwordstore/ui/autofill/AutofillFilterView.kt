@@ -10,36 +10,36 @@ import android.content.Intent
 import android.content.IntentSender
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.view.autofill.AutofillManager
-import android.widget.TextView
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.bold
-import androidx.core.text.buildSpannedString
-import androidx.core.text.underline
-import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.passwordstore.R
-import app.passwordstore.data.password.PasswordItem
-import app.passwordstore.databinding.ActivityOreoAutofillFilterBinding
+import app.passwordstore.data.repo.PasswordRepository
+import app.passwordstore.ui.compose.theme.APSTheme
+import app.passwordstore.ui.list.ListRow
 import app.passwordstore.util.autofill.AutofillMatcher
 import app.passwordstore.util.autofill.AutofillPreferences
 import app.passwordstore.util.coroutines.DispatcherProvider
-import app.passwordstore.util.extensions.viewBinding
-import app.passwordstore.util.settings.DirectoryStructure
 import app.passwordstore.util.viewmodel.FilterMode
 import app.passwordstore.util.viewmodel.ListMode
 import app.passwordstore.util.viewmodel.SearchMode
-import app.passwordstore.util.viewmodel.SearchableRepositoryAdapter
 import app.passwordstore.util.viewmodel.SearchableRepositoryViewModel
 import com.github.androidpasswordstore.autofillparser.FormOrigin
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 import javax.inject.Inject
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import logcat.LogPriority.ERROR
 import logcat.logcat
 
@@ -85,10 +85,11 @@ class AutofillFilterView : AppCompatActivity() {
   }
 
   private lateinit var formOrigin: FormOrigin
-  private lateinit var directoryStructure: DirectoryStructure
-  private val binding by viewBinding(ActivityOreoAutofillFilterBinding::inflate)
 
   private val model: SearchableRepositoryViewModel by viewModels()
+
+  /** Set by the first tap on a row: a double tap must not start a second decryption. */
+  private var picked = false
 
   private val decryptAction =
     registerForActivityResult(StartActivityForResult()) { result ->
@@ -100,7 +101,10 @@ class AutofillFilterView : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(binding.root)
+    // The picker decides which entry fills the requesting app: drop touches under an overlay, as
+    // the
+    // publisher warning does.
+    window.decorView.filterTouchesWhenObscured = true
     setFinishOnTouchOutside(true)
 
     val params = window.attributes
@@ -129,111 +133,77 @@ class AutofillFilterView : AppCompatActivity() {
           return
         }
       }
-    directoryStructure = AutofillPreferences.directoryStructure(this)
-
     supportActionBar?.hide()
-    bindUI()
-    updateSearch()
     setResult(RESULT_CANCELED)
-  }
 
-  private fun bindUI() {
-    with(binding) {
-      rvPassword.apply {
-        adapter =
-          SearchableRepositoryAdapter(
-              R.layout.oreo_autofill_filter_row,
-              ::PasswordViewHolder,
-              lifecycleScope,
-              dispatcherProvider,
-            ) { item, _ ->
-              val file = item.file.relativeTo(item.rootDir)
-              val pathToIdentifier = directoryStructure.getPathToIdentifierFor(file)
-              val identifier = directoryStructure.getIdentifierFor(file)
-              val accountPart = directoryStructure.getAccountPartFor(file)
-              check(identifier != null || accountPart != null) {
-                "At least one of identifier and accountPart should always be non-null"
-              }
-              title.text =
-                if (identifier != null) {
-                  buildSpannedString {
-                    if (pathToIdentifier != null) append("$pathToIdentifier/")
-                    bold { underline { append(identifier) } }
-                  }
-                } else {
-                  accountPart
-                }
-              subtitle.apply {
-                if (identifier != null && accountPart != null) {
-                  text = accountPart
-                  visibility = View.VISIBLE
-                } else {
-                  visibility = View.GONE
-                }
-              }
-            }
-            .onItemClicked { _, item -> decryptAndFill(item) }
-        layoutManager = LinearLayoutManager(context)
-      }
-      search.apply {
-        val initialSearch = formOrigin.getPrettyIdentifier(applicationContext, untrusted = false)
-        setText(initialSearch, TextView.BufferType.EDITABLE)
-        addTextChangedListener { updateSearch() }
-      }
-      origin.text = buildSpannedString {
-        append(getString(R.string.oreo_autofill_select_and_fill_into))
-        append("\n")
-        bold { append(formOrigin.getPrettyIdentifier(applicationContext, untrusted = true)) }
-      }
-      strictDomainSearch.apply {
-        visibility = if (formOrigin is FormOrigin.Web) View.VISIBLE else View.GONE
-        isChecked = formOrigin is FormOrigin.Web
-        setOnCheckedChangeListener { _, _ -> updateSearch() }
-      }
-      shouldMatch.text =
-        getString(
-          R.string.oreo_autofill_match_with,
-          formOrigin.getPrettyIdentifier(applicationContext),
+    val isWeb = formOrigin is FormOrigin.Web
+    val initialQuery = formOrigin.getPrettyIdentifier(applicationContext, untrusted = false)
+    val root = PasswordRepository.getRepositoryDirectory()
+    val directoryStructure = AutofillPreferences.directoryStructure(this)
+    // ponytail: cold flow, so each return to STARTED walks the store again; fine for a picker open
+    // a few seconds. Share it with stateIn in the ViewModel if a large store makes it slow.
+    val rows =
+      model.searchResult
+        .map { result ->
+          autofillRows(result.passwordItems.map { it.file }, root, directoryStructure)
+        }
+        .flowOn(dispatcherProvider.io())
+    val origin = formOrigin.getPrettyIdentifier(applicationContext, untrusted = true)
+    val matchLabel =
+      getString(
+        R.string.oreo_autofill_match_with,
+        formOrigin.getPrettyIdentifier(applicationContext),
+      )
+
+    setContent {
+      APSTheme {
+        var query by rememberSaveable { mutableStateOf(initialQuery) }
+        var strict by rememberSaveable { mutableStateOf(isWeb) }
+        var match by rememberSaveable { mutableStateOf(true) }
+        var clear by rememberSaveable { mutableStateOf(false) }
+        // During the first composition, before rows is collected, so the ViewModel's default root
+        // listing (folders included) is never shown, and with the restored query and switch after
+        // recreation. The LaunchedEffect repeats it with equal arguments, which emits nothing.
+        remember { search(query, strict) }
+        LaunchedEffect(query, strict) { search(query, strict) }
+        val shown by rows.collectAsStateWithLifecycle<ImmutableList<ListRow>?>(initialValue = null)
+        AutofillFilterScreen(
+          origin = origin,
+          query = query,
+          rows = shown,
+          showStrict = isWeb,
+          strict = strict,
+          matchLabel = matchLabel,
+          match = match,
+          clear = clear,
+          onQueryChange = { query = it },
+          onStrictChange = { strict = it },
+          onMatchChange = { match = it },
+          onClearChange = { clear = it },
+          onPick = { path -> decryptAndFill(File(path), match, clear) },
         )
-      lifecycleScope.launch { handleSearchResults() }
-    }
-  }
-
-  private suspend fun handleSearchResults() {
-    model.searchResult.collect { result ->
-      val list = result.passwordItems
-      (binding.rvPassword.adapter as SearchableRepositoryAdapter).submitList(list) {
-        binding.rvPassword.scrollToPosition(0)
-      }
-      // Switch RecyclerView out for a "no results" message if the new list is empty and
-      // the message is not yet shown (and vice versa).
-      if (
-        (list.isEmpty() && binding.rvPasswordSwitcher.nextView.id == binding.rvPasswordEmpty.id) ||
-          (list.isNotEmpty() && binding.rvPasswordSwitcher.nextView.id == binding.rvPassword.id)
-      ) {
-        binding.rvPasswordSwitcher.showNext()
       }
     }
   }
 
-  private fun updateSearch() {
+  /** The old picker's search: fuzzy or strict domain, recursive, entries only. */
+  private fun search(query: String, strict: Boolean) {
     model.search(
-      binding.search.text.toString().trim(),
-      filterMode =
-        if (binding.strictDomainSearch.isChecked) FilterMode.StrictDomain else FilterMode.Fuzzy,
+      query.trim(),
+      filterMode = if (strict) FilterMode.StrictDomain else FilterMode.Fuzzy,
       searchMode = SearchMode.RecursivelyInSubdirectories,
       listMode = ListMode.FilesOnly,
     )
   }
 
-  private fun decryptAndFill(item: PasswordItem) {
-    if (binding.shouldClear.isChecked)
-      AutofillMatcher.clearMatchesFor(applicationContext, formOrigin)
-    if (binding.shouldMatch.isChecked)
-      AutofillMatcher.addMatchFor(applicationContext, formOrigin, item.file)
+  private fun decryptAndFill(file: File, match: Boolean, clear: Boolean) {
+    if (picked) return
+    picked = true
+    if (clear) AutofillMatcher.clearMatchesFor(applicationContext, formOrigin)
+    if (match) AutofillMatcher.addMatchFor(applicationContext, formOrigin, file)
     // intent?.extras? is checked to be non-null in onCreate
     decryptAction.launch(
-      AutofillDecryptActivity.makeDecryptFileIntent(item.file, intent!!.extras!!, this)
+      AutofillDecryptActivity.makeDecryptFileIntent(file, intent!!.extras!!, this)
     )
   }
 }
