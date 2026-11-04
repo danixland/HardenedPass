@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-11-04
+
+### Changed
+
+-   New user interface built with Jetpack Compose and Material 3: the password list with breadcrumbs, search, pull to sync and multi-select; the entry view with an OTP countdown; the editor with a password generator sheet and folder picker; setup (welcome, git server and clone, SSH key, PGP keys); settings grouped by category; and the autofill picker, phishing warning and passphrase prompts
+-   Setup merges the welcome screens; a new local store writes its `.gpg-id` with the key's long key ID, as `pass init` does
+-   The "files first" and "type independent" sort orders were removed; a stored one becomes "folders first"
+-   Autofill caches a PGP passphrase only when it was typed after a successful screen lock prompt, as the entry view does
+-   The autofill picker and the phishing warning ignore taps made through another app's overlay, and "Re-enable Autofill" no longer sits under "Advanced information", so a double tap cannot re-enable it
+-   Updated the public suffix list
+
+### Fixed
+
+-   Deleting the repository, an entry or a folder no longer follows symbolic links out of the store
+-   "Clear saved HTTPS password" and "Clear saved SSH passphrase" now actually clear them
+-   Proxy authentication read the user name from the wrong place and never worked; an invalid proxy port no longer crashes the app
+-   Switches behind the screen lock are stored only after a successful prompt
+-   SSH authentication no longer hangs after a screen lock prompt is closed, and sensor errors end the prompt
+-   The app lock and the autofill passphrase prompt work on Android 14, where the system dismissed the prompt at once
+-   Opening the app from a shortcut no longer starts a second copy of the main screen
+-   The rebase conflict message points to the current settings screen, and the abort dialog names the branch it pushed
+-   Turning autofill off in Settings shows the switch off at once
+-   Other languages no longer call the app "Password Store"
+
 ## [0.1.5] - 2026-11-03
 
 ### Fixed
