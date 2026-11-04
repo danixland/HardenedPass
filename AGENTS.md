@@ -165,6 +165,10 @@ cache rule, no keys flow, picker, settings dialog), all passed.
   Android only partly desugars; moving to it is a large, separate job. Window cache JMX is off
   in `Application` and GC runs without JGit's PID lock, because Android has no JMX.
 
+## Open work
+
+`TODO.md` lists open features and fixes. Remove an item in the commit that finishes it.
+
 ## Maintenance tasks
 
 Recurring jobs with no automation. When starting a session, check the "last run" dates; if a
