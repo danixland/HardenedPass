@@ -6,6 +6,7 @@
 package app.passwordstore.ui.autofill
 
 import app.passwordstore.ui.list.ListRow
+import app.passwordstore.util.auth.BiometricAuthenticator.Result as BiometricResult
 import app.passwordstore.util.settings.DirectoryStructure
 import java.io.File
 import kotlinx.collections.immutable.ImmutableList
@@ -36,3 +37,11 @@ fun autofillRows(
       ListRow(file.absolutePath, identifier ?: account ?: file.nameWithoutExtension, subtitle, 0)
     }
     .toImmutableList()
+
+/**
+ * Whether autofill may cache the passphrase it just decrypted with: only with the cache feature on
+ * ([cacheEnabled]) and after a successful screen lock prompt ([auth]), as the entry view does. A
+ * passphrase typed after a cancelled, failed or unavailable prompt is never kept.
+ */
+fun cachesPassphrase(cacheEnabled: Boolean, auth: BiometricResult): Boolean =
+  cacheEnabled && auth is BiometricResult.Success

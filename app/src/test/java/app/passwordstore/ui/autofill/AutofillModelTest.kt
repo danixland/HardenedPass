@@ -5,10 +5,13 @@
 
 package app.passwordstore.ui.autofill
 
+import app.passwordstore.util.auth.BiometricAuthenticator.Result as BiometricResult
 import app.passwordstore.util.settings.DirectoryStructure
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class AutofillModelTest {
 
@@ -69,5 +72,20 @@ class AutofillModelTest {
       listOf("b.org", "a.org"),
       rows(DirectoryStructure.FileBased, "b.org.gpg", "a.org.gpg").map { it.second },
     )
+  }
+
+  @Test
+  fun passphraseIsCachedOnlyAfterTheScreenLock() {
+    assertTrue(cachesPassphrase(true, BiometricResult.Success(null)))
+    val notConfirmed =
+      listOf(
+        BiometricResult.CanceledByUser,
+        BiometricResult.CanceledBySystem,
+        BiometricResult.HardwareUnavailableOrDisabled,
+        BiometricResult.Failure(null, "failed"),
+        BiometricResult.Retry,
+      )
+    for (auth in notConfirmed) assertFalse(cachesPassphrase(true, auth), auth.toString())
+    assertFalse(cachesPassphrase(false, BiometricResult.Success(null)))
   }
 }

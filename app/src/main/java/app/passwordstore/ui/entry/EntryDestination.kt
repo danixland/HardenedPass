@@ -173,9 +173,12 @@ fun EntryDestination(
   }
 }
 
-/** Asks for the PGP passphrase, as the old `PasswordDialog` did. */
+/**
+ * Asks for the PGP passphrase (entry view and autofill). The passphrase lives only in `remember`
+ * and the dialog's window is FLAG_SECURE.
+ */
 @Composable
-private fun PassphraseDialog(
+internal fun PassphraseDialog(
   wrong: Boolean,
   cacheEnabled: Boolean,
   clearCache: Boolean,

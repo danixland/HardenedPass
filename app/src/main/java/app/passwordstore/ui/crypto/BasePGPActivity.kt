@@ -12,19 +12,15 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.WindowManager
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import app.passwordstore.R
 import app.passwordstore.crypto.PGPIdentifier
 import app.passwordstore.data.crypto.CryptoRepository
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.injection.prefs.SettingsPreferences
-import app.passwordstore.ui.main.MainActivity
-import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.clipboard
 import app.passwordstore.util.extensions.getString
@@ -33,28 +29,13 @@ import app.passwordstore.util.extensions.snackbar
 import app.passwordstore.util.services.ClipboardService
 import app.passwordstore.util.settings.Constants
 import app.passwordstore.util.settings.PreferenceKeys
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import javax.inject.Inject
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Suppress("Registered")
 @AndroidEntryPoint
 open class BasePGPActivity : AppCompatActivity() {
-
-  /** Action to invoke if [keyImportAction] succeeds. */
-  private var onKeyImport: (() -> Unit)? = null
-  private val keyImportAction =
-    registerForActivityResult(StartActivityForResult()) {
-      if (it.resultCode == RESULT_OK) {
-        onKeyImport?.invoke()
-        onKeyImport = null
-      } else {
-        finish()
-      }
-    }
 
   /** [SharedPreferences] instance used by subclasses to persist settings */
   @SettingsPreferences @Inject lateinit var settings: SharedPreferences
@@ -69,31 +50,6 @@ open class BasePGPActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-  }
-
-  /**
-   * Function to execute [onKeysExist] only if there are PGP keys imported in the app's key manager.
-   */
-  fun requireKeysExist(onKeysExist: () -> Unit) {
-    lifecycleScope.launch {
-      val hasKeys = repository.hasKeys()
-      if (!hasKeys) {
-        withContext(dispatcherProvider.main()) {
-          MaterialAlertDialogBuilder(this@BasePGPActivity)
-            .setTitle(resources.getString(R.string.no_keys_imported_dialog_title))
-            .setMessage(resources.getString(R.string.no_keys_imported_dialog_message))
-            .setPositiveButton(resources.getString(R.string.button_label_import)) { _, _ ->
-              onKeyImport = onKeysExist
-              keyImportAction.launch(
-                MainActivity.setupIntent(this@BasePGPActivity, SetupStart.PgpImport)
-              )
-            }
-            .show()
-        }
-      } else {
-        onKeysExist()
-      }
-    }
   }
 
   companion object {
