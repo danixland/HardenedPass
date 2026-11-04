@@ -60,7 +60,6 @@ dependencies {
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.autofill)
   implementation(libs.androidx.biometricKtx)
-  implementation(libs.androidx.constraintlayout)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.documentfile)
   // Pins androidx.fragment (FragmentActivity, BiometricPrompt): appcompat alone resolves 1.5.4.
