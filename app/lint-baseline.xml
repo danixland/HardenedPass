@@ -104,17 +104,6 @@
         errorLine1="  &lt;TextView"
         errorLine2="   ~~~~~~~~">
         <location
-            file="src/main/res/layout/activity_oreo_autofill_filter.xml"
-            line="27"
-            column="4"/>
-    </issue>
-
-    <issue
-        id="SelectableText"
-        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
-        errorLine1="  &lt;TextView"
-        errorLine2="   ~~~~~~~~">
-        <location
             file="src/main/res/layout/activity_oreo_autofill_publisher_changed.xml"
             line="66"
             column="4"/>
@@ -151,28 +140,6 @@
             file="src/main/res/layout/oreo_autofill_dataset.xml"
             line="46"
             column="6"/>
-    </issue>
-
-    <issue
-        id="SelectableText"
-        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
-        errorLine1="  &lt;TextView"
-        errorLine2="   ~~~~~~~~">
-        <location
-            file="src/main/res/layout/oreo_autofill_filter_row.xml"
-            line="29"
-            column="4"/>
-    </issue>
-
-    <issue
-        id="SelectableText"
-        message="Consider making the text value selectable by specifying `android:textIsSelectable=&quot;true&quot;`"
-        errorLine1="  &lt;TextView"
-        errorLine2="   ~~~~~~~~">
-        <location
-            file="src/main/res/layout/oreo_autofill_filter_row.xml"
-            line="43"
-            column="4"/>
     </issue>
 
 </issues>
