@@ -152,6 +152,8 @@ private val BROWSER_SAVE_FLAG =
     "org.mozilla.fenix" to 0,
     "org.mozilla.fenix.nightly" to 0,
     "org.mozilla.fennec_aurora" to 0,
+    "org.mozilla.firefox" to 0,
+    "org.mozilla.firefox_beta" to 0,
     "com.opera.mini.native" to 0,
     "com.opera.mini.native.beta" to 0,
     "com.opera.touch" to 0,
