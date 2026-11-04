@@ -28,6 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -65,11 +67,9 @@ fun PublisherChangedScreen(
         modifier = Modifier.size(40.dp),
         tint = MaterialTheme.colorScheme.error,
       )
-      // ponytail: stringResource drops the footer's <b> in every locale but Italian (whose footer
-      // has none); the red title carries the emphasis. Keep spans with getText if it is missed.
       Text(
         stringResource(R.string.oreo_autofill_warning_publisher_dataset_title),
-        modifier = center,
+        modifier = center.semantics { heading() },
         color = MaterialTheme.colorScheme.error,
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.titleLarge,
@@ -90,6 +90,8 @@ fun PublisherChangedScreen(
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.bodySmall,
       )
+      // ponytail: stringResource drops the footer's <b> in every locale but Italian (whose footer
+      // has none); the red title carries the emphasis. Keep spans with getText if it is missed.
       Text(
         stringResource(R.string.oreo_autofill_warning_publisher_footer),
         style = MaterialTheme.typography.bodyMedium,
@@ -104,9 +106,8 @@ fun PublisherChangedScreen(
           Text(stringResource(R.string.oreo_autofill_warning_publisher_advanced_info_button))
         }
       } else {
-        OutlinedButton(onClick = onReset, modifier = center) {
-          Text(stringResource(R.string.oreo_autofill_warning_publisher_reenable_button))
-        }
+        // The details come first, so Re-enable never sits where Advanced information was and a
+        // double tap cannot re-enable autofill.
         SelectionContainer {
           Text(
             details,
@@ -114,6 +115,9 @@ fun PublisherChangedScreen(
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
           )
+        }
+        OutlinedButton(onClick = onReset, modifier = center) {
+          Text(stringResource(R.string.oreo_autofill_warning_publisher_reenable_button))
         }
       }
     }
