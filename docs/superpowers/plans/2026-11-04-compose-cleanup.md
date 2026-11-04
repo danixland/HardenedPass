@@ -1003,7 +1003,7 @@ APP=xyz.danix.hardenedpass.debug
 e2e_ui() { adb exec-out uiautomator dump /dev/tty; }
 e2e_center() { local b; b=$(e2e_ui | grep -o "<node [^>]*$1[^>]*>" | sed -n "${2:-1}p" | grep -o 'bounds="[^"]*"' | grep -oE '[0-9]+' | tr '\n' ' '); [ -n "$b" ] || { echo "not found: $1" >&2; return 1; }; set -- $b; echo "$(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 ))"; }
 e2e_tap() { local c; c=$(e2e_center "$1" "$2") && adb shell input tap $c; sleep 1; }
-e2e_field() { e2e_tap 'class="android.widget.EditText"' "$1"; adb shell input keycombination 113 29; adb shell input keyevent 67; adb shell input text "$2"; }
+e2e_field() { e2e_tap 'class="android.widget.EditText"' "$1"; sleep 1; adb shell input keycombination 113 29; adb shell input keyevent 67; adb shell input text "$2"; }
 e2e_value() { e2e_ui | grep -o '<node [^>]*class="android.widget.EditText"[^>]*>' | sed -n "${1}p" | grep -o ' text="[^"]*"' | cut -d'"' -f2; }
 e2e_seen() { e2e_ui | grep -q "$1" && echo "ok: $1" || echo "MISSING: $1"; }
 e2e_enabled() { e2e_ui | grep -o "<node [^>]*$1[^>]*>" | head -1 | grep -o 'enabled="[a-z]*"'; }
@@ -1044,6 +1044,8 @@ until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = 1 ]; do sleep 2
 adb shell locksettings set-pin 1234 2>/dev/null || true
 adb shell input keyevent KEYCODE_WAKEUP; adb shell input keyevent 82
 adb shell input text 1234; adb shell input keyevent 66
+until [ "$(adb shell getprop sys.user.0.ce_available | tr -d '\r')" = true ] && \
+  adb shell test -d /sdcard/Download; do sleep 2; done
 for s in animator_duration_scale transition_animation_scale window_animation_scale; do
   adb shell settings put global $s 0; done
 adb shell settings put secure autofill_service null
@@ -1051,7 +1053,7 @@ adb uninstall $APP || true
 ./gradlew :app:installDebug
 scripts/e2e-env.sh push-keys
 ```
-(`set-pin` fails harmlessly when the AVD already has the PIN. `installDebug` and `push-keys` honor `ANDROID_SERIAL`.)
+(`set-pin` fails harmlessly when the AVD already has the PIN. The wait matters: before the keyguard is dismissed and user storage is unlocked, `adb uninstall` fails with `DELETE_FAILED_INTERNAL_ERROR` and `/sdcard/Download` does not exist. `installDebug` and `push-keys` honor `ANDROID_SERIAL`.)
 
 - [ ] **Step 3: Clone over SSH, PGP import**
 
@@ -1063,10 +1065,10 @@ e2e_field 1 ssh://git@10.0.2.2:2222/srv/git/store.git
 e2e_tap 'text="Manage"'; e2e_tap 'text="Import SSH key"'; e2e_pick aps-e2e-ssh-key
 e2e_seen 'text="Imported private key"'; adb shell input keyevent 4; sleep 1
 e2e_tap 'text="Clone"'; sleep 15
-e2e_tap 'text="Import PGP key"' 2; e2e_pick aps-e2e-pgp-key.asc; e2e_tap 'text="OK"'; sleep 2
+e2e_tap 'content-desc="Import PGP key"'; e2e_pick aps-e2e-pgp-key.asc; e2e_tap 'text="OK"'; sleep 2
 e2e_seen 'text="example.org"'; e2e_seen 'text="work"'; e2e_seen 'text="otp"'; e2e_top
 ```
-Expected: `MainActivity` on top with the cloned store (`example.org`, `work`, `otp`). (If the FAB is the first "Import PGP key" match on this image, use index 1.)
+Expected: `MainActivity` on top with the cloned store (`example.org`, `work`, `otp`). (FABs expose their label as `content-desc`, not `text`, in the dump.)
 
 - [ ] **Step 4: Decrypt**
 
@@ -1097,7 +1099,7 @@ The OTP screen never goes idle (no `uiautomator dump` on it) and `screencap` is 
 ```bash
 source SCRATCHPAD/e2e.sh
 [ "$ANDROID_SERIAL" = emulator-5554 ] || exit 1
-e2e_tap 'text="New entry"'; e2e_tap 'text="Create new password"'; e2e_secure
+e2e_tap 'content-desc="New entry"'; e2e_tap 'text="Create new password"'; e2e_secure
 adb shell input text regress.example.net
 e2e_field 2 r3gress-pw; e2e_field 3 dora
 e2e_tap 'text="Save"'; sleep 3; e2e_seen 'text="regress.example.net"'
@@ -1244,7 +1246,7 @@ Expected: the View credential dialog shows the message, a password field (`passw
 ```bash
 source SCRATCHPAD/e2e.sh
 [ "$ANDROID_SERIAL" = emulator-5554 ] || exit 1
-adb shell run-as $APP sh -c 'mkdir -p files/store/badid && echo 0x1234ABCD > files/store/badid/.gpg-id && cp files/store/work/mail.example.org.gpg files/store/badid/x.gpg'
+adb shell "run-as $APP sh -c 'mkdir -p files/store/badid && echo 0x1234ABCD > files/store/badid/.gpg-id && cp files/store/work/mail.example.org.gpg files/store/badid/x.gpg'"
 e2e_open; e2e_tap 'text="badid"'; e2e_tap 'text="x"'; sleep 1
 adb exec-out screencap -p > "$OUT/toast.png"
 e2e_seen 'class="android.widget.EditText"'

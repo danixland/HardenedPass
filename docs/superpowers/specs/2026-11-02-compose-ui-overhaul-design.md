@@ -1,6 +1,6 @@
 # Compose UI overhaul: design
 
-Date: 2026-11-02. Status: approved, not started.
+Date: 2026-11-02. Status: complete (2026-11-04); merges into `master` after the maintainer's phone test.
 
 ## Goal
 
@@ -138,10 +138,14 @@ order (both removed) becomes folders first, and the unused OpenKeychain SSH key 
 
 ### Removed at the end
 
-`fragment-ktx`, `recyclerview`, `recyclerview-selection`, `swiperefreshlayout`,
-`modernandroidpreferences`, the view-binding helpers (`FragmentViewBindingDelegate`,
-`FragmentExtensions`), all layout XML files, and Material Components (Views) if nothing still
-needs it.
+`recyclerview`, `recyclerview-selection`, `swiperefreshlayout`, `modernandroidpreferences`,
+`preference`, `constraintlayout`, fastscroll, view binding and its helpers
+(`FragmentViewBindingDelegate`, `FragmentExtensions`), `BasePGPActivity` and every layout XML
+file but two. Kept: `oreo_autofill_dataset.xml` (fill suggestions are `RemoteViews`, drawn by the
+system) and `git_credential_layout.xml` (the git credential prompt), with Material Components
+(Views): the window themes, the git operations' dialogs and the snackbars still need it. Moving
+those to Compose is a separate change. `fragment-ktx` stays declared as the version pin of
+`androidx.fragment`.
 
 ## Security
 
@@ -162,7 +166,9 @@ Work happens on a temporary `compose` branch, an explicit exception to the maste
 AGENTS.md (recorded there when the branch is created, removed at merge). `master` stays
 releasable for the monthly public suffix list update and hotfixes to 0.1.4. The branch is pushed
 to `origin` as a backup. CI is not extended to the branch: the local pre-commit check from
-AGENTS.md runs before every commit, and CI runs at the merge.
+AGENTS.md runs before every commit, and CI runs at the merge. `master` stays at its last release
+until the maintainer has tested a release build of `compose` on the phone and says go; then
+`compose` merges with one signed `--no-ff` merge commit and is deleted.
 
 ## Migration order
 
@@ -190,4 +196,5 @@ graph through their old intents.
   (`scripts/e2e-env.sh`).
 - Before merge: the full device checklist from AGENTS.md (clone over SSH, PGP import, decrypt,
   TOTP, create and push, conflict recovery, hard reset, fingerprint unlock, Firefox autofill),
-  then the maintainer tests on the phone.
+  then the maintainer tests a release build of `compose` on the phone; the merge waits for the
+  maintainer's go.
