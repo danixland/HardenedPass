@@ -148,7 +148,8 @@ fun SettingsSectionDestination(
         if (value) dialog = SettingsDialog.Autofill
         else {
           activity.autofillManager?.disableAutofillServices()
-          refresh()
+          // hasEnabledAutofillServices() still answers true right after this call.
+          autofillEnabled = false
         }
       PreferenceKeys.BIOMETRIC_AUTH_2 -> {
         fun write() {
