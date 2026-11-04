@@ -97,6 +97,7 @@ class AutofillDecryptActivity : AppCompatActivity() {
 
   /** The recipients the passphrase dialog asks for; null while it is not shown. */
   private var passphraseFor by mutableStateOf<List<PGPIdentifier>?>(null)
+  private var passphraseWrong by mutableStateOf(false)
 
   // The import's activity is still on top when its result arrives: the flow restarts on the next
   // window focus, so the screen lock prompt is not shown (and evicted) behind it.
@@ -158,7 +159,7 @@ class AutofillDecryptActivity : AppCompatActivity() {
         val identifiers = passphraseFor
         if (identifiers != null)
           PassphraseDialog(
-            wrong = false,
+            wrong = passphraseWrong,
             cacheEnabled = features.isEnabled(EnablePGPPassphraseCache),
             clearCache = clearCache,
             onSubmit = onSubmit@{ passphrase, clear ->
@@ -244,7 +245,7 @@ class AutofillDecryptActivity : AppCompatActivity() {
               gpgIdentifiers.first(),
             )
           if (cachedPassphrase != null) {
-            decryptWithPassphrase(gpgIdentifiers, cachedPassphrase)
+            decryptWithPassphrase(gpgIdentifiers, cachedPassphrase, cached = true)
           } else {
             askPassphrase(gpgIdentifiers)
           }
@@ -253,21 +254,31 @@ class AutofillDecryptActivity : AppCompatActivity() {
     }
   }
 
-  private suspend fun askPassphrase(identifiers: List<PGPIdentifier>) {
+  private suspend fun askPassphrase(identifiers: List<PGPIdentifier>, wrong: Boolean = false) {
     if (!repository.isPasswordProtected(identifiers)) {
       decryptWithPassphrase(identifiers, password = "")
       return
     }
+    passphraseWrong = wrong
     passphraseFor = identifiers
   }
 
-  /** Caches [password] only when the user [typed] it, as the entry view does. */
+  /**
+   * Caches [password] only when the user [typed] it, as the entry view does. A [cached] passphrase
+   * that fails (the key's passphrase changed) is not tried again: the prompt asks for the new one,
+   * which replaces it in the cache.
+   */
   private suspend fun decryptWithPassphrase(
     identifiers: List<PGPIdentifier>,
     password: String,
     typed: Boolean = false,
+    cached: Boolean = false,
   ) {
     val credentials = decryptCredential(File(filePath), password, identifiers, typed)
+    if (credentials == null && cached) {
+      askPassphrase(identifiers, wrong = true)
+      return
+    }
     if (credentials == null) {
       setResult(RESULT_CANCELED)
     } else {
