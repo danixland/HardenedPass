@@ -66,7 +66,8 @@ the maintainer's phone stays on 0.1.4 until then.
   `pass init <key ID>` does), and imports the key a store needs: after a clone that no
   imported key can decrypt, and when an entry is opened with no key imported.
 - Settings opens these within the graph. Autofill, the git operations' "No SSH key" dialog and
-  the entry view's key import open them through a `MainActivity` setup intent until step 7.
+  the entry view's key import open them through a `MainActivity` setup intent: the autofill
+  activities live outside the graph, and the other two wait for a result.
 
 ### Settings
 
@@ -81,6 +82,22 @@ the maintainer's phone stays on 0.1.4 until then.
   reset.
 - The list's sort orders are folders first and recently used; "files first" and "type
   independent" are gone, and stored values fall back to folders first.
+
+### Autofill
+
+- The autofill service's activities keep their windows (floating picker and warning, transparent
+  decryption) and draw them with the shared theme. The picker shows the site or app being filled,
+  a search prefilled with it, entry rows named by their origin identifier, and the
+  phishing-resistant search, match and clear-matches switches.
+- The publisher warning offers "Keep Autofill disabled" first; re-enabling stays behind "Advanced
+  information", which shows the package and certificate details above the "Re-enable Autofill"
+  button, so a double tap cannot re-enable autofill. Touches through another app's window are
+  ignored.
+- The decryption shows only the "no keys" and passphrase dialogs and starts once the window has
+  focus. It caches only a passphrase the user typed, and only after a successful screen lock
+  prompt, as the entry view does. An invalid `.gpg-id` closes it without filling. Saving and
+  generating host the editor.
+- Intents, extras, results and matching are unchanged.
 
 ## Architecture
 

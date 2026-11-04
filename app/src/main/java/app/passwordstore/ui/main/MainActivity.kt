@@ -263,8 +263,9 @@ class MainActivity : BaseGitActivity() {
      * missing key). Leaving that screen finishes the instance; the PGP keys screen sets RESULT_OK
      * once a key was imported.
      */
-    // ponytail: a second instance instead of in-graph navigation, until step 7 moves autofill
-    // into the graph and the git operations' dialogs become Compose dialogs.
+    // ponytail: a second instance instead of in-graph navigation. Autofill's activities stay
+    // outside the graph for good (the autofill service starts them); the git operations' "No SSH
+    // key" dialog could navigate in-graph once it becomes a Compose dialog.
     fun setupIntent(context: Context, start: SetupStart): Intent =
       Intent(context, MainActivity::class.java).putExtra(EXTRA_SETUP, start.name)
   }
