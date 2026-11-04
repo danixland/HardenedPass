@@ -331,7 +331,7 @@ private fun ActionIcon(@DrawableRes icon: Int, @StringRes label: Int, onClick: (
   }
 }
 
-private val GitOp.label: Int
+internal val GitOp.label: Int
   get() =
     when (this) {
       GitOp.SYNC -> R.string.git_sync

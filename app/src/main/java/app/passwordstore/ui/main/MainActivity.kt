@@ -228,9 +228,8 @@ class MainActivity : BaseGitActivity() {
     }
 
   /** Runs [op]; failures show the usual git error dialog. */
-  suspend fun runGit(op: GitOp) {
+  suspend fun runGit(op: GitOp): Result<Unit, Throwable> =
     launchGitOperation(op).onFailure { promptOnErrorHandler(it) }
-  }
 
   /** Runs [op] (a hard reset against [branch]) and returns its outcome; the caller reports it. */
   suspend fun gitOperation(op: GitOp, branch: String = ""): Result<Unit, Throwable> {

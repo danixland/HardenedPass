@@ -38,9 +38,11 @@ import app.passwordstore.ui.git.base.BaseGitActivity.GitOp
 import app.passwordstore.ui.main.MainActivity
 import app.passwordstore.util.extensions.isInsideRepository
 import app.passwordstore.util.extensions.sharedPrefs
+import app.passwordstore.util.extensions.snackbar
 import app.passwordstore.util.settings.AuthMode
 import app.passwordstore.util.settings.PreferenceKeys
 import app.passwordstore.util.viewmodel.SearchableRepositoryViewModel
+import com.github.michaelbull.result.onSuccess
 import java.io.File
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.launch
@@ -115,7 +117,11 @@ fun ListDestination(
   fun runGit(op: GitOp) {
     refreshing = true
     activity.lifecycleScope.launch {
-      activity.runGit(op)
+      activity.runGit(op).onSuccess {
+        activity.snackbar(
+          message = activity.getString(R.string.git_tool_done, activity.getString(op.label))
+        )
+      }
       refreshing = false
       refresh()
     }
