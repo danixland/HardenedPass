@@ -13,21 +13,20 @@ import android.os.Build
 import android.os.Bundle
 import android.service.autofill.FillResponse
 import android.text.format.DateUtils
-import android.view.View
 import android.view.autofill.AutofillManager
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
 import app.passwordstore.R
-import app.passwordstore.databinding.ActivityOreoAutofillPublisherChangedBinding
+import app.passwordstore.ui.compose.theme.APSTheme
 import app.passwordstore.util.autofill.AutofillMatcher
 import app.passwordstore.util.autofill.AutofillPublisherChangedException
 import app.passwordstore.util.extensions.asLog
 import app.passwordstore.util.extensions.getApplicationInfoCompat
 import app.passwordstore.util.extensions.getPackageInfoCompat
-import app.passwordstore.util.extensions.viewBinding
 import com.github.androidpasswordstore.autofillparser.FormOrigin
 import com.github.androidpasswordstore.autofillparser.computeCertificatesHash
-import com.github.michaelbull.result.onFailure
+import com.github.michaelbull.result.getOrElse
 import com.github.michaelbull.result.runCatching
 import logcat.LogPriority.ERROR
 import logcat.logcat
@@ -65,15 +64,15 @@ class AutofillPublisherChangedActivity : AppCompatActivity() {
     }
   }
 
-  private lateinit var appPackage: String
-  private val binding by viewBinding(ActivityOreoAutofillPublisherChangedBinding::inflate)
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(binding.root)
     setFinishOnTouchOutside(true)
+    // Tapjacking guard: a touch that reaches this window through another app's window (an overlay
+    // drawn to trick the user into re-enabling) is dropped. ViewGroup.dispatchTouchEvent checks the
+    // decor view's own flag before dispatching to any child, so the ComposeView is covered.
+    window.decorView.filterTouchesWhenObscured = true
 
-    appPackage =
+    val appPackage =
       intent.getStringExtra(EXTRA_APP_PACKAGE)
         ?: run {
           logcat(ERROR) { "AutofillPublisherChangedActivity started without EXTRA_PACKAGE_NAME" }
@@ -81,63 +80,57 @@ class AutofillPublisherChangedActivity : AppCompatActivity() {
           return
         }
     supportActionBar?.hide()
-    showPackageInfo()
-    with(binding) {
-      okButton.setOnClickListener { finish() }
-      advancedButton.setOnClickListener {
-        advancedButton.visibility = View.GONE
-        warningAppAdvancedInfo.visibility = View.VISIBLE
-        resetButton.visibility = View.VISIBLE
-      }
-      resetButton.setOnClickListener {
-        AutofillMatcher.clearMatchesFor(
-          this@AutofillPublisherChangedActivity,
-          FormOrigin.App(appPackage),
-        )
-        val fillResponse =
-          IntentCompat.getParcelableExtra(
-            intent,
-            EXTRA_FILL_RESPONSE_AFTER_RESET,
-            FillResponse::class.java,
+    val (packageInfo, appInfo, hash) =
+      runCatching {
+          Triple(
+            packageManager.getPackageInfoCompat(appPackage, PackageManager.GET_META_DATA),
+            packageManager.getApplicationInfoCompat(appPackage, PackageManager.GET_META_DATA),
+            computeCertificatesHash(this, appPackage),
           )
-        setResult(
-          RESULT_OK,
-          Intent().apply { putExtra(AutofillManager.EXTRA_AUTHENTICATION_RESULT, fillResponse) },
+        }
+        .getOrElse { e ->
+          logcat(ERROR) { e.asLog("Failed to retrieve package info for $appPackage") }
+          finish()
+          return
+        }
+    val appName =
+      getString(
+        R.string.oreo_autofill_warning_publisher_app_name,
+        packageManager.getApplicationLabel(appInfo),
+      )
+    val installed =
+      getString(
+        R.string.oreo_autofill_warning_publisher_install_time,
+        DateUtils.getRelativeTimeSpanString(packageInfo.firstInstallTime),
+      )
+    val details =
+      getString(R.string.oreo_autofill_warning_publisher_advanced_info_template, appPackage, hash)
+    setContent {
+      APSTheme {
+        PublisherChangedScreen(
+          appName = appName,
+          installed = installed,
+          details = details,
+          onKeepDisabled = { finish() },
+          onReset = { reset(appPackage) },
         )
-        finish()
       }
     }
   }
 
-  private fun showPackageInfo() {
-    runCatching {
-        with(binding) {
-          val packageInfo =
-            packageManager.getPackageInfoCompat(appPackage, PackageManager.GET_META_DATA)
-          val installTime = DateUtils.getRelativeTimeSpanString(packageInfo.firstInstallTime)
-          warningAppInstallDate.text =
-            getString(R.string.oreo_autofill_warning_publisher_install_time, installTime)
-          val appInfo =
-            packageManager.getApplicationInfoCompat(appPackage, PackageManager.GET_META_DATA)
-          warningAppName.text =
-            getString(
-              R.string.oreo_autofill_warning_publisher_app_name,
-              packageManager.getApplicationLabel(appInfo),
-            )
-
-          val currentHash =
-            computeCertificatesHash(this@AutofillPublisherChangedActivity, appPackage)
-          warningAppAdvancedInfo.text =
-            getString(
-              R.string.oreo_autofill_warning_publisher_advanced_info_template,
-              appPackage,
-              currentHash,
-            )
-        }
-      }
-      .onFailure { e ->
-        logcat(ERROR) { e.asLog("Failed to retrieve package info for $appPackage") }
-        finish()
-      }
+  /** Forgets the app's matches and fills with the response the service prepared for this case. */
+  private fun reset(appPackage: String) {
+    AutofillMatcher.clearMatchesFor(this, FormOrigin.App(appPackage))
+    val fillResponse =
+      IntentCompat.getParcelableExtra(
+        intent,
+        EXTRA_FILL_RESPONSE_AFTER_RESET,
+        FillResponse::class.java,
+      )
+    setResult(
+      RESULT_OK,
+      Intent().apply { putExtra(AutofillManager.EXTRA_AUTHENTICATION_RESULT, fillResponse) },
+    )
+    finish()
   }
 }
