@@ -249,7 +249,7 @@
   <string name="invalid_filename_text">Il nome del file non deve contenere \'/\', imposta la directory qui sopra</string>
   <!-- GitException messages -->
   <string name="git_unknown_error">Errore sconosciuto</string>
-  <string name="git_pull_rebase_fail_error">Pull non riuscito, sei in detached HEAD. Da \"Impostazioni > Utilità Git\" esegui il push delle modifiche sul remote in un nuovo branch e risolvi il conflitto dal computer.</string>
+  <string name="git_pull_rebase_fail_error">Pull non riuscito, sei in detached HEAD. Da \"Impostazioni > Repository > Configurazione Git locale e utilità\" esegui il push delle modifiche sul remote in un nuovo branch e risolvi il conflitto dal computer.</string>
   <string name="git_push_nff_error">Push rifiutato dal remote: esegui un pull prima di riprovare. Puoi usare Sincronizza, che esegue sia il pull sia il push</string>
   <string name="git_push_generic_error">Push rifiutato dal remote, motivo: %1$s</string>
   <string name="git_push_other_error">Il remote ha rifiutato un push non fast-forward. Controlla la variabile receive.denyNonFastForwards nella configurazione del repository di destinazione.</string>

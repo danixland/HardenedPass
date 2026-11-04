@@ -83,7 +83,7 @@ fun GitConfigScreen(
     modifier = modifier,
     topBar = {
       TopAppBar(
-        title = { Text(stringResource(R.string.title_activity_git_config)) },
+        title = { Text(stringResource(R.string.pref_edit_git_config)) },
         navigationIcon = {
           IconButton(onClick = onBack) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.entry_back))

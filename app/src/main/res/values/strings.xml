@@ -19,7 +19,6 @@
   <string name="dialog_delete">Delete directory</string>
   <string name="dialog_do_not_delete">Cancel</string>
   <string name="title_activity_git_clone">Repository information</string>
-  <string name="title_activity_git_config" translatable="false">Git configuration</string>
   <string name="title_activity_git_log">Commit log</string>
 
   <!-- Password Store -->
@@ -304,7 +303,7 @@
 
   <!-- GitException messages -->
   <string name="git_unknown_error">Unknown error</string>
-  <string name="git_pull_rebase_fail_error">Pull has failed, you\'re in a detached head. Using "settings > git utils", save your changes to the remote in a new branch and resolve the conflict on your computer.</string>
+  <string name="git_pull_rebase_fail_error">Pull has failed, you\'re in a detached head. Using \"Settings > Repository > Local Git config &amp; utilities\", save your changes to the remote in a new branch and resolve the conflict on your computer.</string>
   <string name="git_pull_merge_fail_error">Merge has failed, you\'re in a conflicting state.</string>
 
   <string name="git_push_nff_error">Push was rejected by remote, run pull before pushing again. You can use Synchronize rather than pull/push as it implements both</string>
