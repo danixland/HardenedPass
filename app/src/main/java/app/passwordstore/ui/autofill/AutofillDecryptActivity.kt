@@ -154,7 +154,7 @@ class AutofillDecryptActivity : BasePGPActivity() {
                 passphraseFor = null
                 clearCache = clear
                 lifecycleScope.launch(dispatcherProvider.main()) {
-                  decryptWithPassphrase(identifiers, passphrase)
+                  decryptWithPassphrase(identifiers, passphrase, typed = true)
                 }
               },
             onCancel = { finish() },
@@ -199,7 +199,11 @@ class AutofillDecryptActivity : BasePGPActivity() {
     val gpgIdentifiers =
       getPGPIdentifiers(
         getParentPath(filePath, PasswordRepository.getRepositoryDirectory().toString())
-      ) ?: return
+      )
+        ?: run {
+          finish()
+          return
+        }
     lifecycleScope.launch(dispatcherProvider.main()) {
       when (authResult) {
         // Internally handled by the prompt dialog
@@ -240,8 +244,13 @@ class AutofillDecryptActivity : BasePGPActivity() {
     passphraseFor = identifiers
   }
 
-  private suspend fun decryptWithPassphrase(identifiers: List<PGPIdentifier>, password: String) {
-    val credentials = decryptCredential(File(filePath), password, identifiers)
+  /** Caches [password] only when the user [typed] it, as the entry view does. */
+  private suspend fun decryptWithPassphrase(
+    identifiers: List<PGPIdentifier>,
+    password: String,
+    typed: Boolean = false,
+  ) {
+    val credentials = decryptCredential(File(filePath), password, identifiers, typed)
     if (credentials == null) {
       setResult(RESULT_CANCELED)
     } else {
@@ -266,6 +275,7 @@ class AutofillDecryptActivity : BasePGPActivity() {
     file: File,
     password: String,
     identifiers: List<PGPIdentifier>,
+    typed: Boolean,
   ): Credentials? {
     runCatching { file.readBytes().inputStream() }
       .onFailure { e ->
@@ -283,7 +293,9 @@ class AutofillDecryptActivity : BasePGPActivity() {
           .onSuccess { result ->
             return runCatching {
                 runCatching {
-                    if (cachesPassphrase(features.isEnabled(EnablePGPPassphraseCache), auth)) {
+                    if (
+                      typed && cachesPassphrase(features.isEnabled(EnablePGPPassphraseCache), auth)
+                    ) {
                       passphraseCache.cachePassphrase(this, identifiers.first(), password)
                       settings.edit {
                         putBoolean(PreferenceKeys.CLEAR_PASSPHRASE_CACHE, clearCache)
