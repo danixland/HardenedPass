@@ -58,10 +58,9 @@ private enum class ListDialog {
 
 /**
  * The list at [path] (relative to the store root): wires [ListScreen] to the [viewModel], the
- * folder picker, the legacy activities and the store operations. [onOpenFolder] takes a path
- * relative to the root, [onOpenEntry] an entry file; [onNewEntry] opens the editor in this folder,
- * [onClone] the git server screen for a clone, [onSettings] the settings; [onNoStore] runs when the
- * store is gone.
+ * folder picker and the store operations. [onOpenFolder] takes a path relative to the root,
+ * [onOpenEntry] an entry file; [onNewEntry] opens the editor in this folder, [onClone] the git
+ * server screen for a clone, [onSettings] the settings; [onNoStore] runs when the store is gone.
  */
 @Composable
 fun ListDestination(
@@ -89,7 +88,7 @@ fun ListDestination(
   // Declared before the collection below on purpose: effects start in order, so the ViewModel
   // already points at this folder when the first rows are built (no flash of the store root).
   LaunchedEffect(path, query) {
-    viewModel.navigateTo(dir, pushPreviousLocation = false)
+    viewModel.navigateTo(dir)
     if (query.isNotBlank()) viewModel.search(query.trim())
   }
   val rows by viewModel.rows.collectAsStateWithLifecycle(ListRows())
@@ -100,7 +99,7 @@ fun ListDestination(
     if (path.isNotEmpty() && !dir.isDirectory) onOpenFolder("") else viewModel.forceRefresh()
   }
 
-  // Every return to this folder (back from a child, or from a legacy activity) re-reads it.
+  // Every return to this folder (back from a child, or from another activity) re-reads it.
   LifecycleResumeEffect(Unit) {
     if (activity.checkStore()) refresh() else onNoStore()
     resumes++

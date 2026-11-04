@@ -6,7 +6,6 @@ package app.passwordstore.util.viewmodel
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AndroidViewModel
 import app.passwordstore.data.password.PasswordItem
@@ -68,9 +67,6 @@ private fun PasswordItem.Companion.makeComparator(
     )
 }
 
-val PasswordItem.stableId: String
-  get() = file.absolutePath
-
 enum class FilterMode {
   NoFilter,
   StrictDomain,
@@ -85,7 +81,6 @@ enum class SearchMode {
 
 enum class ListMode {
   FilesOnly,
-  DirectoriesOnly,
   AllEntries,
 }
 
@@ -171,7 +166,7 @@ constructor(
       )
     )
 
-  data class SearchResult(val passwordItems: List<PasswordItem>, val isFiltered: Boolean)
+  data class SearchResult(val passwordItems: List<PasswordItem>)
 
   val searchResult =
     searchActionFlow
@@ -187,8 +182,6 @@ constructor(
           when (searchAction.listMode) {
             ListMode.FilesOnly ->
               listResultFlow.filter { it.isFile }.flowOn(dispatcherProvider.io())
-            ListMode.DirectoriesOnly ->
-              listResultFlow.filter { it.isDirectory }.flowOn(dispatcherProvider.io())
             ListMode.AllEntries -> listResultFlow
           }
         val passwordList =
@@ -244,7 +237,7 @@ constructor(
                 .map { it.second }
             }
           }
-        SearchResult(passwordList, isFiltered = searchAction.filterMode != FilterMode.NoFilter)
+        SearchResult(passwordList)
       }
       .flowOn(dispatcherProvider.io())
 
@@ -288,53 +281,20 @@ constructor(
       .map { result -> listRows(result.passwordItems.map { it.file }, currentDir.value) }
       .flowOn(dispatcherProvider.io())
 
-  data class NavigationStackEntry(val dir: File, val recyclerViewState: Parcelable?)
-
-  private val navigationStack = ArrayDeque<NavigationStackEntry>()
-
-  fun navigateTo(
-    newDirectory: File = root,
-    listMode: ListMode = ListMode.AllEntries,
-    recyclerViewState: Parcelable? = null,
-    pushPreviousLocation: Boolean = true,
-  ) {
+  /** Lists [newDirectory]; the Compose list keeps the back stack (one route per folder). */
+  fun navigateTo(newDirectory: File) {
     if (!newDirectory.exists()) return
     require(newDirectory.isDirectory) { "Can only navigate to a directory" }
-    if (pushPreviousLocation) {
-      navigationStack.addFirst(NavigationStackEntry(_currentDir.value, recyclerViewState))
-    }
     searchActionFlow.update {
       makeSearchAction(
         filter = "",
         baseDirectory = newDirectory,
         filterMode = FilterMode.NoFilter,
         searchMode = SearchMode.InCurrentDirectoryOnly,
-        listMode = listMode,
+        listMode = ListMode.AllEntries,
       )
     }
     _currentDir.update { newDirectory }
-  }
-
-  val canNavigateBack
-    get() = navigationStack.isNotEmpty()
-
-  /**
-   * Navigate back to the last location on the [navigationStack] and restore a cached scroll
-   * position if possible.
-   *
-   * Returns the old RecyclerView's LinearLayoutManager state as a [Parcelable] if it was cached.
-   */
-  fun navigateBack(): Parcelable? {
-    if (!canNavigateBack) return null
-    val (oldDir, oldRecyclerViewState) = navigationStack.removeFirst()
-    navigateTo(oldDir, pushPreviousLocation = false)
-    return oldRecyclerViewState
-  }
-
-  fun reset() {
-    navigationStack.clear()
-    forceUpdateOnNextSearchAction()
-    navigateTo(pushPreviousLocation = false)
   }
 
   fun search(
