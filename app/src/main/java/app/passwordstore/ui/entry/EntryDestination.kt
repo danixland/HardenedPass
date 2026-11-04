@@ -53,6 +53,7 @@ import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result as BiometricResult
 import app.passwordstore.util.extensions.sharedPrefs
+import app.passwordstore.util.extensions.snackbar
 import app.passwordstore.util.settings.PreferenceKeys
 import java.io.File
 
@@ -79,7 +80,9 @@ fun EntryDestination(
 
   fun unlock() {
     val ids =
-      activity.getPGPIdentifiers(getParentPath(file.absolutePath, root.absolutePath)) ?: return
+      getPGPIdentifiers(getParentPath(file.absolutePath, root.absolutePath)) {
+        activity.snackbar(message = activity.getString(it))
+      } ?: return
     if (viewModel.cacheEnabled && BiometricAuthenticator.canAuthenticate(activity)) {
       BiometricAuthenticator.authenticate(
         activity,

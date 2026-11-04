@@ -6,11 +6,9 @@
 package app.passwordstore.ui.crypto
 
 import android.content.ClipData
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.PersistableBundle
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
@@ -95,10 +93,10 @@ fun FragmentActivity.copyPasswordToClipboard(password: String?) {
 /**
  * Get a list of available [PGPIdentifier]s for the current password repository. This method throws
  * when no identifiers were able to be parsed. If this method returns null, an invalid identifier
- * was encountered and reported with a toast: further execution must stop to let the user correct
- * the problem.
+ * was encountered and its message passed to [onInvalid]: further execution must stop to let the
+ * user correct the problem.
  */
-fun Context.getPGPIdentifiers(subDir: String): List<PGPIdentifier>? {
+fun getPGPIdentifiers(subDir: String, onInvalid: (message: Int) -> Unit): List<PGPIdentifier>? {
   val repoRoot = PasswordRepository.getRepositoryDirectory()
   val gpgIdentifierFile =
     File(repoRoot, subDir).findTillRoot(".gpg-id", repoRoot)
@@ -119,9 +117,7 @@ fun Context.getPGPIdentifiers(subDir: String): List<PGPIdentifier>? {
             val message =
               if (line.removePrefix("0x").matches("[a-fA-F0-9]{8}".toRegex())) R.string.short_gpg_id
               else R.string.invalid_gpg_id
-            // A toast on the application context, not a snackbar: the autofill decryption
-            // finishes its window right after, and the toast must outlive it.
-            Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+            onInvalid(message)
             return null
           }
       }

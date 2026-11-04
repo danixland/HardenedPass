@@ -121,7 +121,7 @@ fun EditorDestination(
     if (problem != null) return say(problem)
     // Recipients from the nearest .gpg-id, as pass does; null: an invalid ID, already reported.
     val ids =
-      activity.getPGPIdentifiers(target.parentFile?.relativeTo(root)?.path.orEmpty()) ?: return
+      getPGPIdentifiers(target.parentFile?.relativeTo(root)?.path.orEmpty(), ::say) ?: return
     activity.lifecycleScope.launch {
       val result = viewModel.save(ids, target, original, activity, copy)
       if (result is SaveResult.Failed) failure = activity.getString(result.message, result.arg)

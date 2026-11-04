@@ -16,5 +16,3 @@ Open work after 0.2.0. Remove an item in the commit that finishes it.
   does not work (fill and generate do). First check that it sends save requests.
 - A stale cached passphrase (the key's passphrase changed) makes every autofill fail until the
   cache is cleared; the entry view asks for the passphrase instead. Do the same in autofill.
-- A bad `.gpg-id` shows a Toast in the entry view and editor, where their other errors use a
-  snackbar. Return the reason from `getPGPIdentifiers` and let each caller show it.

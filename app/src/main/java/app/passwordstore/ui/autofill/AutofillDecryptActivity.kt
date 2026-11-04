@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import android.view.autofill.AutofillManager
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
@@ -211,7 +212,11 @@ class AutofillDecryptActivity : AppCompatActivity() {
     val gpgIdentifiers =
       getPGPIdentifiers(
         getParentPath(filePath, PasswordRepository.getRepositoryDirectory().toString())
-      )
+      ) {
+        // A toast on the application context, not a snackbar: this window finishes right after,
+        // and the toast must outlive it.
+        Toast.makeText(applicationContext, it, Toast.LENGTH_LONG).show()
+      }
         ?: run {
           finish()
           return
