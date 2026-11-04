@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -133,9 +134,6 @@ class AutofillFilterView : AppCompatActivity() {
 
     val isWeb = formOrigin is FormOrigin.Web
     val initialQuery = formOrigin.getPrettyIdentifier(applicationContext, untrusted = false)
-    // Before anything is composed, so the ViewModel's default root listing (folders included) is
-    // never shown. The LaunchedEffect below repeats it with equal arguments, which emits nothing.
-    search(initialQuery, isWeb)
     val root = PasswordRepository.getRepositoryDirectory()
     val directoryStructure = AutofillPreferences.directoryStructure(this)
     // ponytail: cold flow, so each return to STARTED walks the store again; fine for a picker open
@@ -159,6 +157,10 @@ class AutofillFilterView : AppCompatActivity() {
         var strict by rememberSaveable { mutableStateOf(isWeb) }
         var match by rememberSaveable { mutableStateOf(true) }
         var clear by rememberSaveable { mutableStateOf(false) }
+        // During the first composition, before rows is collected, so the ViewModel's default root
+        // listing (folders included) is never shown, and with the restored query and switch after
+        // recreation. The LaunchedEffect repeats it with equal arguments, which emits nothing.
+        remember { search(query, strict) }
         LaunchedEffect(query, strict) { search(query, strict) }
         val shown by rows.collectAsStateWithLifecycle<ImmutableList<ListRow>?>(initialValue = null)
         AutofillFilterScreen(

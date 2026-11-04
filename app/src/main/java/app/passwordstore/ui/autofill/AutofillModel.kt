@@ -33,6 +33,6 @@ fun autofillRows(
           listOfNotNull(account, structure.getPathToIdentifierFor(relative))
             .joinToString(" · ")
             .ifEmpty { null }
-      ListRow(file.absolutePath, identifier ?: account.orEmpty(), subtitle, 0)
+      ListRow(file.absolutePath, identifier ?: account ?: file.nameWithoutExtension, subtitle, 0)
     }
     .toImmutableList()

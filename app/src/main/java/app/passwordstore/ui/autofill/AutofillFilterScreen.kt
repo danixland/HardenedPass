@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -24,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -67,6 +69,9 @@ fun AutofillFilterScreen(
   modifier: Modifier = Modifier,
 ) {
   val fillInto = stringResource(R.string.oreo_autofill_select_and_fill_into)
+  val listState = rememberLazyListState()
+  // As the old picker did: every new result starts at its best match.
+  LaunchedEffect(rows) { listState.scrollToItem(0) }
   Surface(modifier.fillMaxSize()) {
     Column(Modifier.padding(vertical = SpacingLarge)) {
       Image(
@@ -115,7 +120,7 @@ fun AutofillFilterScreen(
             // One lazy item per row: a cleared search lists the whole store. The surface wraps
             // a short list and is capped by the box for a long one.
             GroupedSurface(Modifier.fillMaxWidth()) {
-              LazyColumn {
+              LazyColumn(state = listState) {
                 items(rows, key = { it.path }) { row ->
                   EntryRow(
                     name = row.label,
