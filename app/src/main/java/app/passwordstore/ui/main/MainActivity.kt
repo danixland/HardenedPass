@@ -21,7 +21,6 @@ import androidx.navigation.toRoute
 import app.passwordstore.data.password.PasswordItem
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.compose.theme.APSTheme
-import app.passwordstore.ui.crypto.BasePGPActivity
 import app.passwordstore.ui.editor.EditorDestination
 import app.passwordstore.ui.editor.EditorForm
 import app.passwordstore.ui.editor.editorForm
@@ -84,7 +83,7 @@ class MainActivity : BaseGitActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val filePath = intent.getStringExtra(BasePGPActivity.EXTRA_FILE_PATH)
+    val filePath = intent.getStringExtra(LaunchActivity.EXTRA_FILE_PATH)
     val setup =
       intent.getStringExtra(EXTRA_SETUP)?.let { name ->
         SetupStart.entries.firstOrNull { it.name == name }

@@ -9,7 +9,7 @@ import android.content.Context
 import androidx.core.content.edit
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
-import app.passwordstore.ui.crypto.BasePGPActivity.Companion.getLongName
+import app.passwordstore.ui.crypto.getLongName
 import app.passwordstore.ui.git.base.BaseGitActivity
 import app.passwordstore.util.autofill.AutofillMatcher
 import app.passwordstore.util.extensions.base64

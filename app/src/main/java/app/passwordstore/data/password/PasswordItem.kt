@@ -6,7 +6,7 @@ package app.passwordstore.data.password
 
 import android.content.Context
 import android.content.Intent
-import app.passwordstore.ui.crypto.BasePGPActivity
+import app.passwordstore.ui.crypto.getLongName
 import app.passwordstore.ui.main.LaunchActivity
 import java.io.File
 
@@ -15,7 +15,7 @@ data class PasswordItem(val name: String, val type: Char, val file: File, val ro
 
   val fullPathToParent = file.absolutePath.replace(rootDir.absolutePath, "").replace(file.name, "")
 
-  val longName = BasePGPActivity.getLongName(fullPathToParent, rootDir.absolutePath, toString())
+  val longName = getLongName(fullPathToParent, rootDir.absolutePath, toString())
 
   override fun equals(other: Any?): Boolean {
     return (other is PasswordItem) && (other.file == file)
@@ -36,7 +36,7 @@ data class PasswordItem(val name: String, val type: Char, val file: File, val ro
   /** Creates an [Intent] to launch this [PasswordItem] through the authentication process. */
   fun createAuthEnabledIntent(context: Context): Intent {
     val intent = Intent(context, LaunchActivity::class.java)
-    intent.putExtra("FILE_PATH", file.absolutePath)
+    intent.putExtra(LaunchActivity.EXTRA_FILE_PATH, file.absolutePath)
     intent.action = LaunchActivity.ACTION_DECRYPT_PASS
     return intent
   }

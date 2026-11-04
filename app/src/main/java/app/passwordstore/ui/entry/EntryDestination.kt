@@ -43,10 +43,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import app.passwordstore.R
 import app.passwordstore.data.passfile.Totp
 import app.passwordstore.data.repo.PasswordRepository
-import app.passwordstore.ui.crypto.BasePGPActivity.Companion.getParentPath
 import app.passwordstore.ui.crypto.copyPasswordToClipboard
 import app.passwordstore.ui.crypto.copyTextToClipboard
 import app.passwordstore.ui.crypto.getPGPIdentifiers
+import app.passwordstore.ui.crypto.getParentPath
 import app.passwordstore.ui.main.LaunchActivity
 import app.passwordstore.ui.main.MainActivity
 import app.passwordstore.ui.setup.SetupStart

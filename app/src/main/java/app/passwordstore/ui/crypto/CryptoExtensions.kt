@@ -6,22 +6,16 @@
 package app.passwordstore.ui.crypto
 
 import android.content.ClipData
+import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
-import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.WindowManager
-import androidx.annotation.CallSuper
+import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
 import app.passwordstore.crypto.PGPIdentifier
-import app.passwordstore.data.crypto.CryptoRepository
 import app.passwordstore.data.repo.PasswordRepository
-import app.passwordstore.injection.prefs.SettingsPreferences
-import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.clipboard
 import app.passwordstore.util.extensions.getString
 import app.passwordstore.util.extensions.sharedPrefs
@@ -29,61 +23,33 @@ import app.passwordstore.util.extensions.snackbar
 import app.passwordstore.util.services.ClipboardService
 import app.passwordstore.util.settings.Constants
 import app.passwordstore.util.settings.PreferenceKeys
-import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import javax.inject.Inject
 
-@Suppress("Registered")
-@AndroidEntryPoint
-open class BasePGPActivity : AppCompatActivity() {
+/** Gets the relative path to the repository */
+private fun getRelativePath(fullPath: String, repositoryPath: String): String =
+  fullPath.replace(repositoryPath, "").replace("/+".toRegex(), "/")
 
-  /** [SharedPreferences] instance used by subclasses to persist settings */
-  @SettingsPreferences @Inject lateinit var settings: SharedPreferences
-  @Inject lateinit var repository: CryptoRepository
-  @Inject lateinit var dispatcherProvider: DispatcherProvider
+/** Gets the Parent path, relative to the repository */
+fun getParentPath(fullPath: String, repositoryPath: String): String {
+  val relativePath = getRelativePath(fullPath, repositoryPath)
+  val index = relativePath.lastIndexOf("/")
+  return "/${relativePath.substring(startIndex = 0, endIndex = index + 1)}/"
+    .replace("/+".toRegex(), "/")
+}
 
-  /**
-   * [onCreate] sets the window up with the right flags to prevent auth leaks through screenshots or
-   * recent apps screen.
-   */
-  @CallSuper
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-  }
-
-  companion object {
-
-    const val EXTRA_FILE_PATH = "FILE_PATH"
-
-    /** Gets the relative path to the repository */
-    fun getRelativePath(fullPath: String, repositoryPath: String): String =
-      fullPath.replace(repositoryPath, "").replace("/+".toRegex(), "/")
-
-    /** Gets the Parent path, relative to the repository */
-    fun getParentPath(fullPath: String, repositoryPath: String): String {
-      val relativePath = getRelativePath(fullPath, repositoryPath)
-      val index = relativePath.lastIndexOf("/")
-      return "/${relativePath.substring(startIndex = 0, endIndex = index + 1)}/"
-        .replace("/+".toRegex(), "/")
+/** /path/to/store/social/facebook.gpg -> social/facebook */
+fun getLongName(fullPath: String, repositoryPath: String, basename: String): String {
+  var relativePath = getRelativePath(fullPath, repositoryPath)
+  return if (relativePath.isNotEmpty() && relativePath != "/") {
+    // remove preceding '/'
+    relativePath = relativePath.substring(1)
+    if (relativePath.endsWith('/')) {
+      relativePath + basename
+    } else {
+      "$relativePath/$basename"
     }
-
-    /** /path/to/store/social/facebook.gpg -> social/facebook */
-    @JvmStatic
-    fun getLongName(fullPath: String, repositoryPath: String, basename: String): String {
-      var relativePath = getRelativePath(fullPath, repositoryPath)
-      return if (relativePath.isNotEmpty() && relativePath != "/") {
-        // remove preceding '/'
-        relativePath = relativePath.substring(1)
-        if (relativePath.endsWith('/')) {
-          relativePath + basename
-        } else {
-          "$relativePath/$basename"
-        }
-      } else {
-        basename
-      }
-    }
+  } else {
+    basename
   }
 }
 
@@ -128,10 +94,11 @@ fun FragmentActivity.copyPasswordToClipboard(password: String?) {
 
 /**
  * Get a list of available [PGPIdentifier]s for the current password repository. This method throws
- * when no identifiers were able to be parsed. If this method returns null, it means that an invalid
- * identifier was encountered and further execution must stop to let the user correct the problem.
+ * when no identifiers were able to be parsed. If this method returns null, an invalid identifier
+ * was encountered and reported with a toast: further execution must stop to let the user correct
+ * the problem.
  */
-fun FragmentActivity.getPGPIdentifiers(subDir: String): List<PGPIdentifier>? {
+fun Context.getPGPIdentifiers(subDir: String): List<PGPIdentifier>? {
   val repoRoot = PasswordRepository.getRepositoryDirectory()
   val gpgIdentifierFile =
     File(repoRoot, subDir).findTillRoot(".gpg-id", repoRoot)
@@ -149,11 +116,12 @@ fun FragmentActivity.getPGPIdentifiers(subDir: String): List<PGPIdentifier>? {
             if (line.isEmpty()) return@run
             // Apparently `gpg-id` being the first line is also acceptable?
             if (line == "gpg-id") return@run
-            if (line.removePrefix("0x").matches("[a-fA-F0-9]{8}".toRegex())) {
-              snackbar(message = resources.getString(R.string.short_gpg_id))
-            } else {
-              snackbar(message = resources.getString(R.string.invalid_gpg_id))
-            }
+            val message =
+              if (line.removePrefix("0x").matches("[a-fA-F0-9]{8}".toRegex())) R.string.short_gpg_id
+              else R.string.invalid_gpg_id
+            // A toast on the application context, not a snackbar: the autofill decryption
+            // finishes its window right after, and the toast must outlive it.
+            Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
             return null
           }
       }

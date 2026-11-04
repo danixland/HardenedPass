@@ -12,7 +12,6 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import app.passwordstore.data.repo.PasswordRepository
-import app.passwordstore.ui.crypto.BasePGPActivity
 import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result
 import app.passwordstore.util.extensions.sharedPrefs
@@ -61,10 +60,10 @@ class LaunchActivity : AppCompatActivity() {
     // This activity is exported, so the file path is untrusted input: only forward it when it
     // points at a file inside the password store. MainActivity is not exported and trusts it.
     val repoDir = PasswordRepository.getRepositoryDirectory()
-    val filePath = intent.getStringExtra(BasePGPActivity.EXTRA_FILE_PATH)
+    val filePath = intent.getStringExtra(EXTRA_FILE_PATH)
     val intentToStart = Intent(this, MainActivity::class.java)
     if (intent.action == ACTION_DECRYPT_PASS && isFileInRepo(filePath, repoDir))
-      intentToStart.putExtra(BasePGPActivity.EXTRA_FILE_PATH, filePath)
+      intentToStart.putExtra(EXTRA_FILE_PATH, filePath)
     // A plain start replaces the task, so an instance already open (one whose store vanished, say)
     // is not left below the new one. An entry opens on top, back returns to where the user was.
     else intentToStart.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -76,6 +75,9 @@ class LaunchActivity : AppCompatActivity() {
   companion object {
 
     const val ACTION_DECRYPT_PASS = "DECRYPT_PASS"
+
+    /** The entry to open; home screen shortcuts carry this exact key, never change it. */
+    const val EXTRA_FILE_PATH = "FILE_PATH"
 
     /** True when [path] resolves, after following `..` and symlinks, to a file under [repoDir]. */
     fun isFileInRepo(path: String?, repoDir: File): Boolean {

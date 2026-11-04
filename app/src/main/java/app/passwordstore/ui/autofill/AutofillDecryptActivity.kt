@@ -8,11 +8,14 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import android.view.autofill.AutofillManager
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -25,12 +28,14 @@ import androidx.lifecycle.lifecycleScope
 import app.passwordstore.Application.Companion.screenWasOff
 import app.passwordstore.R
 import app.passwordstore.crypto.PGPIdentifier
+import app.passwordstore.data.crypto.CryptoRepository
 import app.passwordstore.data.crypto.PGPPassphraseCache
 import app.passwordstore.data.passfile.PasswordEntry
 import app.passwordstore.data.repo.PasswordRepository
+import app.passwordstore.injection.prefs.SettingsPreferences
 import app.passwordstore.ui.compose.theme.APSTheme
-import app.passwordstore.ui.crypto.BasePGPActivity
 import app.passwordstore.ui.crypto.getPGPIdentifiers
+import app.passwordstore.ui.crypto.getParentPath
 import app.passwordstore.ui.entry.PassphraseDialog
 import app.passwordstore.ui.main.MainActivity
 import app.passwordstore.ui.setup.SetupStart
@@ -38,6 +43,7 @@ import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result as BiometricResult
 import app.passwordstore.util.autofill.AutofillPreferences
 import app.passwordstore.util.autofill.AutofillResponseBuilder
+import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.asLog
 import app.passwordstore.util.features.Feature.EnablePGPPassphraseCache
 import app.passwordstore.util.features.Features
@@ -64,8 +70,11 @@ import logcat.logcat
  * FLAG_SECURE window shows only the "no keys" and passphrase dialogs.
  */
 @AndroidEntryPoint
-class AutofillDecryptActivity : BasePGPActivity() {
+class AutofillDecryptActivity : AppCompatActivity() {
 
+  @SettingsPreferences @Inject lateinit var settings: SharedPreferences
+  @Inject lateinit var repository: CryptoRepository
+  @Inject lateinit var dispatcherProvider: DispatcherProvider
   @Inject lateinit var passwordEntryFactory: PasswordEntry.Factory
   @Inject lateinit var features: Features
   @Inject lateinit var passphraseCache: PGPPassphraseCache
@@ -97,6 +106,9 @@ class AutofillDecryptActivity : BasePGPActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    // Before anything is drawn: the passphrase dialog's parent stays out of screenshots and
+    // recents.
+    window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
     // ponytail: a recreation (theme or locale change; rotation and resizing do not recreate, see
     // the manifest) cancels the fill instead of resuming a half-done flow; the user taps the field
     // again. Keep the flow's state in a ViewModel if this ever matters.
