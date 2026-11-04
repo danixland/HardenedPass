@@ -19,6 +19,7 @@ import app.passwordstore.data.crypto.CryptoRepository
 import app.passwordstore.data.crypto.PGPPassphraseCache
 import app.passwordstore.data.passfile.PasswordEntry
 import app.passwordstore.injection.prefs.SettingsPreferences
+import app.passwordstore.ui.autofill.cachesPassphrase
 import app.passwordstore.util.auth.BiometricAuthenticator.Result as BiometricResult
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.getString
@@ -123,7 +124,7 @@ constructor(
     this.clearCache = clearCache
     val app = context.applicationContext
     viewModelScope.launch {
-      if (decrypt(passphrase, app) && auth is BiometricResult.Success) {
+      if (decrypt(passphrase, app) && cachesPassphrase(cacheEnabled, auth)) {
         runCatching {
             passphraseCache.cachePassphrase(app, ids.first(), passphrase)
             settings.edit { putBoolean(PreferenceKeys.CLEAR_PASSPHRASE_CACHE, clearCache) }

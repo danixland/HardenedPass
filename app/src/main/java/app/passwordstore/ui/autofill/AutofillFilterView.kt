@@ -101,6 +101,10 @@ class AutofillFilterView : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    // The picker decides which entry fills the requesting app: drop touches under an overlay, as
+    // the
+    // publisher warning does.
+    window.decorView.filterTouchesWhenObscured = true
     setFinishOnTouchOutside(true)
 
     val params = window.attributes
