@@ -311,14 +311,15 @@ fun GitConfigDestination(
     }
     if (done == GitOp.BREAK_OUT_OF_DETACHED) {
       val aborted = viewModel.abortedBranch.orEmpty()
+      // BreakOutOfDetached names the pushed branch conflicting-<branch>-<millis>: the newest one.
+      val pushed =
+        PasswordRepository.repository
+          ?.refDatabase
+          ?.getRefsByPrefix("refs/heads/conflicting-$aborted-")
+          ?.maxOfOrNull { it.name.removePrefix("refs/heads/") } ?: "conflicting-$aborted-..."
       SetupDialog(
         title = stringResource(R.string.git_abort_and_push_title),
-        text =
-          stringResource(
-            R.string.git_break_out_of_detached_success,
-            aborted,
-            "conflicting-$aborted-...",
-          ),
+        text = stringResource(R.string.git_break_out_of_detached_success, aborted, pushed),
         confirm = stringResource(R.string.dialog_ok),
         onConfirm = onClose,
         onDismiss = onClose,
