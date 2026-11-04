@@ -28,10 +28,7 @@ class ApplicationPlugin : Plugin<Project> {
         includeInApk = false
       }
 
-      buildFeatures {
-        viewBinding = true
-        buildConfig = true
-      }
+      buildFeatures { buildConfig = true }
 
       buildTypes {
         named("release") {

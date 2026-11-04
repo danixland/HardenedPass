@@ -5,7 +5,6 @@
 <lint>
   <issue id="ContentDescription">
     <ignore path="src/main/res/layout/oreo_autofill_dataset.xml" />
-    <ignore path="src/main/res/layout/oreo_autofill_filter_row.xml" />
   </issue>
   <issue id="InvalidPackage">
     <ignore regexp="X509LDAPCertStoreSpi" />
@@ -20,10 +19,6 @@
   <issue id="UnusedResources">
     <ignore path="src/main/res/values/bools.xml" />
     <ignore path="src/main/res/values/colors_material3.xml" />
-    <ignore path="src/main/res/layout/map_preference_widget_switch.xml" />
-  </issue>
-  <issue id="PrivateResource">
-    <ignore path="src/main/res/layout/map_preference_widget_switch.xml" />
   </issue>
   <issue id="VectorPath">
     <ignore path="src/main/res/drawable/app_settings_alt_24px.xml" />
