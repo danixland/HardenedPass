@@ -31,9 +31,9 @@ below Android 12 stay on 0.2.0; the next release notes must say so.
 `Prompts` is a ViewModel scoped to the activity, reached with the extension `activity.prompts`
 (`ViewModelProvider(activity)`), so no interface is needed. It offers:
 
-- `suspend fun ask(title, message, confirm, dismiss = null, neutral = null): Choice`, which
-  suspends until a button is pressed or the dialog is dismissed. Dismissing counts as the
-  cancelling answer.
+- `suspend fun ask(title, message, confirm, cancel = null, other = null): Choice`, which suspends
+  until a button is pressed or the dialog is dismissed. Dismissing answers `Choice.Cancel`, so a
+  tap outside the missing SSH key dialog can never mean "generate".
 - `askCredential(...)` for the credential dialog, delivering the entered text and the remember
   choice, or null on cancel.
 - `snackbar(message, length)`, with `length` short, long or indefinite, returning a handle to
@@ -43,14 +43,18 @@ below Android 12 stay on 0.2.0; the next release notes must say so.
 `AutofillSaveActivity`, the only two activities that show these. It draws the current dialog and a
 `SnackbarHost` at the bottom of the window, above the navigation bar and keyboard.
 
-The state lives in the ViewModel, so a theme or locale recreation redraws a pending dialog instead
-of leaving the operation waiting on a dialog that no longer exists.
+The state lives in the ViewModel. Git operations run in the activity's `lifecycleScope`, so a theme
+or locale recreation cancels them: `ask` removes its dialog when cancelled. The credential dialog
+blocks an SSH thread that cancellation cannot reach, so it stays and is redrawn by the new activity
+instead of leaving that thread waiting forever. When the activity finishes for good, `onCleared`
+answers every pending prompt with its cancelling answer.
 
 ### Dialogs
 
 These all move to `ask`:
 
-- the git error dialog in `BaseGitActivity.promptOnErrorHandler`, keeping `onPromptDone`
+- the git error dialog in `BaseGitActivity.promptOnErrorHandler`, whose unused `onPromptDone`
+  parameter goes
 - the missing SSH key dialog in `GitOperation` (import, generate, cancel)
 - `BreakOutOfDetached`'s "not needed" notice
 - `moveFile`'s error and `confirm` in `StoreActions`
@@ -73,7 +77,9 @@ rather than queueing behind it as `SnackbarHostState` does by default. `GitComma
 ### minSdk
 
 `AndroidCommon.kt` sets 31. Branches that become dead are deleted, including the below-Android-11
-snackbar in `copyTextToClipboard` and its parameters.
+snackbar in `copyTextToClipboard` and its parameters, and `Api26AutofillResponseBuilder`. Lint runs
+with `warningsAsErrors`, so `ObsoleteSdkInt` lists whatever is missed. `StrictDomainRegexTest`'s
+`@Config(sdk = [23])` goes, being below minSdk.
 
 ### AppCompat out
 
@@ -90,10 +96,10 @@ snackbar in `copyTextToClipboard` and its parameters.
 `Application.setNightMode` calls `UiModeManager.setApplicationNightMode`: `light` is
 `MODE_NIGHT_NO`, `dark` is `MODE_NIGHT_YES`, everything else is `MODE_NIGHT_AUTO`.
 
-"Set by Battery Saver" leaves the settings list, and `app_theme_def` becomes `follow_system`.
-Android already turns dark in battery saver, so follow-system covers it. A stored `battery_saver`
-value falls into the "everything else" case; no migration is needed, but the settings row must
-show "System default" for it rather than nothing.
+`values-v29` already selects `follow_system` and hides "Set by Battery Saver" on Android 10 and
+later, so nothing changes for users: its `arrays.xml` and `prefs.xml` replace the base ones, the
+folder goes, and the battery saver string leaves every locale. A stored `battery_saver` value could
+only come from a device that ran the app on Android 9 or older; it still maps to `MODE_NIGHT_AUTO`.
 
 ### System bars
 
@@ -116,7 +122,7 @@ reports as unused after this (`md_theme_*`) are deleted.
   :app:assembleRelease lint metalavaCheckCompatibilityRelease`.
 - Emulator, on the e2e store: credential dialog (wrong passphrase retry, remember, cancel), missing
   SSH key dialog, git error dialog, conflict recovery, move error, delete and move confirmations,
-  every theme setting including a stored `battery_saver`, bar colors in light and dark, QR scanner
+  every theme setting, bar colors in light and dark, QR scanner
   opens, fingerprint unlock, a theme change while a dialog is open.
 - Real device with Firefox: autofill save, since its window now hosts `PromptHost`, and the
   autofill windows' transparent bars.
@@ -133,8 +139,7 @@ reports as unused after this (`md_theme_*`) are deleted.
 
 1. minSdk 31 and dead branches.
 2. `Prompts`, `PromptHost` and all call sites.
-3. Material out: themes, `DynamicColors`, system bars, dependency.
-4. AppCompat out: activities, night mode, settings list, dependency, docs.
+3. AppCompat out: activities, themes, night mode, `DynamicColors`, system bars.
+4. Dependencies and unused resources out, docs.
 
-After step 3 the window themes must still satisfy AppCompat, so that commit moves them to
-`Theme.AppCompat.DayNight.NoActionBar`, and step 4 moves them to `android:Theme.Material.*`.
+AppCompat goes before the Material dependency so the window themes change only once.
