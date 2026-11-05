@@ -132,8 +132,9 @@ Last full emulator run (2026-11-05, Android 15, minSdk 31 build): clone over SSH
 passphrase key (wrong, cancel, remembered, kept through a recreation), missing SSH key dialog, git
 error dialog, snackbars, conflict recovery (abort rebase, push a new branch), overwrite confirmation
 on move, light, dark and system themes with bar colors, QR scanner opens, decrypt, TOTP and
-fingerprint unlock passed. Last Firefox autofill runs, both 2026-11-05 and before the minSdk 31 build: tablet (fill, save, stale
-cached passphrase) and Pixel 6 Pro on Android 17 (fill, save), all passed.
+fingerprint unlock passed. Last Firefox autofill run (2026-11-05): Pixel 6 Pro on Android 17 with the
+signed minSdk 31 release build (fill, save, sync, abort rebase, hard reset), all passed. The tablet
+(fill, save, stale cached passphrase) was last run before that build.
 
 ## Verified facts and gotchas
 
