@@ -91,7 +91,9 @@ storage is unlocked before `adb uninstall` or `push-keys`: earlier, uninstall fa
 field, wait about a second after the tap before clearing it (Ctrl+A, DEL), or the clear misses.
 `adb shell run-as <pkg> sh -c '...'` needs the whole command quoted as one `adb` argument
 (`adb shell "run-as <pkg> sh -c '...'"`), or the device shell splits it.
-Fingerprint: `adb emu finger touch 1` after enrolling one in Settings (needs a lock PIN:
+The `aps-test` AVD has lock PIN 1234: until it is entered at the keyguard, user storage stays
+locked. On the host, `ssh` to the e2e server needs `-F none -o IdentityAgent=none`, or
+`AddKeysToAgent` makes gpg-agent ask for a passphrase for the throwaway key. Fingerprint: `adb emu finger touch 1` after enrolling one in Settings (needs a lock PIN:
 `adb shell locksettings set-pin 1234` on the emulator only). Disable animations
 (`settings put global animator_duration_scale 0`, same for `transition_` and `window_`)
 or `uiautomator dump` waits for an idle state that never comes. The OTP screen never goes idle
@@ -126,8 +128,10 @@ instead:
   Firefox with `null root node`, so drive by `screencap` and tap coordinates; secure windows need
   the owner. The system file picker can show real files: the owner picks the keys there.
 
-Last full emulator run (2026-11-04, Compose UI): clone over SSH, PGP import, decrypt, TOTP,
-create and push, conflict recovery (abort rebase, push a new branch), hard reset and
+Last full emulator run (2026-11-05, Android 15, minSdk 31 build): clone over SSH with a
+passphrase key (wrong, cancel, remembered, kept through a recreation), missing SSH key dialog, git
+error dialog, snackbars, conflict recovery (abort rebase, push a new branch), overwrite confirmation
+on move, light, dark and system themes with bar colors, QR scanner opens, decrypt, TOTP and
 fingerprint unlock passed. Last Firefox autofill runs, both 2026-11-05: tablet (fill, save, stale
 cached passphrase) and Pixel 6 Pro on Android 17 (fill, save), all passed.
 
