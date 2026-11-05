@@ -48,7 +48,7 @@ Report bugs and feature requests on the
 
 ## Support
 
-[![Support on Ko-fi](https://git.danix.xyz/HardenedPass/plain/media/kofi-button.svg)](https://ko-fi.com/K6Y520C9I6)
+[![Support on Ko-fi](media/kofi-button.png)](https://ko-fi.com/K6Y520C9I6)
 
 ## License
 
