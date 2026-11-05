@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2026-11-05
+
+### Changed
+
+-   About moved from Settings to the list's menu, and its links show that they open in the browser
+
+### Fixed
+
+-   The version, signing certificate and SSH public key are no longer hidden in the clipboard preview
+
 ## [0.3.1] - 2026-11-05
 
 ### Added
