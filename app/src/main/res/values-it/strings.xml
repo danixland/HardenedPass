@@ -379,4 +379,19 @@
   <string name="git_reset_confirm_message">I commit e le modifiche locali che non sono su questo remote branch vengono scartati.</string>
   <string name="git_tool_done">%1$s: completato</string>
   <string name="store_delete_confirm">Eliminare l\'archivio locale? Le voci di cui non è stato fatto il push sul remote vanno perse.</string>
+  <string name="about">Informazioni</string>
+  <string name="about_summary">Un client Android per pass, il gestore di password standard di Unix. Un fork mantenuto di Android Password Store.</string>
+  <string name="about_version">Versione</string>
+  <string name="about_docs">Documentazione</string>
+  <string name="about_changelog">Novità</string>
+  <string name="about_source">Codice sorgente</string>
+  <string name="about_issues">Segnala un problema</string>
+  <string name="about_support">Sostieni su Ko-fi</string>
+  <string name="about_privacy_title">Privacy</string>
+  <string name="about_privacy">Nessuna telemetria, nessuna analisi, nessun servizio Google. HardenedPass si collega solo al tuo server git, tramite il tuo proxy se ne imposti uno.</string>
+  <string name="about_certificate">Certificato di firma (SHA-256)</string>
+  <string name="about_license">Licenza</string>
+  <string name="about_license_text">GNU General Public License v3.0 only. Copyright degli autori di Android Password Store e dei contributori di HardenedPass.</string>
+  <string name="about_libraries">Licenze open source</string>
+  <string name="about_no_browser">Nessun browser trovato per aprire questo link</string>
 </resources>

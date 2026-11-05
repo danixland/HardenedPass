@@ -180,6 +180,10 @@ signed minSdk 31 release build (fill, save, sync, abort rebase, hard reset), all
   Android only partly desugars; moving to it is a large, separate job. Window cache JMX is off
   in `Application` and GC runs without JGit's PID lock, because Android has no JMX.
 
+- The about screen's `LICENSES` list (`AboutScreen.kt`) is kept by hand: update it when a
+  dependency that ships in the APK comes or goes. Its Ko-fi logo must stay unchanged, per Ko-fi's
+  guidance, on the white button that keeps its dark outline visible.
+
 ## Open work
 
 `TODO.md` lists open features and fixes. Remove an item in the commit that finishes it.

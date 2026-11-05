@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -68,7 +69,7 @@ enum class SettingsAction {
 /** Top bar with [title] and back, then [content] in one grouped surface, scrolling. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsScaffold(
+internal fun SettingsScaffold(
   title: String,
   onBack: () -> Unit,
   modifier: Modifier = Modifier,
@@ -97,6 +98,7 @@ private fun SettingsScaffold(
 @Composable
 fun SettingsScreen(
   onSection: (SettingsSection) -> Unit,
+  onAbout: () -> Unit,
   onBack: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -109,6 +111,12 @@ fun SettingsScreen(
         colors = rowColors(),
       )
     }
+    ListItem(
+      headlineContent = { Text(stringResource(R.string.about)) },
+      modifier = Modifier.clickable(role = Role.Button, onClick = onAbout),
+      leadingContent = { Icon(Icons.Filled.Info, contentDescription = null) },
+      colors = rowColors(),
+    )
   }
 }
 

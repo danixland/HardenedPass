@@ -22,6 +22,14 @@ class ApplicationPlugin : Plugin<Project> {
     project.pluginManager.apply(AppPlugin::class)
     AndroidCommon.configure(project)
     val minifySwitch = project.providers.environmentVariable("DISABLE_MINIFY")
+    val commit =
+      project.providers
+        .exec {
+          commandLine("git", "rev-parse", "--short=8", "HEAD")
+          isIgnoreExitValue = true
+        }
+        .standardOutput
+        .asText
     project.extensions.configure<ApplicationExtension> {
       dependenciesInfo {
         includeInBundle = false
@@ -41,12 +49,14 @@ class ApplicationPlugin : Plugin<Project> {
             )
           )
           buildConfigField("boolean", "ENABLE_DEBUG_FEATURES", "${project.isSnapshot()}")
+          buildConfigField("String", "GIT_COMMIT", "\"\"")
         }
         named("debug") {
           applicationIdSuffix = ".debug"
           versionNameSuffix = "-debug"
           isMinifyEnabled = false
           buildConfigField("boolean", "ENABLE_DEBUG_FEATURES", "true")
+          buildConfigField("String", "GIT_COMMIT", "\"${commit.get().trim()}\"")
         }
       }
 

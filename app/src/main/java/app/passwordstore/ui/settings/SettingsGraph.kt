@@ -30,6 +30,9 @@ import kotlinx.serialization.Serializable
 /** The store's commit log. */
 @Serializable data object GitLogRoute
 
+/** Version, links, certificate and licenses. */
+@Serializable data object AboutRoute
+
 /** HTTP(S) proxy settings. */
 @Serializable data object ProxyRoute
 
@@ -44,8 +47,12 @@ fun NavGraphBuilder.settingsGraph(activity: MainActivity, nav: NavHostController
   composable<SettingsRoute> { entry ->
     SettingsScreen(
       onSection = { if (onTop(entry)) nav.navigate(SettingsSectionRoute(it)) },
+      onAbout = { if (onTop(entry)) nav.navigate(AboutRoute) },
       onBack = { close(entry) },
     )
+  }
+  composable<AboutRoute> { entry ->
+    AboutDestination(activity = activity, onBack = { close(entry) })
   }
   composable<SettingsSectionRoute> { entry ->
     SettingsSectionDestination(

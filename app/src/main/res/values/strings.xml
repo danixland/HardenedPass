@@ -413,4 +413,19 @@
   <string name="git_reset_confirm_message">Local commits and changes that are not on this remote branch are discarded.</string>
   <string name="git_tool_done">%1$s: done</string>
   <string name="store_delete_confirm">Delete the local store? Entries not pushed to the remote are lost.</string>
+  <string name="about">About</string>
+  <string name="about_summary">An Android client for pass, the standard Unix password manager. A maintained fork of Android Password Store.</string>
+  <string name="about_version">Version</string>
+  <string name="about_docs">Documentation</string>
+  <string name="about_changelog">What\'s new</string>
+  <string name="about_source">Source code</string>
+  <string name="about_issues">Report a problem</string>
+  <string name="about_support">Support on Ko-fi</string>
+  <string name="about_privacy_title">Privacy</string>
+  <string name="about_privacy">No telemetry, no analytics, no Google services. HardenedPass connects only to your git server, through your proxy if you set one.</string>
+  <string name="about_certificate">Signing certificate (SHA-256)</string>
+  <string name="about_license">License</string>
+  <string name="about_license_text">GNU General Public License v3.0 only. Copyright the Android Password Store authors and HardenedPass contributors.</string>
+  <string name="about_libraries">Open source licenses</string>
+  <string name="about_no_browser">No browser found to open this link</string>
 </resources>
