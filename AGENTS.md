@@ -119,11 +119,14 @@ instead:
   (Italian: "Cerca la voce" is the app's "Search entry" chip).
 - Only read screens of the debug app, the test page and the autofill UI; the device holds the
   owner's real data.
+- On the Pixel 6 Pro (GrapheneOS, Android 17) `uiautomator dump` fails on the debug app and on
+  Firefox with `null root node`, so drive by `screencap` and tap coordinates; secure windows need
+  the owner. The system file picker can show real files: the owner picks the keys there.
 
 Last full emulator run (2026-11-04, Compose UI): clone over SSH, PGP import, decrypt, TOTP,
 create and push, conflict recovery (abort rebase, push a new branch), hard reset and
-fingerprint unlock passed. Last Firefox autofill run on the tablet: 2026-11-05 (fill, save, stale
-cached passphrase), all passed.
+fingerprint unlock passed. Last Firefox autofill runs, both 2026-11-05: tablet (fill, save, stale
+cached passphrase) and Pixel 6 Pro on Android 17 (fill, save), all passed.
 
 ## Verified facts and gotchas
 
