@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2026-11-05
+
+### Added
+
+-   An about screen in Settings: version, documentation and project links, Ko-fi, the privacy statement, the signing certificate of the installed copy and the licenses
+
 ## [0.3.0] - 2026-11-05
 
 ### Changed
