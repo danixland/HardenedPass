@@ -4,12 +4,12 @@
  */
 package app.passwordstore.util.git.operation
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode.TRACK
 import org.eclipse.jgit.api.GitCommand
 import org.eclipse.jgit.api.ResetCommand
 
-class ResetToRemoteOperation(callingActivity: AppCompatActivity, remoteBranch: String) :
+class ResetToRemoteOperation(callingActivity: FragmentActivity, remoteBranch: String) :
   GitOperation(callingActivity) {
 
   override val commands: Array<GitCommand<out Any>> =

@@ -5,7 +5,6 @@
 package app.passwordstore.util.git.operation
 
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
@@ -64,8 +63,6 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
     EntryPointAccessors.fromApplication<GitOperationEntryPoint>(callingActivity)
   protected val repository = PasswordRepository.repository!!
   protected val git = Git(repository)
-  private val authActivity
-    get() = callingActivity as AppCompatActivity
 
   private class HttpsCredentialsProvider(private val passwordFinder: PasswordFinder) :
     CredentialsProvider() {
@@ -170,7 +167,7 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
               }
             when (result) {
               is Success -> {
-                registerAuthProviders(SshAuthMethod.SshKey(authActivity))
+                registerAuthProviders(SshAuthMethod.SshKey(callingActivity))
               }
               is CanceledByUser -> {
                 return Err(SSHException(DisconnectReason.AUTH_CANCELLED_BY_USER))
@@ -190,7 +187,7 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
               }
             }
           } else {
-            registerAuthProviders(SshAuthMethod.SshKey(authActivity))
+            registerAuthProviders(SshAuthMethod.SshKey(callingActivity))
           }
         } else {
           onMissingSshKeyFile()
@@ -208,7 +205,7 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
               hiltEntryPoint.dispatcherProvider(),
             )
           )
-        registerAuthProviders(SshAuthMethod.Password(authActivity), httpsCredentialProvider)
+        registerAuthProviders(SshAuthMethod.Password(callingActivity), httpsCredentialProvider)
       }
       AuthMode.None -> {}
     }

@@ -13,13 +13,13 @@ import android.view.autofill.AutofillManager
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
@@ -43,7 +43,7 @@ import logcat.LogPriority.ERROR
 import logcat.logcat
 
 @AndroidEntryPoint
-class AutofillFilterView : AppCompatActivity() {
+class AutofillFilterView : FragmentActivity() {
 
   @Inject lateinit var dispatcherProvider: DispatcherProvider
 
@@ -128,7 +128,6 @@ class AutofillFilterView : AppCompatActivity() {
           return
         }
       }
-    supportActionBar?.hide()
     setResult(RESULT_CANCELED)
 
     val isWeb = formOrigin is FormOrigin.Web

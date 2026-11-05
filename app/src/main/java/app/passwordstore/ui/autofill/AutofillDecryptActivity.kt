@@ -15,7 +15,6 @@ import android.view.autofill.AutofillManager
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.edit
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import app.passwordstore.Application.Companion.screenWasOff
 import app.passwordstore.R
@@ -70,7 +70,7 @@ import logcat.logcat
  * FLAG_SECURE window shows only the "no keys" and passphrase dialogs.
  */
 @AndroidEntryPoint
-class AutofillDecryptActivity : AppCompatActivity() {
+class AutofillDecryptActivity : FragmentActivity() {
 
   @SettingsPreferences @Inject lateinit var settings: SharedPreferences
   @Inject lateinit var repository: CryptoRepository

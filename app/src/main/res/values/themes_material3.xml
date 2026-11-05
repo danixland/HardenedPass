@@ -6,16 +6,9 @@
 <resources>
 
   <style name="AppThemeM3" parent="APSThemeM3">
-    <item name="fontFamily">@font/manrope</item>
     <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
     <item name="android:statusBarColor">?android:colorBackground</item>
     <item name="android:navigationBarColor">?android:colorBackground</item>
-  </style>
-
-  <!-- AppCompat activities whose whole UI is Compose -->
-  <style name="NoActionBarThemeM3" parent="AppThemeM3">
-    <item name="windowActionBar">false</item>
-    <item name="windowNoTitle">true</item>
   </style>
 
   <style name="NoBackgroundThemeM3" parent="@style/AppThemeM3">
@@ -25,48 +18,17 @@
     <item name="android:statusBarColor">@android:color/transparent</item>
     <item name="android:windowIsTranslucent">true</item>
     <item name="android:windowContentOverlay">@null</item>
-    <item name="android:windowActionBar">false</item>
     <item name="android:windowBackground">@android:color/transparent</item>
     <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
     <item name="android:windowExitAnimation">@android:anim/fade_out</item>
-    <item name="colorPrimaryDark">@android:color/transparent</item>
-    <item name="windowNoTitle">true</item>
   </style>
 
   <style name="DialogLikeThemeM3" parent="AppThemeM3">
-    <item name="android:windowActionBar">false</item>
     <item name="android:windowIsFloating">true</item>
     <item name="android:backgroundDimEnabled">true</item>
-    <!-- Needs to be set without android: prefix as per https://stackoverflow.com/a/33417456 -->
-    <item name="windowNoTitle">true</item>
   </style>
 
-  <style name="APSThemeM3" parent="Theme.Material3.DayNight">
-    <item name="colorPrimary">@color/md_theme_light_primary</item>
-    <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-    <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
-    <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
-    <item name="colorSecondary">@color/md_theme_light_secondary</item>
-    <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-    <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
-    <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
-    <item name="colorTertiary">@color/md_theme_light_tertiary</item>
-    <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
-    <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
-    <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
-    <item name="colorError">@color/md_theme_light_error</item>
-    <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
-    <item name="colorOnError">@color/md_theme_light_onError</item>
-    <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
-    <item name="android:colorBackground">@color/md_theme_light_background</item>
-    <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
-    <item name="colorSurface">@color/md_theme_light_surface</item>
-    <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
-    <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
-    <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
-    <item name="colorOutline">@color/md_theme_light_outline</item>
-    <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
-    <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
-    <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
+  <style name="APSThemeM3" parent="android:Theme.Material.Light.NoActionBar">
+    <item name="android:colorBackground">@android:color/system_neutral2_10</item>
   </style>
 </resources>

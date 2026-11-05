@@ -9,8 +9,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import androidx.fragment.app.FragmentActivity
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result
@@ -19,7 +19,7 @@ import app.passwordstore.util.settings.PreferenceKeys
 import java.io.File
 
 @SuppressLint("CustomSplashScreen")
-class LaunchActivity : AppCompatActivity() {
+class LaunchActivity : FragmentActivity() {
 
   private var prompted = false
 

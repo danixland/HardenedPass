@@ -12,8 +12,8 @@ import android.os.Bundle
 import android.view.WindowManager
 import android.view.autofill.AutofillManager
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentActivity
 import app.passwordstore.data.passfile.PasswordEntry
 import app.passwordstore.ui.compose.theme.APSTheme
 import app.passwordstore.ui.editor.EditorDestination
@@ -39,7 +39,7 @@ import logcat.logcat
  * password, fills it in.
  */
 @AndroidEntryPoint
-class AutofillSaveActivity : AppCompatActivity() {
+class AutofillSaveActivity : FragmentActivity() {
 
   companion object {
 

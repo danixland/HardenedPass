@@ -5,8 +5,8 @@
 package app.passwordstore.ui.git.base
 
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
 import app.passwordstore.injection.prefs.GitPreferences
 import app.passwordstore.ui.prompts.prompts
@@ -36,11 +36,11 @@ import net.schmizz.sshj.transport.TransportException
 import net.schmizz.sshj.userauth.UserAuthException
 
 /**
- * Abstract [AppCompatActivity] that holds some information that is commonly shared across
+ * Abstract [FragmentActivity] that holds some information that is commonly shared across
  * git-related tasks and makes sense to be held here.
  */
 @AndroidEntryPoint
-abstract class BaseGitActivity : AppCompatActivity() {
+abstract class BaseGitActivity : FragmentActivity() {
 
   /** Enum of possible Git operations than can be run through [launchGitOperation]. */
   enum class GitOp {

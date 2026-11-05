@@ -35,8 +35,7 @@
     <activity
       android:name=".ui.main.LaunchActivity"
       android:configChanges="orientation|screenSize"
-      android:exported="true"
-      android:theme="@style/NoActionBarThemeM3">
+      android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -48,7 +47,6 @@
       android:name=".ui.main.MainActivity"
       android:configChanges="orientation|screenSize"
       android:exported="false"
-      android:theme="@style/NoActionBarThemeM3"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
@@ -100,7 +98,6 @@
       android:name=".ui.autofill.AutofillSaveActivity"
       android:configChanges="orientation|screenSize"
       android:exported="false"
-      android:theme="@style/NoActionBarThemeM3"
       android:windowSoftInputMode="adjustResize" />
     <activity
       android:name=".ui.autofill.AutofillPublisherChangedActivity"

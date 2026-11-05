@@ -4,13 +4,13 @@
  */
 package app.passwordstore
 
+import android.app.UiModeManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.StrictMode
-import androidx.appcompat.app.AppCompatDelegate.*
 import app.passwordstore.data.crypto.PGPPassphraseCache
 import app.passwordstore.injection.context.FilesDirPath
 import app.passwordstore.injection.prefs.SettingsPreferences
@@ -23,7 +23,6 @@ import app.passwordstore.util.settings.GitSettings
 import app.passwordstore.util.settings.PreferenceKeys
 import app.passwordstore.util.settings.removeSecurityCryptoData
 import app.passwordstore.util.settings.runMigrations
-import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -64,7 +63,6 @@ class Application : android.app.Application(), SharedPreferences.OnSharedPrefere
     removeSecurityCryptoData(this, prefs)
     runMigrations(filesDirPath, prefs, gitSettings)
     proxyUtils.setDefaultProxy()
-    DynamicColors.applyToActivitiesIfAvailable(this)
     setupScreenOffHandler()
   }
 
@@ -112,14 +110,14 @@ class Application : android.app.Application(), SharedPreferences.OnSharedPrefere
   }
 
   private fun setNightMode() {
-    setDefaultNightMode(
-      when (prefs.getString(PreferenceKeys.APP_THEME) ?: getString(R.string.app_theme_def)) {
-        "light" -> MODE_NIGHT_NO
-        "dark" -> MODE_NIGHT_YES
-        "follow_system" -> MODE_NIGHT_FOLLOW_SYSTEM
-        else -> MODE_NIGHT_AUTO_BATTERY
-      }
-    )
+    getSystemService(UiModeManager::class.java)
+      .setApplicationNightMode(
+        when (prefs.getString(PreferenceKeys.APP_THEME) ?: getString(R.string.app_theme_def)) {
+          "light" -> UiModeManager.MODE_NIGHT_NO
+          "dark" -> UiModeManager.MODE_NIGHT_YES
+          else -> UiModeManager.MODE_NIGHT_AUTO
+        }
+      )
   }
 
   companion object {

@@ -14,8 +14,8 @@ import android.service.autofill.FillResponse
 import android.text.format.DateUtils
 import android.view.autofill.AutofillManager
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
+import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
 import app.passwordstore.ui.compose.theme.APSTheme
 import app.passwordstore.util.autofill.AutofillMatcher
@@ -30,7 +30,7 @@ import com.github.michaelbull.result.runCatching
 import logcat.LogPriority.ERROR
 import logcat.logcat
 
-class AutofillPublisherChangedActivity : AppCompatActivity() {
+class AutofillPublisherChangedActivity : FragmentActivity() {
 
   companion object {
 
@@ -74,7 +74,6 @@ class AutofillPublisherChangedActivity : AppCompatActivity() {
           finish()
           return
         }
-    supportActionBar?.hide()
     val (packageInfo, appInfo, hash) =
       runCatching {
           Triple(

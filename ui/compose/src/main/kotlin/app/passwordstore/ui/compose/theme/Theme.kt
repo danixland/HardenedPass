@@ -6,6 +6,8 @@
 package app.passwordstore.ui.compose.theme
 
 import android.app.Activity
+import android.graphics.Color as AndroidColor
+import android.view.Window
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -14,6 +16,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -97,8 +100,19 @@ public fun APSTheme(
   if (!view.isInEditMode) {
     SideEffect {
       val window = (view.context as Activity).window
-      WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+      val bars = WindowCompat.getInsetsController(window, view)
+      bars.isAppearanceLightStatusBars = !darkTheme
+      bars.isAppearanceLightNavigationBars = !darkTheme
+      paintBars(window, colorScheme.background.toArgb())
     }
   }
   MaterialTheme(colorScheme = colorScheme, typography = AppTypography, content = content)
+}
+
+/** Colors the system bars, except in windows that keep them see-through (autofill decryption). */
+@Suppress("DEPRECATION") // Deprecated with edge-to-edge, which targetSdk 34 does not force.
+private fun paintBars(window: Window, color: Int) {
+  if (window.statusBarColor == AndroidColor.TRANSPARENT) return
+  window.statusBarColor = color
+  window.navigationBarColor = color
 }

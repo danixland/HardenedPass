@@ -4,10 +4,10 @@
  */
 package app.passwordstore.util.git.operation
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import org.eclipse.jgit.api.GitCommand
 
-class PullOperation(callingActivity: AppCompatActivity, rebase: Boolean) :
+class PullOperation(callingActivity: FragmentActivity, rebase: Boolean) :
   GitOperation(callingActivity) {
 
   /**

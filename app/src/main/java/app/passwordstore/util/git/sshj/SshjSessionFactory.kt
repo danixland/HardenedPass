@@ -5,7 +5,7 @@
 package app.passwordstore.util.git.sshj
 
 import android.util.Base64
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import app.passwordstore.ui.prompts.Prompts
 import app.passwordstore.ui.prompts.prompts
 import app.passwordstore.util.coroutines.DispatcherProvider
@@ -44,16 +44,16 @@ import org.eclipse.jgit.transport.SshSessionFactory
 import org.eclipse.jgit.transport.URIish
 import org.eclipse.jgit.util.FS
 
-sealed class SshAuthMethod(val activity: AppCompatActivity) {
+sealed class SshAuthMethod(val activity: FragmentActivity) {
   /**
    * The activity's [Prompts], taken while it is alive: the SSH thread reads it later, and asking an
    * activity that was finished meanwhile for it would create one nothing draws.
    */
   val prompts = activity.prompts
 
-  class Password(activity: AppCompatActivity) : SshAuthMethod(activity)
+  class Password(activity: FragmentActivity) : SshAuthMethod(activity)
 
-  class SshKey(activity: AppCompatActivity) : SshAuthMethod(activity)
+  class SshKey(activity: FragmentActivity) : SshAuthMethod(activity)
 }
 
 abstract class InteractivePasswordFinder(private val dispatcherProvider: DispatcherProvider) :

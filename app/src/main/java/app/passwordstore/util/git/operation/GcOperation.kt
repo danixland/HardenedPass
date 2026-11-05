@@ -5,7 +5,7 @@
 
 package app.passwordstore.util.git.operation
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import org.eclipse.jgit.api.GitCommand
 import org.eclipse.jgit.internal.storage.file.FileRepository
 import org.eclipse.jgit.internal.storage.file.GC
@@ -14,7 +14,7 @@ import org.eclipse.jgit.internal.storage.file.GC
  * Run an aggressive garbage collection job on the repository, expiring every loose object to
  * achieve the best compression.
  */
-class GcOperation(callingActivity: AppCompatActivity) : GitOperation(callingActivity) {
+class GcOperation(callingActivity: FragmentActivity) : GitOperation(callingActivity) {
 
   override val requiresAuth: Boolean = false
   override val commands: Array<GitCommand<out Any>> =

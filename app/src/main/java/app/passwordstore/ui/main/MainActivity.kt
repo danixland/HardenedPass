@@ -71,8 +71,8 @@ import kotlinx.serialization.Serializable
 /**
  * Single-activity host for the Compose UI. Not exported: it is only started by [LaunchActivity],
  * after its biometric gate and path check, and by the app itself through [setupIntent]. Extends
- * [BaseGitActivity] (an AppCompatActivity, so also the FragmentActivity BiometricPrompt needs)
- * because the git operations require one; it hosts no fragments.
+ * [BaseGitActivity] (a FragmentActivity, which BiometricPrompt needs) because the git operations
+ * require one; it hosts no fragments.
  */
 @AndroidEntryPoint
 class MainActivity : BaseGitActivity() {
