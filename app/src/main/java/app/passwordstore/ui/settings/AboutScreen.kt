@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -110,7 +111,7 @@ fun AboutDestination(
       versionLine(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, BuildConfig.GIT_COMMIT),
     changelog = changelogUrl(BuildConfig.VERSION_NAME),
     fingerprint = fingerprint,
-    onCopy = { activity.copyTextToClipboard(it) },
+    onCopy = { activity.copyTextToClipboard(it, sensitive = false) },
     onOpen = { url ->
       try {
         activity.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
@@ -147,10 +148,10 @@ private fun AboutScreen(
       Text(stringResource(R.string.about_summary), textAlign = TextAlign.Center)
     }
     AboutRow(stringResource(R.string.about_version), version) { onCopy(version) }
-    AboutRow(stringResource(R.string.about_docs)) { onOpen(DOCUMENTATION) }
-    AboutRow(stringResource(R.string.about_changelog)) { onOpen(changelog) }
-    AboutRow(stringResource(R.string.about_source)) { onOpen(REPOSITORY) }
-    AboutRow(stringResource(R.string.about_issues)) { onOpen("$REPOSITORY/issues") }
+    LinkRow(stringResource(R.string.about_docs)) { onOpen(DOCUMENTATION) }
+    LinkRow(stringResource(R.string.about_changelog)) { onOpen(changelog) }
+    LinkRow(stringResource(R.string.about_source)) { onOpen(REPOSITORY) }
+    LinkRow(stringResource(R.string.about_issues)) { onOpen("$REPOSITORY/issues") }
     // White in both themes: the logo's dark outline disappears on a dark background, and Ko-fi
     // asks that the logo itself stays as it is.
     Button(
@@ -198,11 +199,33 @@ private fun AboutScreen(
 }
 
 @Composable
-private fun AboutRow(title: String, summary: String? = null, onClick: () -> Unit) {
+private fun AboutRow(
+  title: String,
+  summary: String? = null,
+  trailing: (@Composable () -> Unit)? = null,
+  onClick: () -> Unit,
+) {
   ListItem(
     headlineContent = { Text(title) },
     supportingContent = summary?.let { { Text(it) } },
+    trailingContent = trailing,
     modifier = Modifier.clickable(role = Role.Button, onClick = onClick),
     colors = rowColors(),
+  )
+}
+
+/** A row that leaves for the browser, and says so. */
+@Composable
+private fun LinkRow(title: String, summary: String? = null, onClick: () -> Unit) {
+  AboutRow(
+    title = title,
+    summary = summary,
+    trailing = {
+      Icon(
+        painterResource(R.drawable.ic_open_in_new_24dp),
+        contentDescription = stringResource(R.string.about_opens_browser),
+      )
+    },
+    onClick = onClick,
   )
 }

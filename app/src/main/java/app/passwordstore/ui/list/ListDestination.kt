@@ -73,6 +73,7 @@ fun ListDestination(
   onNewEntry: () -> Unit,
   onClone: () -> Unit,
   onSettings: () -> Unit,
+  onAbout: () -> Unit,
   onNoStore: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: SearchableRepositoryViewModel = hiltViewModel(),
@@ -159,6 +160,7 @@ fun ListDestination(
       },
       onGitOp = { op -> ifInitialized { runGit(op) } },
       onSettings = onSettings,
+      onAbout = onAbout,
       onNew = { dialog = ListDialog.Create },
       onMove = { dialog = ListDialog.Move },
       onDelete = {

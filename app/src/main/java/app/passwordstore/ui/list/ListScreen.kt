@@ -91,6 +91,7 @@ fun ListScreen(
   onSync: () -> Unit,
   onGitOp: (GitOp) -> Unit,
   onSettings: () -> Unit,
+  onAbout: () -> Unit,
   onNew: () -> Unit,
   onMove: () -> Unit,
   onDelete: () -> Unit,
@@ -133,7 +134,7 @@ fun ListScreen(
         SelectionBar(rows, selected, onClearSelection, onMove, onDelete, onRename, onPin)
       } else {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-          SearchField(query, gitOps, onQueryChange, onGitOp, onSettings, searchFocus)
+          SearchField(query, gitOps, onQueryChange, onGitOp, onSettings, onAbout, searchFocus)
           BreadcrumbBar(
             crumbsFor(path),
             stringResource(R.string.list_store_root),
@@ -238,6 +239,7 @@ private fun SearchField(
   onQueryChange: (String) -> Unit,
   onGitOp: (GitOp) -> Unit,
   onSettings: () -> Unit,
+  onAbout: () -> Unit,
   focus: FocusRequester,
 ) {
   val focusManager = LocalFocusManager.current
@@ -280,6 +282,13 @@ private fun SearchField(
                   onClick = {
                     menu = false
                     onSettings()
+                  },
+                )
+                DropdownMenuItem(
+                  text = { Text(stringResource(R.string.about)) },
+                  onClick = {
+                    menu = false
+                    onAbout()
                   },
                 )
               }

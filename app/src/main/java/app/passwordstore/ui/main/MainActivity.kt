@@ -30,6 +30,7 @@ import app.passwordstore.ui.git.base.BaseGitActivity
 import app.passwordstore.ui.list.ListDestination
 import app.passwordstore.ui.list.folderMoves
 import app.passwordstore.ui.prompts.PromptHost
+import app.passwordstore.ui.settings.AboutRoute
 import app.passwordstore.ui.settings.SettingsRoute
 import app.passwordstore.ui.settings.settingsGraph
 import app.passwordstore.ui.setup.GitServerRoute
@@ -130,6 +131,7 @@ class MainActivity : BaseGitActivity() {
               onSettings = {
                 if (nav.currentBackStackEntry?.id == entry.id) nav.navigate(SettingsRoute)
               },
+              onAbout = { if (nav.currentBackStackEntry?.id == entry.id) nav.navigate(AboutRoute) },
               onNoStore = {
                 // The store is gone (deleted from Settings): setup starts over.
                 if (nav.currentBackStackEntry?.id == entry.id)

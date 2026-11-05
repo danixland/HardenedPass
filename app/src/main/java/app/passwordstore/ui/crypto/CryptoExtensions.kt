@@ -48,12 +48,14 @@ fun getLongName(fullPath: String, repositoryPath: String, basename: String): Str
   }
 }
 
-/** Copies provided [text] to the clipboard, flagged sensitive. */
-fun FragmentActivity.copyTextToClipboard(text: String?) {
+/** Copies provided [text] to the clipboard; [sensitive] text is hidden from its preview. */
+fun FragmentActivity.copyTextToClipboard(text: String?, sensitive: Boolean = true) {
   val clipboard = clipboard ?: return
   val clip = ClipData.newPlainText("pgp_handler_result_pm", text)
-  clip.description.extras =
-    PersistableBundle().apply { putBoolean("android.content.extra.IS_SENSITIVE", true) }
+  if (sensitive) {
+    clip.description.extras =
+      PersistableBundle().apply { putBoolean("android.content.extra.IS_SENSITIVE", true) }
+  }
   clipboard.setPrimaryClip(clip)
 }
 

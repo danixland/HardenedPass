@@ -47,7 +47,6 @@ fun NavGraphBuilder.settingsGraph(activity: MainActivity, nav: NavHostController
   composable<SettingsRoute> { entry ->
     SettingsScreen(
       onSection = { if (onTop(entry)) nav.navigate(SettingsSectionRoute(it)) },
-      onAbout = { if (onTop(entry)) nav.navigate(AboutRoute) },
       onBack = { close(entry) },
     )
   }

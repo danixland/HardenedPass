@@ -427,5 +427,6 @@
   <string name="about_license">License</string>
   <string name="about_license_text">GNU General Public License v3.0 only. Copyright the Android Password Store authors and HardenedPass contributors.</string>
   <string name="about_libraries">Open source licenses</string>
+  <string name="about_opens_browser">Opens in the browser</string>
   <string name="about_no_browser">No browser found to open this link</string>
 </resources>
