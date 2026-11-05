@@ -220,5 +220,6 @@ be updated again.
   `openssl enc -aes-256-cbc -md sha256 -pbkdf2`; the key is the `ENCRYPT_KEY` repository
   secret. `scripts/signing-setup.sh` decrypts them, `signing-cleanup.sh` deletes them.
 - Pushing a `vX.Y.Z` tag runs `deploy_github_releases.yml`: it builds the signed APK and creates
-  a draft GitHub Release with `HardenedPass_vX.Y.Z.apk` and its `.sha256`.
+  a draft GitHub Release with `HardenedPass_vX.Y.Z.apk` and its `.sha256`. The notes are that
+  version's `CHANGELOG.md` section in full, so the release fails without one.
 - Never print, log or commit the keystore password or `ENCRYPT_KEY`.

@@ -37,5 +37,8 @@ jobs:
         apk="HardenedPass_${TAG}.apk"
         cp app/build/outputs/apk/release/app-release.apk "$apk"
         sha256sum "$apk" > "$apk.sha256"
-        gh release create "$TAG" "$apk" "$apk.sha256" --draft --title "$TAG" \
-          --notes "See [CHANGELOG.md](https://github.com/${GITHUB_REPOSITORY}/blob/${TAG}/CHANGELOG.md)."
+        # The release notes are this version's section of the changelog.
+        awk -v head="## [${TAG#v}]" 'index($0, head) == 1 { found = 1; next } /^## \[/ { found = 0 } found' \
+          CHANGELOG.md > notes.md
+        grep -q '[^[:space:]]' notes.md || { echo "No CHANGELOG.md section for $TAG"; exit 1; }
+        gh release create "$TAG" "$apk" "$apk.sha256" --draft --title "$TAG" --notes-file notes.md
