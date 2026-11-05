@@ -18,7 +18,6 @@
   </issue>
   <issue id="UnusedResources">
     <ignore path="src/main/res/values/bools.xml" />
-    <ignore path="src/main/res/values/colors_material3.xml" />
   </issue>
   <issue id="VectorPath">
     <ignore path="src/main/res/drawable/app_settings_alt_24px.xml" />

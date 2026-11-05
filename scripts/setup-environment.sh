@@ -39,4 +39,4 @@ export PATH="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${PATH}"
 
 sdkmanager --install 'build-tools;30.0.3' platform-tools "platforms;android-${API_LEVEL}"
 sdkmanager --install emulator
-sdkmanager --install "system-images;android-${API_LEVEL};google_apis;x86"
+sdkmanager --install "system-images;android-${API_LEVEL};google_apis;x86_64"

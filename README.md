@@ -25,6 +25,7 @@ How to install, set up and use the app: <https://danix.xyz/hardenedpass/>.
 - Decrypt screen no longer reachable by other apps with arbitrary file paths.
 - No build scans uploaded to third-party services.
 - No crash reporting (Sentry) and no Google Play Services; a single FOSS build.
+- Needs Android 12 or later.
 - Own application ID (`xyz.danix.hardenedpass`): installs next to upstream instead of over it.
 
 ## Building

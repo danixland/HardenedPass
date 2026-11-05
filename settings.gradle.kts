@@ -42,7 +42,6 @@ dependencyResolutionManagement {
         includeGroupByRegex("androidx.*")
         includeGroupByRegex("com.android.*")
         includeGroup("com.google.android.gms")
-        includeModule("com.google.android.material", "material")
       }
     }
     maven("https://androidx.dev/storage/compose-compiler/repository") {
