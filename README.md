@@ -1,5 +1,7 @@
 # HardenedPass
 
+![HardenedPass](media/banner.png)
+
 An Android client for [pass](https://www.passwordstore.org/), the standard Unix password manager.
 Passwords are stored as OpenPGP-encrypted files in a git repository, so the same store works with
 `pass` on the desktop and with this app on the phone. HardenedPass aims to work flawlessly on
