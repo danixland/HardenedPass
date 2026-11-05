@@ -16,18 +16,18 @@ import android.content.pm.PackageManager.ApplicationInfoFlags
 import android.content.pm.PackageManager.PackageInfoFlags
 import android.os.Build
 import android.util.Base64
-import android.view.View
 import android.view.autofill.AutofillManager
+import androidx.compose.material3.SnackbarDuration
 import androidx.core.content.getSystemService
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.BuildConfig
-import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
+import app.passwordstore.ui.prompts.Snack
+import app.passwordstore.ui.prompts.prompts
 import app.passwordstore.util.crypto.keystorePreferences
 import app.passwordstore.util.git.operation.GitOperation
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
-import com.google.android.material.snackbar.Snackbar
 import logcat.logcat
 
 /** Get an instance of [AutofillManager] */
@@ -70,7 +70,7 @@ suspend fun FragmentActivity.commitChange(message: String): Result<Unit, Throwab
           git.commit().setAll(true).setMessage(message),
         )
 
-      override fun preExecute(): Boolean {
+      override suspend fun preExecute(): Boolean {
         logcat { "Committing with message: '$message'" }
         return true
       }
@@ -78,16 +78,11 @@ suspend fun FragmentActivity.commitChange(message: String): Result<Unit, Throwab
     .execute()
 }
 
-/** Show a [Snackbar] in a [FragmentActivity]. */
+/** Shows a snackbar through this activity's [prompts]; it must host a `PromptHost`. */
 fun FragmentActivity.snackbar(
-  view: View = findViewById(android.R.id.content),
   message: String,
-  length: Int = Snackbar.LENGTH_SHORT,
-): Snackbar {
-  val snackbar = Snackbar.make(view, message, length)
-  snackbar.show()
-  return snackbar
-}
+  length: SnackbarDuration = SnackbarDuration.Short,
+): Snack = prompts.snackbar(message, length)
 
 /** Simplifies the common `getString(key, null) ?: defaultValue` case slightly */
 fun SharedPreferences.getString(key: String): String? = getString(key, null)

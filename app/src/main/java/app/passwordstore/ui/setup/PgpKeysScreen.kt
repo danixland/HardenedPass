@@ -31,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -59,7 +60,6 @@ import app.passwordstore.ui.main.MainActivity
 import app.passwordstore.util.extensions.commitChange
 import app.passwordstore.util.extensions.snackbar
 import com.github.michaelbull.result.onFailure
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -269,7 +269,7 @@ fun PgpKeysDestination(
         if (error != null) {
           activity.snackbar(
             message = activity.getString(R.string.store_create_failed, error),
-            length = Snackbar.LENGTH_LONG,
+            length = SnackbarDuration.Long,
           )
         } else {
           // A failed commit is reported like any git error; the store exists either way, and

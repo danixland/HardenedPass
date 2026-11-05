@@ -11,6 +11,8 @@ import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.crypto.getLongName
 import app.passwordstore.ui.git.base.BaseGitActivity
+import app.passwordstore.ui.prompts.Choice
+import app.passwordstore.ui.prompts.prompts
 import app.passwordstore.util.autofill.AutofillMatcher
 import app.passwordstore.util.extensions.base64
 import app.passwordstore.util.extensions.commitChange
@@ -20,11 +22,8 @@ import app.passwordstore.util.extensions.listFilesRecursively
 import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.settings.PasswordSortOrder
 import app.passwordstore.util.settings.PreferenceKeys
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import java.nio.file.Files
-import kotlin.coroutines.resume
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import logcat.LogPriority.ERROR
 import logcat.logcat
@@ -153,27 +152,20 @@ private suspend fun BaseGitActivity.moveFile(source: File, destination: File): B
     }
   if (!moved) {
     logcat(ERROR) { "Something went wrong while moving $source to $destination." }
-    // ponytail: View dialog like BaseGitActivity's git prompts; both move to Compose together.
-    MaterialAlertDialogBuilder(this)
-      .setTitle(R.string.password_move_error_title)
-      .setMessage(getString(R.string.password_move_error_message, source, destination))
-      .setPositiveButton(android.R.string.ok, null)
-      .show()
+    prompts.ask(
+      title = getString(R.string.password_move_error_title),
+      message = getString(R.string.password_move_error_message, source, destination),
+      confirm = getString(R.string.dialog_ok),
+    )
   }
   return moved
 }
 
 /** Shows [message] under [title] and suspends until answered; true when confirmed. */
-// ponytail: View dialog, see moveFile.
-private suspend fun Context.confirm(title: String, message: String): Boolean =
-  suspendCancellableCoroutine { cont ->
-    val dialog =
-      MaterialAlertDialogBuilder(this)
-        .setTitle(title)
-        .setMessage(message)
-        .setPositiveButton(R.string.dialog_ok) { _, _ -> cont.resume(true) }
-        .setNegativeButton(R.string.dialog_cancel) { _, _ -> cont.resume(false) }
-        .setOnCancelListener { cont.resume(false) }
-        .show()
-    cont.invokeOnCancellation { dialog.dismiss() }
-  }
+private suspend fun BaseGitActivity.confirm(title: String, message: String): Boolean =
+  prompts.ask(
+    title = title,
+    message = message,
+    confirm = getString(R.string.dialog_ok),
+    cancel = getString(R.string.dialog_cancel),
+  ) == Choice.Confirm

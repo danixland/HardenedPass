@@ -6,6 +6,8 @@ package app.passwordstore.util.git.sshj
 
 import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
+import app.passwordstore.ui.prompts.Prompts
+import app.passwordstore.ui.prompts.prompts
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.git.operation.CredentialFinder
 import app.passwordstore.util.settings.AuthMode
@@ -43,6 +45,12 @@ import org.eclipse.jgit.transport.URIish
 import org.eclipse.jgit.util.FS
 
 sealed class SshAuthMethod(val activity: AppCompatActivity) {
+  /**
+   * The activity's [Prompts], taken while it is alive: the SSH thread reads it later, and asking an
+   * activity that was finished meanwhile for it would create one nothing draws.
+   */
+  val prompts = activity.prompts
+
   class Password(activity: AppCompatActivity) : SshAuthMethod(activity)
 
   class SshKey(activity: AppCompatActivity) : SshAuthMethod(activity)
@@ -156,7 +164,14 @@ private class SshjSession(
     ssh.connect(uri.host, uri.port.takeUnless { it == -1 } ?: 22)
     if (!ssh.isConnected) throw IOException()
     val passwordAuth =
-      AuthPassword(CredentialFinder(authMethod.activity, AuthMode.Password, dispatcherProvider))
+      AuthPassword(
+        CredentialFinder(
+          authMethod.activity,
+          authMethod.prompts,
+          AuthMode.Password,
+          dispatcherProvider,
+        )
+      )
     when (authMethod) {
       is SshAuthMethod.Password -> {
         ssh.auth(username, passwordAuth)
@@ -166,7 +181,12 @@ private class SshjSession(
           AuthPublickey(
             SshKey.provide(
               ssh,
-              CredentialFinder(authMethod.activity, AuthMode.SshKey, dispatcherProvider),
+              CredentialFinder(
+                authMethod.activity,
+                authMethod.prompts,
+                AuthMode.SshKey,
+                dispatcherProvider,
+              ),
             )
           )
         ssh.auth(username, pubkeyAuth, passwordAuth)

@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.main.MainActivity
+import app.passwordstore.ui.prompts.Choice
+import app.passwordstore.ui.prompts.prompts
 import app.passwordstore.ui.setup.SetupStart
 import app.passwordstore.util.auth.BiometricAuthenticator
 import app.passwordstore.util.auth.BiometricAuthenticator.Result.CanceledByUser
@@ -24,7 +26,6 @@ import app.passwordstore.util.settings.AuthMode
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -131,22 +132,22 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
     return operationResult
   }
 
-  private fun onMissingSshKeyFile() {
-    MaterialAlertDialogBuilder(callingActivity)
-      .setMessage(callingActivity.resources.getString(R.string.ssh_preferences_dialog_text))
-      .setTitle(callingActivity.resources.getString(R.string.ssh_preferences_dialog_title))
-      .setPositiveButton(callingActivity.resources.getString(R.string.button_label_import)) { _, _
-        ->
-        getSshKey(false)
-      }
-      .setNegativeButton(
-        callingActivity.resources.getString(R.string.ssh_preferences_dialog_generate)
-      ) { _, _ ->
-        getSshKey(true)
-      }
-      // Cancel only closes the dialog: the calling activity is the app's own screen now.
-      .setNeutralButton(callingActivity.resources.getString(R.string.dialog_cancel), null)
-      .show()
+  private suspend fun onMissingSshKeyFile() {
+    val resources = callingActivity.resources
+    val choice =
+      callingActivity.prompts.ask(
+        title = resources.getString(R.string.ssh_preferences_dialog_title),
+        message = resources.getString(R.string.ssh_preferences_dialog_text),
+        confirm = resources.getString(R.string.button_label_import),
+        cancel = resources.getString(R.string.dialog_cancel),
+        other = resources.getString(R.string.ssh_preferences_dialog_generate),
+      )
+    when (choice) {
+      Choice.Confirm -> getSshKey(false)
+      Choice.Other -> getSshKey(true)
+      // Only closes the dialog: the calling activity is the app's own screen now.
+      Choice.Cancel -> {}
+    }
   }
 
   suspend fun executeAfterAuthentication(authMode: AuthMode): Result<Unit, Throwable> {
@@ -202,6 +203,7 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
           HttpsCredentialsProvider(
             CredentialFinder(
               callingActivity,
+              callingActivity.prompts,
               AuthMode.Password,
               hiltEntryPoint.dispatcherProvider(),
             )
@@ -214,7 +216,7 @@ abstract class GitOperation(protected val callingActivity: FragmentActivity) {
   }
 
   /** Called before execution of the Git operation. Return false to cancel. */
-  open fun preExecute() = true
+  open suspend fun preExecute() = true
 
   private suspend fun postExecute() {
     withContext(hiltEntryPoint.dispatcherProvider().io()) { sshSessionFactory?.close() }

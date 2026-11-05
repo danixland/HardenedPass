@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -41,7 +42,6 @@ import app.passwordstore.util.extensions.isInsideRepository
 import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.extensions.snackbar
 import app.passwordstore.util.settings.PreferenceKeys
-import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
 import java.io.File
 import kotlinx.coroutines.launch
@@ -142,7 +142,7 @@ fun EditorDestination(
               R.string.password_creation_file_delete_fail_message,
               it.nameWithoutExtension,
             ),
-          length = Snackbar.LENGTH_LONG,
+          length = SnackbarDuration.Long,
         )
       }
     }

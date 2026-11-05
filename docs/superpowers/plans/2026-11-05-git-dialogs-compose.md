@@ -433,7 +433,7 @@ private fun QuestionDialog(question: Question, prompts: Prompts) {
 private fun CredentialDialog(request: CredentialRequest, prompts: Prompts) {
   // remember, never rememberSaveable: the credential must not reach saved state.
   var text by remember { mutableStateOf("") }
-  var keep by remember { mutableStateOf(false) }
+  var keep by remember { mutableStateOf(true) }
   var revealed by remember { mutableStateOf(false) }
   var error by remember { mutableStateOf(request.error) }
   val focus = remember { FocusRequester() }
@@ -871,9 +871,10 @@ Each must behave as stated:
 | Check | Expected |
 |---|---|
 | SSH key with passphrase, wrong passphrase | Dialog returns with the error, cleared on typing, field empty |
-| Same, remember ticked, right passphrase | Next sync asks nothing |
+| Same, remember left ticked (the default), right passphrase | Next sync asks nothing |
 | Same, Cancel | Operation stops, no error dialog |
 | Tap outside the credential dialog | Same as Cancel |
+| Credential dialog opens | Keyboard comes up on the field |
 | Missing SSH key | Three buttons; outside tap only closes; Import and Generate open setup |
 | Unreachable server | Git error dialog |
 | Conflict, then "abort and push" | Recovery works; notice shows on a clean store |

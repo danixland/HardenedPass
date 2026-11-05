@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -60,7 +61,6 @@ import app.passwordstore.util.settings.AuthMode
 import app.passwordstore.util.settings.GitSettings.UpdateConnectionSettingsResult
 import app.passwordstore.util.settings.Protocol
 import com.github.michaelbull.result.fold
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 /**
@@ -210,7 +210,7 @@ fun GitServerDestination(
   BackHandler(enabled = viewModel.progress != null) {}
 
   fun say(message: String) {
-    activity.snackbar(message = message, length = Snackbar.LENGTH_LONG)
+    activity.snackbar(message = message, length = SnackbarDuration.Long)
   }
 
   // ponytail: a theme or locale change cancels the clone with the activity's scope, like every

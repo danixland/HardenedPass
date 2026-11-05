@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import app.passwordstore.R
 import app.passwordstore.injection.prefs.GitPreferences
+import app.passwordstore.ui.prompts.prompts
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.sharedPrefs
 import app.passwordstore.util.git.ErrorMessages
@@ -25,10 +26,8 @@ import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.andThen
 import com.github.michaelbull.result.mapError
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlinx.coroutines.withContext
 import logcat.asLog
 import logcat.logcat
 import net.schmizz.sshj.common.DisconnectReason
@@ -100,23 +99,17 @@ abstract class BaseGitActivity : AppCompatActivity() {
     finish()
   }
 
-  suspend fun promptOnErrorHandler(err: Throwable, onPromptDone: () -> Unit = {}) {
+  suspend fun promptOnErrorHandler(err: Throwable) {
     val error = rootCauseException(err)
     if (!isExplicitlyUserInitiatedError(error)) {
       gitPrefs.edit { remove(PreferenceKeys.HTTPS_PASSWORD) }
       sharedPrefs.edit { remove(PreferenceKeys.SSH_OPENKEYSTORE_KEYID) }
       logcat { error.asLog() }
-      withContext(dispatcherProvider.main()) {
-        MaterialAlertDialogBuilder(this@BaseGitActivity).run {
-          setTitle(resources.getString(R.string.jgit_error_dialog_title))
-          setMessage(ErrorMessages[error])
-          setPositiveButton(resources.getString(R.string.dialog_ok)) { _, _ -> }
-          setOnDismissListener { onPromptDone() }
-          show()
-        }
-      }
-    } else {
-      onPromptDone()
+      prompts.ask(
+        title = getString(R.string.jgit_error_dialog_title),
+        message = ErrorMessages[error],
+        confirm = getString(R.string.dialog_ok),
+      )
     }
   }
 

@@ -29,6 +29,7 @@ import app.passwordstore.ui.entry.EntryViewModel
 import app.passwordstore.ui.git.base.BaseGitActivity
 import app.passwordstore.ui.list.ListDestination
 import app.passwordstore.ui.list.folderMoves
+import app.passwordstore.ui.prompts.PromptHost
 import app.passwordstore.ui.settings.SettingsRoute
 import app.passwordstore.ui.settings.settingsGraph
 import app.passwordstore.ui.setup.GitServerRoute
@@ -199,6 +200,7 @@ class MainActivity : BaseGitActivity() {
           setupGraph(this@MainActivity, nav)
           settingsGraph(this@MainActivity, nav)
         }
+        PromptHost(this@MainActivity)
       }
     }
   }
@@ -263,7 +265,7 @@ class MainActivity : BaseGitActivity() {
      */
     // ponytail: a second instance instead of in-graph navigation. Autofill's activities stay
     // outside the graph for good (the autofill service starts them); the git operations' "No SSH
-    // key" dialog could navigate in-graph once it becomes a Compose dialog.
+    // key" dialog could navigate in-graph if git operations could reach the nav controller.
     fun setupIntent(context: Context, start: SetupStart): Intent =
       Intent(context, MainActivity::class.java).putExtra(EXTRA_SETUP, start.name)
   }

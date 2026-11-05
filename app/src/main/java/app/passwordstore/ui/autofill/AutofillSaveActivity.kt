@@ -20,6 +20,7 @@ import app.passwordstore.ui.editor.EditorDestination
 import app.passwordstore.ui.editor.EditorForm
 import app.passwordstore.ui.editor.SaveResult
 import app.passwordstore.ui.editor.passContent
+import app.passwordstore.ui.prompts.PromptHost
 import app.passwordstore.util.autofill.AutofillMatcher
 import app.passwordstore.util.autofill.AutofillPreferences
 import app.passwordstore.util.autofill.AutofillResponseBuilder
@@ -139,6 +140,7 @@ class AutofillSaveActivity : AppCompatActivity() {
           onSaved = ::finishSaved,
           generate = generate,
         )
+        PromptHost(this@AutofillSaveActivity)
       }
     }
   }

@@ -6,8 +6,10 @@
 package app.passwordstore.util.git
 
 import android.widget.Toast
+import androidx.compose.material3.SnackbarDuration
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
+import app.passwordstore.ui.prompts.prompts
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.extensions.snackbar
 import app.passwordstore.util.extensions.unsafeLazy
@@ -17,7 +19,6 @@ import app.passwordstore.util.git.operation.GitOperation
 import app.passwordstore.util.settings.GitSettings
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.runCatching
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -45,10 +46,10 @@ class GitCommandExecutor(
   suspend fun execute(): Result<Unit, Throwable> {
     val gitSettings = hiltEntryPoint.gitSettings()
     val dispatcherProvider = hiltEntryPoint.dispatcherProvider()
-    val snackbar =
+    val running =
       activity.snackbar(
         message = activity.resources.getString(R.string.git_operation_running),
-        length = Snackbar.LENGTH_INDEFINITE,
+        length = SnackbarDuration.Indefinite,
       )
     // Count the number of uncommitted files
     var nbChanges = 0
@@ -123,7 +124,7 @@ class GitCommandExecutor(
           }
         }
       }
-      .also { snackbar.dismiss() }
+      .also { activity.prompts.dismiss(running) }
   }
 
   @EntryPoint

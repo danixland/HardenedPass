@@ -7,8 +7,8 @@ package app.passwordstore.util.git.operation
 import androidx.appcompat.app.AppCompatActivity
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
+import app.passwordstore.ui.prompts.prompts
 import app.passwordstore.util.extensions.unsafeLazy
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.eclipse.jgit.api.GitCommand
 import org.eclipse.jgit.api.RebaseCommand
 import org.eclipse.jgit.api.ResetCommand
@@ -50,16 +50,14 @@ class BreakOutOfDetached(callingActivity: AppCompatActivity) : GitOperation(call
     }
   }
 
-  override fun preExecute() =
+  override suspend fun preExecute() =
     if (!git.repository.repositoryState.isRebasing && !merging) {
-      MaterialAlertDialogBuilder(callingActivity)
-        .setTitle(callingActivity.resources.getString(R.string.git_abort_and_push_title))
-        .setMessage(
-          callingActivity.resources.getString(R.string.git_break_out_of_detached_unneeded)
-        )
-        // Only closes the dialog: the calling activity is the app's main screen.
-        .setPositiveButton(callingActivity.resources.getString(R.string.dialog_ok), null)
-        .show()
+      val resources = callingActivity.resources
+      callingActivity.prompts.ask(
+        title = resources.getString(R.string.git_abort_and_push_title),
+        message = resources.getString(R.string.git_break_out_of_detached_unneeded),
+        confirm = resources.getString(R.string.dialog_ok),
+      )
       false
     } else {
       true

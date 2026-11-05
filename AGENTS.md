@@ -80,8 +80,8 @@ names (`e2e_pass`, not `pass`, which is the real `pass` and reaches a real store
 `adb shell input`, `uiautomator dump` and `screencap`; Compose nodes carry `text` and
 `content-desc` in the dump, no resource ids, so match on those. FABs ("Import PGP key", "New
 entry") carry only `content-desc`, and the list's search bar is itself an `EditText`. The entry
-view, the editor and its generator sheet, the proxy screen, the passphrase dialogs and the
-autofill decryption and save windows set `FLAG_SECURE`, so screenshots of them are black; read
+view, the editor and its generator sheet, the proxy screen, the passphrase dialogs, the git
+credential dialog and the autofill decryption and save windows set `FLAG_SECURE`, so screenshots of them are black; read
 them from the `uiautomator` dump. After boot, wait until the keyguard is dismissed and user
 storage is unlocked before `adb uninstall` or `push-keys`: earlier, uninstall fails with
 `DELETE_FAILED_INTERNAL_ERROR` and `/sdcard/Download` does not exist yet. In a Compose text

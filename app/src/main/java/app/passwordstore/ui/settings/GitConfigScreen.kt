@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -54,7 +55,6 @@ import app.passwordstore.ui.main.MainActivity
 import app.passwordstore.ui.setup.SetupDialog
 import app.passwordstore.util.extensions.snackbar
 import com.github.michaelbull.result.fold
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 /**
@@ -223,7 +223,7 @@ fun GitConfigDestination(
       }
     activity.snackbar(
       message = activity.getString(R.string.git_tool_done, activity.getString(label)),
-      length = Snackbar.LENGTH_LONG,
+      length = SnackbarDuration.Long,
     )
     viewModel.done = null
   }

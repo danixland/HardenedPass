@@ -5,24 +5,17 @@
 
 package app.passwordstore.util.git.operation
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.view.LayoutInflater
-import android.view.WindowManager
 import androidx.annotation.StringRes
 import androidx.core.content.edit
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
 import app.passwordstore.injection.prefs.GitPreferences
+import app.passwordstore.ui.prompts.Prompts
 import app.passwordstore.util.coroutines.DispatcherProvider
 import app.passwordstore.util.git.sshj.InteractivePasswordFinder
 import app.passwordstore.util.settings.AuthMode
 import app.passwordstore.util.settings.PreferenceKeys
-import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -32,6 +25,7 @@ import kotlin.coroutines.resume
 
 class CredentialFinder(
   private val callingActivity: FragmentActivity,
+  private val prompts: Prompts,
   private val authMode: AuthMode,
   dispatcherProvider: DispatcherProvider,
 ) : InteractivePasswordFinder(dispatcherProvider) {
@@ -71,42 +65,18 @@ class CredentialFinder(
     if (isRetry) gitOperationPrefs.edit { remove(credentialPref) }
     val storedCredential = gitOperationPrefs.getString(credentialPref, null)
     if (storedCredential == null) {
-      val layoutInflater = LayoutInflater.from(callingActivity)
-
-      @SuppressLint("InflateParams")
-      val dialogView = layoutInflater.inflate(R.layout.git_credential_layout, null)
-      val credentialLayout =
-        dialogView.findViewById<TextInputLayout>(R.id.git_auth_passphrase_layout)
-      val editCredential = dialogView.findViewById<TextInputEditText>(R.id.git_auth_credential)
-      editCredential.setHint(hintRes)
-      val rememberCredential =
-        dialogView.findViewById<MaterialCheckBox>(R.id.git_auth_remember_credential)
-      rememberCredential.setText(rememberRes)
-      if (isRetry) {
-        credentialLayout.error = callingActivity.resources.getString(errorRes)
-        // Reset error when user starts entering a password
-        editCredential.doOnTextChanged { _, _, _, _ -> credentialLayout.error = null }
+      val resources = callingActivity.resources
+      prompts.askCredential(
+        message = resources.getString(messageRes),
+        hint = resources.getString(hintRes),
+        remember = resources.getString(rememberRes),
+        error = if (isRetry) resources.getString(errorRes) else null,
+      ) { answer ->
+        if (answer?.remember == true) {
+          gitOperationPrefs.edit { putString(credentialPref, answer.text) }
+        }
+        cont.resume(answer?.text)
       }
-      MaterialAlertDialogBuilder(callingActivity)
-        .run {
-          setTitle(R.string.passphrase_dialog_title)
-          setMessage(messageRes)
-          setView(dialogView)
-          setPositiveButton(R.string.dialog_ok) { _, _ ->
-            val credential = editCredential.text.toString()
-            if (rememberCredential.isChecked) {
-              gitOperationPrefs.edit { putString(credentialPref, credential) }
-            }
-            cont.resume(credential)
-          }
-          setNegativeButton(R.string.dialog_cancel) { _, _ -> cont.resume(null) }
-          setOnCancelListener { cont.resume(null) }
-          create()
-        }
-        .run {
-          window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-          show()
-        }
     } else {
       cont.resume(storedCredential)
     }
