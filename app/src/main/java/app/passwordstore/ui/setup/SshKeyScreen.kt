@@ -195,7 +195,7 @@ fun SshKeyDestination(
       busy = viewModel.busy,
       onImport = { if (SshKey.exists) replace = true else picker.launch(arrayOf("*/*")) },
       onGenerate = onGenerate,
-      onCopy = { publicKey?.let { activity.copyTextToClipboard(it) } },
+      onCopy = { publicKey?.let { activity.copyTextToClipboard(it, sensitive = false) } },
       onShare = { publicKey?.let { activity.startActivity(shareKey(it)) } },
       onBack = { if (!viewModel.busy) onClose() },
     )
