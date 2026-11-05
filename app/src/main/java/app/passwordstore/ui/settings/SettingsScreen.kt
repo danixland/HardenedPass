@@ -35,6 +35,7 @@ import app.passwordstore.BuildConfig
 import app.passwordstore.R
 import app.passwordstore.ui.compose.GroupedSurface
 import app.passwordstore.util.features.Feature
+import app.passwordstore.util.settings.Constants
 import app.passwordstore.util.settings.PreferenceKeys
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
@@ -229,7 +230,7 @@ fun SettingsSectionScreen(
           summary =
             stringResource(
               R.string.pref_clipboard_timeout_summary,
-              state.clipboardTimeout.ifEmpty { "45" },
+              state.clipboardTimeout.ifEmpty { Constants.DEFAULT_DECRYPTION_TIMEOUT.toString() },
             ),
           keyboardType = KeyboardType.Number,
         )
