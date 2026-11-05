@@ -5,8 +5,6 @@
 
 package app.passwordstore.injection
 
-import android.os.Build
-import app.passwordstore.util.autofill.Api26AutofillResponseBuilder
 import app.passwordstore.util.autofill.Api30AutofillResponseBuilder
 import app.passwordstore.util.autofill.AutofillResponseBuilder
 import dagger.Module
@@ -21,11 +19,6 @@ object AutofillResponseBuilderModule {
 
   @Provides
   @Reusable
-  fun provideAutofillResponseBuilder(): AutofillResponseBuilder.Factory {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      Api30AutofillResponseBuilder.Factory
-    } else {
-      Api26AutofillResponseBuilder.Factory
-    }
-  }
+  fun provideAutofillResponseBuilder(): AutofillResponseBuilder.Factory =
+    Api30AutofillResponseBuilder.Factory
 }

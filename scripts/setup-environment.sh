@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Installs the latest command line tools and sets up the necessary packages for an Android emulator
-# for API level $ANDROID_API_LEVEL, or API 30 if unspecified.
+# for API level $ANDROID_API_LEVEL, or API 31 if unspecified.
 
 set -euo pipefail
 
@@ -23,9 +23,9 @@ else
   exit 1
 fi
 
-[ -n "${ANDROID_API_LEVEL:-}" ] || { echo "ANDROID_API_LEVEL not defined; defaulting to 30"; }
+[ -n "${ANDROID_API_LEVEL:-}" ] || { echo "ANDROID_API_LEVEL not defined; defaulting to 31"; }
 
-API_LEVEL="${ANDROID_API_LEVEL:-30}"
+API_LEVEL="${ANDROID_API_LEVEL:-31}"
 
 unzip -qo /tmp/tools.zip -d "${ANDROID_SDK_ROOT}/latest"
 mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools"

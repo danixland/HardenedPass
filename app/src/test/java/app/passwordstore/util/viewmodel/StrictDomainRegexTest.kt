@@ -10,13 +10,11 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 private infix fun String.matchedForDomain(domain: String) =
   SearchableRepositoryViewModel.generateStrictDomainRegex(domain)?.containsMatchIn(this) == true
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [23])
 class StrictDomainRegexTest {
 
   @Test

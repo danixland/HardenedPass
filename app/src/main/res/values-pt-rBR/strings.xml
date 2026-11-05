@@ -37,7 +37,6 @@
   <string name="git_commit_move_multiple_text">Mova múltiplas senhas para %1$s.</string>
   <string name="git_commit_gpg_id">Inicializar IDs GPG em %1$s.</string>
   <!-- PGPHandler -->
-  <string name="clipboard_copied_text">Copiado para a área de transferência</string>
   <string name="file_toast_text">Por favor, informe um nome de arquivo</string>
   <string name="empty_toast_text">Você não pode usar uma senha vazia ou conteúdo extra vazio</string>
   <!-- Git Async Task -->
@@ -232,7 +231,6 @@
   <string name="pref_app_theme_title">Tema do aplicativo</string>
   <string name="pref_app_theme_value_light">Claro</string>
   <string name="pref_app_theme_value_dark">Escuro</string>
-  <string name="pref_app_theme_value_battery_saver">Configurado pela Economia de bateria</string>
   <string name="pref_app_theme_value_follow_system">Padrão do sistema</string>
   <string name="connection_mode_ssh_key">Chave SSH</string>
   <string name="connection_mode_basic_authentication">Senha</string>

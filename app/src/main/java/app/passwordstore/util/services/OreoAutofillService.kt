@@ -5,7 +5,6 @@
 package app.passwordstore.util.services
 
 import android.content.Context
-import android.os.Build
 import android.os.CancellationSignal
 import android.service.autofill.AutofillService
 import android.service.autofill.FillCallback
@@ -74,16 +73,12 @@ class OreoAutofillService : AutofillService() {
           return
         }
     if (structure.activityComponent.packageName in DENYLISTED_PACKAGES) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        callback.onSuccess(
-          FillResponse.Builder().run {
-            disableAutofill(DISABLE_AUTOFILL_DURATION_MS)
-            build()
-          }
-        )
-      } else {
-        callback.onSuccess(null)
-      }
+      callback.onSuccess(
+        FillResponse.Builder().run {
+          disableAutofill(DISABLE_AUTOFILL_DURATION_MS)
+          build()
+        }
+      )
       return
     }
     val formToFill =

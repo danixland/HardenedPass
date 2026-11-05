@@ -12,7 +12,7 @@ package com.github.androidpasswordstore.autofillparser {
     method public static String computeCertificatesHash(android.content.Context context, String appPackage);
   }
 
-  @RequiresApi(android.os.Build.VERSION_CODES.O) public abstract sealed nonexhaustive class AutofillScenario<T> {
+  public abstract sealed nonexhaustive class AutofillScenario<T> {
     method @InaccessibleFromKotlin public final java.util.List<T> getFieldsToSave();
     method @InaccessibleFromKotlin public final boolean getHasFieldsToSave();
     method @InaccessibleFromKotlin public final boolean getHasPasswordFieldsToSave();
@@ -35,13 +35,13 @@ package com.github.androidpasswordstore.autofillparser {
   }
 
   public final class AutofillScenarioKt {
-    method @KotlinOnly @RequiresApi(android.os.Build.VERSION_CODES.O) public static void fillWith(android.service.autofill.Dataset.Builder, com.github.androidpasswordstore.autofillparser.AutofillScenario<android.view.autofill.AutofillId> scenario, com.github.androidpasswordstore.autofillparser.AutofillAction action, com.github.androidpasswordstore.autofillparser.Credentials? credentials);
-    method @InaccessibleFromKotlin @RequiresApi(android.os.Build.VERSION_CODES.O) public static void fillWithAutofillId(android.service.autofill.Dataset.Builder, com.github.androidpasswordstore.autofillparser.AutofillScenario<android.view.autofill.AutofillId> scenario, com.github.androidpasswordstore.autofillparser.AutofillAction action, com.github.androidpasswordstore.autofillparser.Credentials? credentials);
-    method @InaccessibleFromKotlin @RequiresApi(android.os.Build.VERSION_CODES.O) public static String? getPasswordValue(com.github.androidpasswordstore.autofillparser.AutofillScenario<? extends android.app.assist.AssistStructure.ViewNode>);
-    method @InaccessibleFromKotlin @RequiresApi(android.os.Build.VERSION_CODES.O) public static String? getUsernameValue(com.github.androidpasswordstore.autofillparser.AutofillScenario<? extends android.app.assist.AssistStructure.ViewNode>);
-    method @RequiresApi(android.os.Build.VERSION_CODES.O) public static com.github.androidpasswordstore.autofillparser.AutofillScenario<android.app.assist.AssistStructure.ViewNode>? recoverNodes(com.github.androidpasswordstore.autofillparser.AutofillScenario<android.view.autofill.AutofillId>, android.app.assist.AssistStructure structure);
-    property @RequiresApi(android.os.Build.VERSION_CODES.O) public static String? com.github.androidpasswordstore.autofillparser.AutofillScenario<android.app.assist.AssistStructure.ViewNode>.passwordValue;
-    property @RequiresApi(android.os.Build.VERSION_CODES.O) public static String? com.github.androidpasswordstore.autofillparser.AutofillScenario<android.app.assist.AssistStructure.ViewNode>.usernameValue;
+    method @KotlinOnly public static void fillWith(android.service.autofill.Dataset.Builder, com.github.androidpasswordstore.autofillparser.AutofillScenario<android.view.autofill.AutofillId> scenario, com.github.androidpasswordstore.autofillparser.AutofillAction action, com.github.androidpasswordstore.autofillparser.Credentials? credentials);
+    method @InaccessibleFromKotlin public static void fillWithAutofillId(android.service.autofill.Dataset.Builder, com.github.androidpasswordstore.autofillparser.AutofillScenario<android.view.autofill.AutofillId> scenario, com.github.androidpasswordstore.autofillparser.AutofillAction action, com.github.androidpasswordstore.autofillparser.Credentials? credentials);
+    method @InaccessibleFromKotlin public static String? getPasswordValue(com.github.androidpasswordstore.autofillparser.AutofillScenario<? extends android.app.assist.AssistStructure.ViewNode>);
+    method @InaccessibleFromKotlin public static String? getUsernameValue(com.github.androidpasswordstore.autofillparser.AutofillScenario<? extends android.app.assist.AssistStructure.ViewNode>);
+    method public static com.github.androidpasswordstore.autofillparser.AutofillScenario<android.app.assist.AssistStructure.ViewNode>? recoverNodes(com.github.androidpasswordstore.autofillparser.AutofillScenario<android.view.autofill.AutofillId>, android.app.assist.AssistStructure structure);
+    property public static String? com.github.androidpasswordstore.autofillparser.AutofillScenario<android.app.assist.AssistStructure.ViewNode>.passwordValue;
+    property public static String? com.github.androidpasswordstore.autofillparser.AutofillScenario<android.app.assist.AssistStructure.ViewNode>.usernameValue;
   }
 
   public enum BrowserAutofillSupportLevel {
@@ -68,10 +68,10 @@ package com.github.androidpasswordstore.autofillparser {
   }
 
   public final class FeatureAndTrustDetectionKt {
-    method @RequiresApi(android.os.Build.VERSION_CODES.O) public static java.util.List<kotlin.Pair<java.lang.String,com.github.androidpasswordstore.autofillparser.BrowserAutofillSupportLevel>> getInstalledBrowsersWithAutofillSupportLevel(android.content.Context context);
+    method public static java.util.List<kotlin.Pair<java.lang.String,com.github.androidpasswordstore.autofillparser.BrowserAutofillSupportLevel>> getInstalledBrowsersWithAutofillSupportLevel(android.content.Context context);
   }
 
-  @RequiresApi(android.os.Build.VERSION_CODES.O) public final class FillableForm {
+  public final class FillableForm {
     method @InaccessibleFromKotlin public com.github.androidpasswordstore.autofillparser.FormOrigin getFormOrigin();
     method @InaccessibleFromKotlin public java.util.List<android.view.autofill.AutofillId> getIgnoredIds();
     method @InaccessibleFromKotlin public Integer? getSaveFlags();
@@ -88,7 +88,7 @@ package com.github.androidpasswordstore.autofillparser {
     method public com.github.androidpasswordstore.autofillparser.FillableForm? parseAssistStructure(android.content.Context context, android.app.assist.AssistStructure structure, boolean isManualRequest, optional kotlin.sequences.Sequence<java.lang.String> customSuffixes);
   }
 
-  @RequiresApi(android.os.Build.VERSION_CODES.O) public final class FixedSaveCallback {
+  public final class FixedSaveCallback {
     ctor public FixedSaveCallback(android.content.Context context, android.service.autofill.SaveCallback callback);
     method public void onFailure(CharSequence message);
     method public void onSuccess(android.content.IntentSender intentSender);

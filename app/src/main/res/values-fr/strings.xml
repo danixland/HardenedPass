@@ -36,7 +36,6 @@
   <string name="git_commit_move_text">Renommer %1$sà %2$s. </string>
   <string name="git_commit_move_multiple_text">Déplacement de mots de passe vers %1$s.</string>
   <!-- PGPHandler -->
-  <string name="clipboard_copied_text">Copié dans le presse-papiers</string>
   <string name="file_toast_text">Veuillez fournir un nom de fichier</string>
   <string name="empty_toast_text">Vous ne pouvez pas utiliser un mot de passe vide ou des données supplémentaires vide</string>
   <!-- Git Async Task -->
@@ -220,7 +219,6 @@
   <string name="pref_app_theme_title">Thème de l\'application</string>
   <string name="pref_app_theme_value_light">Clair</string>
   <string name="pref_app_theme_value_dark">Sombre</string>
-  <string name="pref_app_theme_value_battery_saver">Défini par l\'économiseur de batterie</string>
   <string name="pref_app_theme_value_follow_system">Valeur par défaut du système</string>
   <string name="connection_mode_ssh_key">Clé SSH</string>
   <string name="connection_mode_basic_authentication">Mot de passe</string>

@@ -36,7 +36,6 @@
   <string name="git_commit_move_multiple_text">将多个密码移至%1$s</string>
   <string name="git_commit_gpg_id">初始化 %1$s 中的 GPG ID</string>
   <!-- PGPHandler -->
-  <string name="clipboard_copied_text">复制到剪切板</string>
   <string name="file_toast_text">请提供文件名</string>
   <string name="empty_toast_text">您不能使用空密码或空额外内容</string>
   <!-- Git Async Task -->
@@ -233,7 +232,6 @@
   <string name="pref_app_theme_title">应用主题</string>
   <string name="pref_app_theme_value_light">浅色</string>
   <string name="pref_app_theme_value_dark">深色</string>
-  <string name="pref_app_theme_value_battery_saver">由省电模式设定</string>
   <string name="pref_app_theme_value_follow_system">系统默认</string>
   <string name="connection_mode_ssh_key">SSH密钥</string>
   <string name="connection_mode_basic_authentication">密码</string>

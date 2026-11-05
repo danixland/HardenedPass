@@ -11,7 +11,6 @@ import android.service.autofill.Dataset
 import android.service.autofill.Field
 import android.view.autofill.AutofillId
 import android.view.autofill.AutofillValue
-import androidx.annotation.RequiresApi
 import androidx.core.os.BundleCompat
 import logcat.LogPriority.ERROR
 import logcat.asLog
@@ -30,7 +29,6 @@ public enum class AutofillAction {
  * [FormField], [AssistStructure.ViewNode] or [AutofillId], depending on how much metadata about the
  * field is needed and available in the particular situation.
  */
-@RequiresApi(Build.VERSION_CODES.O)
 public sealed class AutofillScenario<out T : Any> {
 
   public companion object {
@@ -187,7 +185,6 @@ public sealed class AutofillScenario<out T : Any> {
     get() = username != null
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 internal data class ClassifiedAutofillScenario<T : Any>(
   override val username: T?,
   override val fillUsername: Boolean,
@@ -212,7 +209,6 @@ internal data class ClassifiedAutofillScenario<T : Any>(
     get() = newPassword.ifEmpty { currentPassword }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 internal data class GenericAutofillScenario<T : Any>(
   override val username: T?,
   override val fillUsername: Boolean,
@@ -236,7 +232,6 @@ internal data class GenericAutofillScenario<T : Any>(
     get() = genericPassword
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 internal fun AutofillScenario<FormField>.passesOriginCheck(singleOriginMode: Boolean): Boolean {
   return if (singleOriginMode) {
     // In single origin mode, only the browsers URL bar (which is never filled) should have
@@ -249,7 +244,6 @@ internal fun AutofillScenario<FormField>.passesOriginCheck(singleOriginMode: Boo
   }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @JvmName("fillWithAutofillId")
 public fun Dataset.Builder.fillWith(
   scenario: AutofillScenario<AutofillId>,
@@ -272,7 +266,6 @@ public fun Dataset.Builder.fillWith(
   }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 internal inline fun <T : Any, S : Any> AutofillScenario<T>.map(
   transform: (T) -> S
 ): AutofillScenario<S> {
@@ -292,7 +285,6 @@ internal inline fun <T : Any, S : Any> AutofillScenario<T>.map(
   return builder.build()
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @JvmName("toBundleAutofillId")
 internal fun AutofillScenario<AutofillId>.toBundle(): Bundle =
   when (this) {
@@ -321,7 +313,6 @@ internal fun AutofillScenario<AutofillId>.toBundle(): Bundle =
     }
   }
 
-@RequiresApi(Build.VERSION_CODES.O)
 public fun AutofillScenario<AutofillId>.recoverNodes(
   structure: AssistStructure
 ): AutofillScenario<AssistStructure.ViewNode>? {
@@ -329,13 +320,11 @@ public fun AutofillScenario<AutofillId>.recoverNodes(
 }
 
 public val AutofillScenario<AssistStructure.ViewNode>.usernameValue: String?
-  @RequiresApi(Build.VERSION_CODES.O)
   get() {
     val value = username?.autofillValue ?: return null
     return if (value.isText) value.textValue.toString() else null
   }
 public val AutofillScenario<AssistStructure.ViewNode>.passwordValue: String?
-  @RequiresApi(Build.VERSION_CODES.O)
   get() {
     val distinctValues =
       passwordFieldsToSave

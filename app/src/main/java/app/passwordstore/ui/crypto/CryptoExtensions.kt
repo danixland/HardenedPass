@@ -7,9 +7,7 @@ package app.passwordstore.ui.crypto
 
 import android.content.ClipData
 import android.content.Intent
-import android.os.Build
 import android.os.PersistableBundle
-import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.R
 import app.passwordstore.crypto.PGPIdentifier
@@ -17,7 +15,6 @@ import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.util.extensions.clipboard
 import app.passwordstore.util.extensions.getString
 import app.passwordstore.util.extensions.sharedPrefs
-import app.passwordstore.util.extensions.snackbar
 import app.passwordstore.util.services.ClipboardService
 import app.passwordstore.util.settings.Constants
 import app.passwordstore.util.settings.PreferenceKeys
@@ -51,23 +48,13 @@ fun getLongName(fullPath: String, repositoryPath: String, basename: String): Str
   }
 }
 
-/**
- * Copies provided [text] to the clipboard, flagged sensitive. Below Android 11 it also shows a
- * snackbar, which can be disabled by passing [showSnackbar] as false.
- */
-fun FragmentActivity.copyTextToClipboard(
-  text: String?,
-  showSnackbar: Boolean = true,
-  @StringRes snackbarTextRes: Int = R.string.clipboard_copied_text,
-) {
+/** Copies provided [text] to the clipboard, flagged sensitive. */
+fun FragmentActivity.copyTextToClipboard(text: String?) {
   val clipboard = clipboard ?: return
   val clip = ClipData.newPlainText("pgp_handler_result_pm", text)
   clip.description.extras =
     PersistableBundle().apply { putBoolean("android.content.extra.IS_SENSITIVE", true) }
   clipboard.setPrimaryClip(clip)
-  if (showSnackbar && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-    snackbar(message = resources.getString(snackbarTextRes))
-  }
 }
 
 /**

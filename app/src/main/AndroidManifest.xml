@@ -30,8 +30,7 @@
     android:label="@string/app_name"
     android:supportsRtl="true"
     android:theme="@style/AppThemeM3"
-    tools:ignore="GoogleAppIndexingWarning"
-    tools:targetApi="s">
+    tools:ignore="GoogleAppIndexingWarning">
 
     <activity
       android:name=".ui.main.LaunchActivity"

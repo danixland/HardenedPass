@@ -10,8 +10,6 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -168,12 +166,8 @@ constructor(
     return withContext(dispatcherProvider.io()) {
       runCatching {
           val bitmap =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-              ImageDecoder.decodeBitmap(ImageDecoder.createSource(resolver, uri))
-                .copy(Bitmap.Config.ARGB_8888, false)
-            } else {
-              @Suppress("DEPRECATION") MediaStore.Images.Media.getBitmap(resolver, uri)
-            }
+            ImageDecoder.decodeBitmap(ImageDecoder.createSource(resolver, uri))
+              .copy(Bitmap.Config.ARGB_8888, false)
           val pixels = IntArray(bitmap.width * bitmap.height)
           bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
           val source = RGBLuminanceSource(bitmap.width, bitmap.height, pixels)

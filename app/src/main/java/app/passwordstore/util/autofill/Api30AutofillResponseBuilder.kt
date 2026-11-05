@@ -31,7 +31,6 @@ import logcat.asLog
 import logcat.logcat
 
 /** Implements [AutofillResponseBuilder]'s methods for API 30 and above */
-@RequiresApi(Build.VERSION_CODES.R)
 class Api30AutofillResponseBuilder private constructor(form: FillableForm) :
   AutofillResponseBuilder {
 

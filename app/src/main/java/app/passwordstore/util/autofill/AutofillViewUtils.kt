@@ -10,7 +10,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.drawable.Icon
-import android.os.Build
 import android.service.autofill.InlinePresentation
 import android.view.View
 import android.widget.RemoteViews
@@ -47,8 +46,6 @@ fun makeInlinePresentation(
   imeSpec: InlinePresentationSpec,
   metadata: DatasetMetadata,
 ): InlinePresentation? {
-  if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return null
-
   if (UiVersions.INLINE_UI_VERSION_1 !in UiVersions.getVersions(imeSpec.style)) return null
 
   val launchIntent =
@@ -56,11 +53,7 @@ fun makeInlinePresentation(
       context,
       0,
       Intent(context, LaunchActivity::class.java),
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        PendingIntent.FLAG_MUTABLE
-      } else {
-        0
-      },
+      PendingIntent.FLAG_MUTABLE,
     )
   val slice =
     InlineSuggestionUi.newContentBuilder(launchIntent).run {
@@ -100,8 +93,6 @@ fun makeGenerateAndFillMetadata(context: Context) =
     null,
     R.drawable.ic_autofill_new_password,
   )
-
-fun makeEmptyMetadata() = DatasetMetadata("PLACEHOLDER", "PLACEHOLDER", R.mipmap.ic_launcher)
 
 fun makeWarningMetadata(context: Context) =
   DatasetMetadata(

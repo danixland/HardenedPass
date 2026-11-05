@@ -7,7 +7,6 @@ package app.passwordstore.util.crypto
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.security.keystore.StrongBoxUnavailableException
@@ -66,18 +65,14 @@ fun keystoreAesKey(
         .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
         .apply(configure)
-        .apply {
-          if (useStrongBox && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            setIsStrongBoxBacked(true)
-          }
-        }
+        .setIsStrongBoxBacked(useStrongBox)
         .build()
     return KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore").run {
       init(spec)
       generateKey()
     }
   }
-  if (!strongBox || Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return generate(false)
+  if (!strongBox) return generate(false)
   return try {
     generate(true)
   } catch (_: StrongBoxUnavailableException) {
@@ -91,14 +86,10 @@ fun keystoreAesKey(
  */
 fun KeyGenParameterSpec.Builder.requireUserAuthentication(seconds: Int) {
   setUserAuthenticationRequired(true)
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-    setUserAuthenticationParameters(
-      seconds,
-      KeyProperties.AUTH_DEVICE_CREDENTIAL or KeyProperties.AUTH_BIOMETRIC_STRONG,
-    )
-  } else {
-    @Suppress("DEPRECATION") setUserAuthenticationValidityDurationSeconds(seconds)
-  }
+  setUserAuthenticationParameters(
+    seconds,
+    KeyProperties.AUTH_DEVICE_CREDENTIAL or KeyProperties.AUTH_BIOMETRIC_STRONG,
+  )
 }
 
 /**

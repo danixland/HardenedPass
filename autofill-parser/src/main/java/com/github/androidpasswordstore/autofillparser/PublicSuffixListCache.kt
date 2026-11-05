@@ -6,7 +6,6 @@ package com.github.androidpasswordstore.autofillparser
 
 import android.content.Context
 import android.net.InetAddresses
-import android.os.Build
 import android.util.Patterns
 import kotlinx.coroutines.runBlocking
 import mozilla.components.lib.publicsuffixlist.PublicSuffixList
@@ -45,18 +44,10 @@ internal fun getPublicSuffixPlusOne(
   // We do not check whether the domain actually exists (actually, not even whether its TLD
   // exists). As long as we restrict ourselves to syntactically valid domain names,
   // getPublicSuffixPlusOne will return non-colliding results.
-  if (!Patterns.DOMAIN_NAME.matcher(domain).matches() || isNumericAddress(domain)) {
+  if (!Patterns.DOMAIN_NAME.matcher(domain).matches() || InetAddresses.isNumericAddress(domain)) {
     domain
   } else {
     getCanonicalSuffix(context, domain, customSuffixes)
-  }
-}
-
-private fun isNumericAddress(domain: String): Boolean {
-  return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-    InetAddresses.isNumericAddress(domain)
-  } else {
-    @Suppress("DEPRECATION") Patterns.IP_ADDRESS.matcher(domain).matches()
   }
 }
 

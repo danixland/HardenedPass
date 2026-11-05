@@ -35,7 +35,6 @@
   <string name="git_commit_move_text">Zmień nazwę %1$s na %2$s.</string>
   <string name="git_commit_move_multiple_text">Przenieś hasła do %1$s.</string>
   <!-- PGPHandler -->
-  <string name="clipboard_copied_text">Skopiowano do schowka</string>
   <string name="file_toast_text">Podaj nazwę pliku</string>
   <string name="empty_toast_text">Nie możesz użyć pustego hasła lub pustej dodatkowej zawartości</string>
   <!-- Git Async Task -->
@@ -227,7 +226,6 @@
   <string name="pref_app_theme_title">Motyw aplikacji</string>
   <string name="pref_app_theme_value_light">Jasny</string>
   <string name="pref_app_theme_value_dark">Ciemny</string>
-  <string name="pref_app_theme_value_battery_saver">Ustawiany przez funkcję oszczędzania energii</string>
   <string name="pref_app_theme_value_follow_system">Domyślny</string>
   <string name="connection_mode_ssh_key">Klucz SSH</string>
   <string name="connection_mode_basic_authentication">Hasło</string>

@@ -12,7 +12,6 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.ClipData
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
@@ -121,11 +120,7 @@ class ClipboardService : Service() {
         this,
         0,
         clearIntent,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-          PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-        } else {
-          PendingIntent.FLAG_UPDATE_CURRENT
-        },
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE,
       )
     val notification = createNotification(pendingIntent, clearTimeMs)
 

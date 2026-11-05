@@ -30,7 +30,7 @@ import com.github.michaelbull.result.Result
 import com.google.android.material.snackbar.Snackbar
 import logcat.logcat
 
-/** Get an instance of [AutofillManager]. Only available on Android Oreo and above */
+/** Get an instance of [AutofillManager] */
 val Context.autofillManager: AutofillManager?
   get() = getSystemService()
 

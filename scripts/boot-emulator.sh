@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Creates and boots a display-less emulator (defaulting to Android 8.1, our min SDK)
+# Creates and boots a display-less emulator (defaulting to Android 12, our min SDK)
 
 set -euo pipefail
 
@@ -9,8 +9,8 @@ set -euo pipefail
   exit 1
 }
 
-[ -n "${ANDROID_API_LEVEL:-}" ] || { echo "ANDROID_API_LEVEL not defined; defaulting to 26"; }
-API_LEVEL="${ANDROID_API_LEVEL:-26}"
+[ -n "${ANDROID_API_LEVEL:-}" ] || { echo "ANDROID_API_LEVEL not defined; defaulting to 31"; }
+API_LEVEL="${ANDROID_API_LEVEL:-31}"
 
 ARCH="x86_64"
 if [[ "$(uname -m)" == "arm64" && "$(uname)" == "Darwin" ]]; then

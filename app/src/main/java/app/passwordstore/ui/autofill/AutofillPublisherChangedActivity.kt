@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.service.autofill.FillResponse
 import android.text.format.DateUtils
@@ -54,11 +53,7 @@ class AutofillPublisherChangedActivity : AppCompatActivity() {
           context,
           publisherChangedRequestCode++,
           intent,
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE
-          } else {
-            PendingIntent.FLAG_CANCEL_CURRENT
-          },
+          PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE,
         )
         .intentSender
     }

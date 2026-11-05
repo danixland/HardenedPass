@@ -41,7 +41,6 @@
   <string name="git_commit_move_multiple_text">Переместить несколько паролей в %1$s.</string>
   <string name="git_commit_gpg_id">Инициализация GPG ID через %1$s.</string>
   <!-- PGPHandler -->
-  <string name="clipboard_copied_text">Скопировано в буфер обмена</string>
   <string name="file_toast_text">Пожалуйста, укажите имя файла</string>
   <string name="empty_toast_text">Вы не можете использовать пустой пароль или пустое поле информации</string>
   <!-- Git Async Task -->
@@ -225,7 +224,6 @@
   <string name="pref_app_theme_title">Тема приложения</string>
   <string name="pref_app_theme_value_light">Светлая</string>
   <string name="pref_app_theme_value_dark">Темная</string>
-  <string name="pref_app_theme_value_battery_saver">Задается экономией батареи</string>
   <string name="pref_app_theme_value_follow_system">Системная</string>
   <string name="connection_mode_ssh_key">SSH ключ</string>
   <string name="connection_mode_basic_authentication">Пароль</string>

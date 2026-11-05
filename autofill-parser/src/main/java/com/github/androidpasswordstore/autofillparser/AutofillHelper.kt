@@ -15,7 +15,6 @@ import android.service.autofill.SaveCallback
 import android.util.Base64
 import android.view.autofill.AutofillId
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import java.security.MessageDigest
 import logcat.LogPriority.ERROR
 import logcat.logcat
@@ -56,24 +55,22 @@ public fun computeCertificatesHash(context: Context, appPackage: String): String
       .signatures
       .orEmpty()
   val stableHashOld = stableHash(signaturesOld.map { it.toByteArray() })
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-    val info =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        context.packageManager.getPackageInfo(
-          appPackage,
-          PackageManager.PackageInfoFlags.of(PackageManager.GET_SIGNING_CERTIFICATES.toLong()),
-        )
-      } else {
-        context.packageManager.getPackageInfo(appPackage, PackageManager.GET_SIGNING_CERTIFICATES)
-      }
-    val signaturesNew =
-      info.signingInfo?.signingCertificateHistory ?: info.signingInfo?.apkContentsSigners.orEmpty()
-    val stableHashNew = stableHash(signaturesNew.map { it.toByteArray() })
-    if (stableHashNew != stableHashOld)
-      logcat("CertificatesHash", ERROR) {
-        "Mismatch between old and new hash: $stableHashNew != $stableHashOld"
-      }
-  }
+  val info =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      context.packageManager.getPackageInfo(
+        appPackage,
+        PackageManager.PackageInfoFlags.of(PackageManager.GET_SIGNING_CERTIFICATES.toLong()),
+      )
+    } else {
+      context.packageManager.getPackageInfo(appPackage, PackageManager.GET_SIGNING_CERTIFICATES)
+    }
+  val signaturesNew =
+    info.signingInfo?.signingCertificateHistory ?: info.signingInfo?.apkContentsSigners.orEmpty()
+  val stableHashNew = stableHash(signaturesNew.map { it.toByteArray() })
+  if (stableHashNew != stableHashOld)
+    logcat("CertificatesHash", ERROR) {
+      "Mismatch between old and new hash: $stableHashNew != $stableHashOld"
+    }
   return stableHashOld
 }
 
@@ -82,15 +79,12 @@ public fun computeCertificatesHash(context: Context, appPackage: String): String
  * its `webDomain` and `webScheme`, if available.
  */
 internal val AssistStructure.ViewNode.webOrigin: String?
-  @RequiresApi(Build.VERSION_CODES.O)
   get() =
     webDomain?.let { domain ->
-      val scheme =
-        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) webScheme else null) ?: "https"
+      val scheme = webScheme ?: "https"
       "$scheme://$domain"
     }
 
-@RequiresApi(Build.VERSION_CODES.O)
 public class FixedSaveCallback(private val context: Context, private val callback: SaveCallback) {
 
   private val applicationContext = context.applicationContext
@@ -120,13 +114,7 @@ public class FixedSaveCallback(private val context: Context, private val callbac
         applicationContext.startIntentSender(intentSender, null, 0, 0, 0, options)
         callback.onSuccess()
       }
-      Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> callback.onSuccess(intentSender)
-      else -> {
-        callback.onSuccess()
-        // On SDKs < 28, we cannot advise the Autofill framework to launch the save intent in
-        // the context of the app that triggered the save request. Hence, we launch it here.
-        applicationContext.startIntentSender(intentSender, null, 0, 0, 0)
-      }
+      else -> callback.onSuccess(intentSender)
     }
   }
 }
@@ -147,7 +135,6 @@ private fun visitViewNode(
   }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 internal fun AssistStructure.findNodeByAutofillId(
   autofillId: AutofillId
 ): AssistStructure.ViewNode? {

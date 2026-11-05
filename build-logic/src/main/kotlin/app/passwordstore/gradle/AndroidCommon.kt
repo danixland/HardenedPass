@@ -20,7 +20,7 @@ object AndroidCommon {
   fun configure(project: Project) {
     project.extensions.getByType(CommonExtension::class.java).apply {
       compileSdk = 35
-      defaultConfig.minSdk = 26
+      defaultConfig.minSdk = 31
 
       packaging.resources.excludes.add("**/*.version")
       packaging.resources.excludes.add("**/*.txt")

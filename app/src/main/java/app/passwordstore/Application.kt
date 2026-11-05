@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate.*
 import app.passwordstore.data.crypto.PGPPassphraseCache
@@ -92,38 +91,24 @@ class Application : android.app.Application(), SharedPreferences.OnSharedPrefere
   }
 
   private fun setVmPolicy() {
-    val builder =
+    StrictMode.setVmPolicy(
       StrictMode.VmPolicy.Builder()
         .detectActivityLeaks()
         .detectFileUriExposure()
         .detectLeakedClosableObjects()
         .detectLeakedRegistrationObjects()
         .detectLeakedSqlLiteObjects()
-
-    builder.detectContentUriWithoutPermission()
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      builder.detectCredentialProtectedWhileLocked().detectImplicitDirectBoot()
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      builder.detectNonSdkApiUsage()
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      builder.detectIncorrectContextUse().detectUnsafeIntentLaunch()
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-      builder.penaltyListener(Executors.newSingleThreadExecutor()) { violation ->
-        logcat(VERBOSE) { violation.stackTraceToString() }
-      }
-    } else {
-      builder.penaltyLog()
-    }
-
-    val policy = builder.build()
-    StrictMode.setVmPolicy(policy)
+        .detectContentUriWithoutPermission()
+        .detectCredentialProtectedWhileLocked()
+        .detectImplicitDirectBoot()
+        .detectNonSdkApiUsage()
+        .detectIncorrectContextUse()
+        .detectUnsafeIntentLaunch()
+        .penaltyListener(Executors.newSingleThreadExecutor()) { violation ->
+          logcat(VERBOSE) { violation.stackTraceToString() }
+        }
+        .build()
+    )
   }
 
   private fun setNightMode() {

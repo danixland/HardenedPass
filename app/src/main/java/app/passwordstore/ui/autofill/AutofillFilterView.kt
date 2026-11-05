@@ -8,7 +8,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import android.os.Build
 import android.os.Bundle
 import android.view.autofill.AutofillManager
 import androidx.activity.compose.setContent
@@ -74,11 +73,7 @@ class AutofillFilterView : AppCompatActivity() {
           context,
           matchAndDecryptFileRequestCode++,
           intent,
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE
-          } else {
-            PendingIntent.FLAG_CANCEL_CURRENT
-          },
+          PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE,
         )
         .intentSender
     }

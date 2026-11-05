@@ -6,7 +6,6 @@
 package app.passwordstore.ui.settings
 
 import android.net.InetAddresses
-import android.os.Build
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,10 +18,7 @@ import javax.inject.Inject
 
 /** A numeric address or a plain host name: no scheme, port or path, which the port field holds. */
 fun isProxyHost(text: String): Boolean {
-  val numeric =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) InetAddresses.isNumericAddress(text)
-    else @Suppress("DEPRECATION") Patterns.IP_ADDRESS.matcher(text).matches()
-  return numeric ||
+  return InetAddresses.isNumericAddress(text) ||
     (!text.contains(':') && !text.contains('/') && Patterns.DOMAIN_NAME.matcher(text).matches())
 }
 

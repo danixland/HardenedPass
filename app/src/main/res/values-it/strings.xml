@@ -36,7 +36,6 @@
   <string name="git_commit_move_text">Rinomina %1$s in %2$s.</string>
   <string name="git_commit_move_multiple_text">Sposta più password in %1$s.</string>
   <!-- PGPHandler -->
-  <string name="clipboard_copied_text">Copiato negli appunti</string>
   <string name="file_toast_text">Inserisci un nome per il file</string>
   <string name="empty_toast_text">Non puoi usare una password vuota o dei contenuti extra vuoti</string>
   <!-- Git Async Task -->
@@ -215,7 +214,6 @@
   <string name="pref_app_theme_title">Tema dell\'App</string>
   <string name="pref_app_theme_value_light">Chiaro</string>
   <string name="pref_app_theme_value_dark">Scuro</string>
-  <string name="pref_app_theme_value_battery_saver">Impostato dal Risparmio Energetico</string>
   <string name="pref_app_theme_value_follow_system">Predefinito del sistema</string>
   <string name="connection_mode_ssh_key">Chiave SSH</string>
   <string name="connection_mode_basic_authentication">Password</string>

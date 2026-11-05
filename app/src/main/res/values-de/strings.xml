@@ -37,7 +37,6 @@
   <string name="git_commit_move_multiple_text">Verschiebe mehrere Passwörter nach %1$s.</string>
   <string name="git_commit_gpg_id">Initialisiere PGP-IDs in %1$s.</string>
   <!-- PGPHandler -->
-  <string name="clipboard_copied_text">In die Zwischenablage kopiert</string>
   <string name="file_toast_text">Bitte setzen Sie einen Dateinamen.</string>
   <string name="empty_toast_text">Sie können kein leeres Passwort oder leere Extra-Angaben setzen.</string>
   <!-- Git Async Task -->
@@ -232,7 +231,6 @@
   <string name="pref_app_theme_title">App-Farbthema</string>
   <string name="pref_app_theme_value_light">Hell</string>
   <string name="pref_app_theme_value_dark">Dunkel</string>
-  <string name="pref_app_theme_value_battery_saver">Durch Energiesparmodus gesetzt</string>
   <string name="pref_app_theme_value_follow_system">Systemstandard</string>
   <string name="connection_mode_ssh_key">SSH-Schlüssel</string>
   <string name="connection_mode_basic_authentication">Passwort</string>

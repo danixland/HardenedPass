@@ -35,7 +35,6 @@
   <string name="git_commit_move_multiple_text">여러개의 비밀번호를 %1$s 로 옮겼습니다.</string>
   <string name="git_commit_gpg_id">%1$s의 GPG ID를 초기화 합니다.</string>
   <!-- PGPHandler -->
-  <string name="clipboard_copied_text">클립보드로 복사됨</string>
   <string name="file_toast_text">파일 이름이 필요합니다</string>
   <string name="empty_toast_text">비어있는 비밀번호나 추가 정보를 사용할 수 없습니다</string>
   <!-- Git Async Task -->
@@ -228,7 +227,6 @@
   <string name="pref_app_theme_title">앱 테마</string>
   <string name="pref_app_theme_value_light">밝은 테마</string>
   <string name="pref_app_theme_value_dark">어두운 테마</string>
-  <string name="pref_app_theme_value_battery_saver">배터리 절약모드 설정</string>
   <string name="pref_app_theme_value_follow_system">시스템 기본값</string>
   <string name="connection_mode_ssh_key">SSH 키</string>
   <string name="connection_mode_basic_authentication">비밀번호</string>
