@@ -25,6 +25,9 @@ Debug"), so it installs next to upstream's `app.passwordstore` and never updates
 Kotlin package stays `app.passwordstore`; renaming it is churn with no user-visible effect.
 Keep "GrapheneOS" out of the app name: it is that project's trademark.
 
+minSdk is 31: GrapheneOS runs current Android only, and Android 12 has
+`UiModeManager.setApplicationNightMode`.
+
 ## Repository layout and remotes
 
 - `master` is the only branch. Upstream's `develop` was renamed; do not recreate it.
@@ -144,13 +147,13 @@ cached passphrase) and Pixel 6 Pro on Android 17 (fill, save), all passed.
 - `LaunchActivity` is exported and forwards `FILE_PATH` to `MainActivity` (not exported) only
   after `isFileInRepo` checks it canonically resolves inside the store; `MainActivity` opens it as
   `EntryRoute`, whose destination checks it again before decrypting.
-- Material Components (Views) stays after the Compose overhaul: the window themes derive from
-  `Theme.Material3.DayNight` (the AppCompat activities need it), and the git operations' View
-  dialogs (`BaseGitActivity`, `GitOperation`, `CredentialFinder` with
-  `git_credential_layout.xml`, `BreakOutOfDetached`, `StoreActions`), `DynamicColors` and the
-  `snackbar` helper use it. `oreo_autofill_dataset.xml` stays a layout: fill suggestions are
-  `RemoteViews` drawn by the system. `fragment-ktx` is declared only to pin `androidx.fragment`
-  (appcompat alone resolves an older one).
+- Window themes derive from the platform `android:Theme.Material.*.NoActionBar`, activities from
+  `FragmentActivity` (`BiometricPrompt` needs it). Git operations and store actions show dialogs and
+  snackbars through the activity-scoped `Prompts` ViewModel (`activity.prompts`), drawn by
+  `PromptHost`, which only `MainActivity` and `AutofillSaveActivity` host. AppCompat stays in the
+  APK through zxing (`CaptureManager`, `zxing_CaptureTheme`) and `androidx.biometric`;
+  `oreo_autofill_dataset.xml` stays a layout: fill suggestions are `RemoteViews` drawn by the
+  system.
 - sshj gets Ed25519 keys from Bouncy Castle: `SshjConfig.kt` pins `KeyFactory.Ed25519` to it at
   provider position 1. Conscrypt from Android 14 mainline updates serves that factory with keys
   sshj maps to `KeyType.UNKNOWN` ("Don't know how to encode key"), breaking every Ed25519 host
