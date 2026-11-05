@@ -46,6 +46,10 @@ Services.
 Report bugs and feature requests on the
 [issue tracker](https://github.com/danixland/HardenedPass/issues).
 
+## Support
+
+[![Support on Ko-fi](https://git.danix.xyz/HardenedPass/plain/media/kofi-button.svg)](https://ko-fi.com/K6Y520C9I6)
+
 ## License
 
 GPL-3.0-only, see [LICENSE.txt](LICENSE.txt).
