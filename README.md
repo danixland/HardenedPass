@@ -12,6 +12,10 @@ This is a maintained fork of
 which was archived in October 2024. All credit for the original work goes to the
 Android Password Store authors.
 
+## Documentation
+
+How to install, set up and use the app: <https://danix.xyz/hardenedpass/>.
+
 ## Changes from upstream
 
 - Decrypts messages GnuPG 2.3+ writes by default (OCB / LibrePGP AEAD), which upstream rejected
