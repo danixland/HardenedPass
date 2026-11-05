@@ -222,4 +222,6 @@ be updated again.
 - Pushing a `vX.Y.Z` tag runs `deploy_github_releases.yml`: it builds the signed APK and creates
   a draft GitHub Release with `HardenedPass_vX.Y.Z.apk` and its `.sha256`. The notes are that
   version's `CHANGELOG.md` section in full, so the release fails without one.
+- After publishing, rebuild the website with a push to its `production` branch: its landing page
+  reads the latest version from GitHub at build time.
 - Never print, log or commit the keystore password or `ENCRYPT_KEY`.
