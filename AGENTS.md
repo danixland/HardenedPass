@@ -122,8 +122,8 @@ instead:
 
 Last full emulator run (2026-11-04, Compose UI): clone over SSH, PGP import, decrypt, TOTP,
 create and push, conflict recovery (abort rebase, push a new branch), hard reset and
-fingerprint unlock passed. Last Firefox autofill run on the tablet: 2026-11-04 (fill, passphrase
-cache rule, no keys flow, picker, settings dialog), all passed.
+fingerprint unlock passed. Last Firefox autofill run on the tablet: 2026-11-05 (fill, save, stale
+cached passphrase), all passed.
 
 ## Verified facts and gotchas
 
@@ -161,6 +161,10 @@ cache rule, no keys flow, picker, settings dialog), all passed.
   AES-GCM encrypted under Android Keystore keys by `util/crypto/KeystorePreferences.kt`.
   androidx security-crypto was removed; `removeSecurityCryptoData` in `Migrations.kt` deleted
   its data once on upgrade from 0.1.x.
+- Autofill save on Android 14+: the framework sends the save `IntentSender` from the app being
+  filled, which is not opted in to background activity starts, so `AutofillSaveActivity` opens
+  hidden behind it (`Background activity launch blocked` in logcat). `FixedSaveCallback` starts it
+  from the service instead, which the system has bound. Firefox's own save prompt shows as well.
 - JGit is on 5.13.x, the last line that needs only Java 8 APIs. JGit 6+ needs Java 11 APIs
   Android only partly desugars; moving to it is a large, separate job. Window cache JMX is off
   in `Application` and GC runs without JGit's PID lock, because Android has no JMX.

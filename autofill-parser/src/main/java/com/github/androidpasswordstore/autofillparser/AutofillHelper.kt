@@ -5,6 +5,7 @@
 package com.github.androidpasswordstore.autofillparser
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.app.assist.AssistStructure
 import android.content.Context
 import android.content.IntentSender
@@ -105,13 +106,27 @@ public class FixedSaveCallback(private val context: Context, private val callbac
   }
 
   public fun onSuccess(intentSender: IntentSender) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-      callback.onSuccess(intentSender)
-    } else {
-      callback.onSuccess()
-      // On SDKs < 28, we cannot advise the Autofill framework to launch the save intent in
-      // the context of the app that triggered the save request. Hence, we launch it here.
-      applicationContext.startIntentSender(intentSender, null, 0, 0, 0)
+    when {
+      // From Android 14 the framework sends this intent from the app being filled, which does not
+      // opt in to background activity starts when it targets SDK 34 or later: the save window
+      // opens hidden behind it. This service is bound by the system, so it may start it itself.
+      Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE -> {
+        val options =
+          ActivityOptions.makeBasic()
+            .setPendingIntentBackgroundActivityStartMode(
+              ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+            )
+            .toBundle()
+        applicationContext.startIntentSender(intentSender, null, 0, 0, 0, options)
+        callback.onSuccess()
+      }
+      Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> callback.onSuccess(intentSender)
+      else -> {
+        callback.onSuccess()
+        // On SDKs < 28, we cannot advise the Autofill framework to launch the save intent in
+        // the context of the app that triggered the save request. Hence, we launch it here.
+        applicationContext.startIntentSender(intentSender, null, 0, 0, 0)
+      }
     }
   }
 }
