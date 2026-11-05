@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-11-05
+
+### Changed
+
+-   Android 12 or later is now required; older devices stay on 0.2.0
+-   New HardenedPass launcher icon
+-   The git dialogs and snackbars are now Compose; Material Components are gone
+-   The dialog asking for a git password or SSH passphrase is hidden from screenshots and recents
+-   A snackbar confirms a successful git operation
+-   Updated the public suffix list
+
+### Fixed
+
+-   The clipboard is cleared after the 45 seconds Settings shows, not 60
+-   Autofill save works with Firefox release and beta, and its window opens on top on Android 14+
+-   Autofill asks again when a cached passphrase fails
+-   An invalid `.gpg-id` shows as a snackbar in the entry view and the editor
+
 ## [0.2.0] - 2026-11-04
 
 ### Changed
