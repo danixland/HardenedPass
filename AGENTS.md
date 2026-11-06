@@ -35,7 +35,6 @@ minSdk is 31: GrapheneOS runs current Android only, and Android 12 has
   and to the GitHub fork (`danixland/HardenedPass`) in one `git push`.
   GitHub is a push mirror: never create commits on GitHub (bots, web edits), they would
   diverge from the main repository.
-- `upstream` is fetch-only (push URL disabled).
 - Work directly on `master`, no PRs.
 
 ## Build and test
