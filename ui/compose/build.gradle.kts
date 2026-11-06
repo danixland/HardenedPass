@@ -21,6 +21,7 @@ dependencies {
   api(libs.compose.material3)
   api(libs.compose.ui.core)
   implementation(libs.androidx.core.ktx)
-  implementation(libs.compose.ui.tooling)
+  implementation(libs.compose.ui.tooling.preview)
+  debugImplementation(libs.compose.ui.tooling)
   testImplementation(libs.bundles.testDependencies)
 }

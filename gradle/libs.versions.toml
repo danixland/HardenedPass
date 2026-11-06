@@ -47,6 +47,7 @@ compose-foundation-layout = { module = "androidx.compose.foundation:foundation-l
 compose-material3 = { module = "androidx.compose.material3:material3" }
 compose-ui-core = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 dagger-hilt-core = { module = "com.google.dagger:hilt-core", version.ref = "hilt" }
