@@ -258,6 +258,12 @@ fun SettingsSectionScreen(
               else R.string.pref_rebase_on_pull_summary
             ),
         )
+        PreferenceSwitch(
+          title = stringResource(R.string.pref_push_after_commit_title),
+          checked = state.pushAfterCommit,
+          onCheckedChange = { onBoolean(PreferenceKeys.PUSH_AFTER_COMMIT, it) },
+          summary = stringResource(R.string.pref_push_after_commit_summary),
+        )
         if (state.isGitRepo) {
           PreferenceAction(
             title = stringResource(R.string.pref_edit_git_server_settings),

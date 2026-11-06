@@ -9,7 +9,9 @@ import app.passwordstore.util.extensions.getString
 import com.github.ivanshafran.sharedpreferencesmock.SPMockBuilder
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class GitSettingsTest {
 
@@ -23,5 +25,20 @@ class GitSettingsTest {
     assertEquals("proxy-user", gitSettings.proxyUsername)
     assertEquals("proxy-user", proxy.getString(PreferenceKeys.PROXY_USERNAME))
     assertNull(settings.getString(PreferenceKeys.PROXY_USERNAME))
+  }
+
+  @Test
+  fun pushAfterCommitIsOptIn() {
+    val settings = SPMockBuilder().createSharedPreferences()
+    val gitSettings =
+      GitSettings(
+        settings,
+        SPMockBuilder().createSharedPreferences(),
+        SPMockBuilder().createSharedPreferences(),
+        "/nonexistent",
+      )
+    assertFalse(gitSettings.pushAfterCommit)
+    gitSettings.pushAfterCommit = true
+    assertTrue(settings.getBoolean(PreferenceKeys.PUSH_AFTER_COMMIT, false))
   }
 }

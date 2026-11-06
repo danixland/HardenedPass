@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+-   A "Push after each change" setting, off by default, pushes after saving, moving or deleting in the app; autofill saves stay local until the next push or sync
+
 ### Fixed
 
 -   Release builds made by CI no longer run with debug logging and the strict VM policy on

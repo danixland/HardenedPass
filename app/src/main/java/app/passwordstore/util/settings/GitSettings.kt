@@ -125,6 +125,12 @@ constructor(
       settings.edit { putBoolean(PreferenceKeys.REBASE_ON_PULL, value) }
     }
 
+  var pushAfterCommit
+    get() = settings.getBoolean(PreferenceKeys.PUSH_AFTER_COMMIT, false)
+    set(value) {
+      settings.edit { putBoolean(PreferenceKeys.PUSH_AFTER_COMMIT, value) }
+    }
+
   sealed class UpdateConnectionSettingsResult {
     class MissingUsername(val newProtocol: Protocol) : UpdateConnectionSettingsResult()
 

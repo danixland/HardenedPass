@@ -86,6 +86,7 @@ object PreferenceKeys {
   const val PROXY_PASSWORD = "proxy_password"
 
   const val REBASE_ON_PULL = "rebase_on_pull"
+  const val PUSH_AFTER_COMMIT = "push_after_commit"
 
   const val DICEWARE_SEPARATOR = "diceware_separator"
   const val DICEWARE_LENGTH = "diceware_length"

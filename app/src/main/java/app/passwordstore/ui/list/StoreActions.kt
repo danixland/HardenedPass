@@ -6,7 +6,9 @@
 package app.passwordstore.ui.list
 
 import android.content.Context
+import androidx.compose.material3.SnackbarDuration
 import androidx.core.content.edit
+import androidx.lifecycle.lifecycleScope
 import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.crypto.getLongName
@@ -20,12 +22,17 @@ import app.passwordstore.util.extensions.getString
 import app.passwordstore.util.extensions.isInsideRepository
 import app.passwordstore.util.extensions.listFilesRecursively
 import app.passwordstore.util.extensions.sharedPrefs
+import app.passwordstore.util.extensions.snackbar
 import app.passwordstore.util.settings.PasswordSortOrder
 import app.passwordstore.util.settings.PreferenceKeys
+import com.github.michaelbull.result.onFailure
+import com.github.michaelbull.result.onSuccess
 import java.io.File
 import java.nio.file.Files
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.LogPriority.ERROR
+import logcat.asLog
 import logcat.logcat
 
 /** Shared preferences file of the "recently used" sort order, keyed by base64 of the path. */
@@ -64,6 +71,27 @@ internal fun File.deleteWithoutFollowingLinks(): Boolean {
   return delete()
 }
 
+/**
+ * Commits the store and, when the user asked for it, pushes without holding up the caller. A failed
+ * push only says so: the commit stays local, and [BaseGitActivity.promptOnErrorHandler] would
+ * delete the saved credentials over what may just be a missing network.
+ *
+ * ponytail: a push cut off by recreation is not resumed; the next one sends everything. An SSH key
+ * behind biometrics prompts on each change.
+ */
+suspend fun BaseGitActivity.commitAndPush(message: String) {
+  commitChange(message).onSuccess {
+    if (gitSettings.pushAfterCommit && gitSettings.url != null) {
+      lifecycleScope.launch {
+        launchGitOperation(BaseGitActivity.GitOp.PUSH).onFailure {
+          logcat(ERROR) { it.asLog() }
+          snackbar(getString(R.string.git_push_after_commit_failed), SnackbarDuration.Long)
+        }
+      }
+    }
+  }
+}
+
 /** Deletes [files] (entries or whole folders), drops their autofill matches and commits. */
 suspend fun BaseGitActivity.deleteItems(files: List<File>) {
   val root = PasswordRepository.getRepositoryDirectory()
@@ -72,7 +100,7 @@ suspend fun BaseGitActivity.deleteItems(files: List<File>) {
     files.forEach { it.deleteWithoutFollowingLinks() }
     AutofillMatcher.updateMatches(applicationContext, delete = deleted)
   }
-  commitChange(
+  commitAndPush(
     getString(
       R.string.git_commit_remove_text,
       files.joinToString(", ") { it.toRelativeString(root) },
@@ -116,14 +144,14 @@ suspend fun BaseGitActivity.moveItems(files: List<File>, target: File) {
       val relative = "${target.absolutePath}/".replace(repo, "").replace("/+".toRegex(), "/")
       getString(R.string.git_commit_move_multiple_text, relative)
     }
-  commitChange(message)
+  commitAndPush(message)
 }
 
 /** Renames the folder [from] to [to], keeps its recently-used time, then commits. */
 suspend fun BaseGitActivity.renameFolder(from: File, to: File) {
   if (!moveFile(from, to)) return
   moveHistory(from, to)
-  commitChange(getString(R.string.git_commit_move_text, from.name, to.name))
+  commitAndPush(getString(R.string.git_commit_move_text, from.name, to.name))
 }
 
 /** Carries the "recently used" time of [from] over to [to]. */

@@ -35,7 +35,9 @@ import app.passwordstore.R
 import app.passwordstore.data.repo.PasswordRepository
 import app.passwordstore.ui.crypto.copyPasswordToClipboard
 import app.passwordstore.ui.crypto.getPGPIdentifiers
+import app.passwordstore.ui.git.base.BaseGitActivity
 import app.passwordstore.ui.list.FolderPicker
+import app.passwordstore.ui.list.commitAndPush
 import app.passwordstore.util.extensions.commitChange
 import app.passwordstore.util.extensions.getString
 import app.passwordstore.util.extensions.isInsideRepository
@@ -148,12 +150,15 @@ fun EditorDestination(
     }
     // ponytail: commit failures are not shown, as for the list's move and delete. A commit cut
     // short by recreation runs again; one that already went through finds nothing to commit.
-    activity.commitChange(
+    val message =
       activity.getString(
         if (original != null) R.string.git_commit_edit_text else R.string.git_commit_add_text,
         saved.file.relativeTo(root).path.removeSuffix(".gpg"),
       )
-    )
+    // ponytail: AutofillSaveActivity closes right after saving, which would cancel a push, so its
+    // saves stay local until the next push or sync.
+    if (activity is BaseGitActivity) activity.commitAndPush(message)
+    else activity.commitChange(message)
     keyboard?.hide()
     focusManager.clearFocus()
     viewModel.left()
