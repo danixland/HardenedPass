@@ -12,7 +12,8 @@ import logcat.logcat
 /** An implementation of [AbstractLogger] that forwards logging calls to [logcat]. */
 class LogcatLogger(name: String) : AbstractLogger(name) {
 
-  override fun isTraceEnabled() = true
+  // sshj's trace level dumps every SSH packet in the clear, passwords included. Never log it.
+  override fun isTraceEnabled() = false
 
   override fun isDebugEnabled() = true
 
@@ -27,9 +28,7 @@ class LogcatLogger(name: String) : AbstractLogger(name) {
   @Suppress("RegExpRedundantEscape")
   private fun String.fix() = replace("""(?!<\\)\{\}""".toRegex(), "%s")
 
-  override fun t(message: String, t: Throwable?, vararg args: Any?) {
-    logcat(name, LogPriority.VERBOSE) { message.fix().format(*args) + (t?.asLog() ?: "") }
-  }
+  override fun t(message: String, t: Throwable?, vararg args: Any?) = Unit
 
   override fun d(message: String, t: Throwable?, vararg args: Any?) {
     logcat(name) { message.fix().format(*args) + (t?.asLog() ?: "") }

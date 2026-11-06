@@ -141,7 +141,7 @@ internal class FormField(
       ?.filter { it.first != null && it.second != null }
       ?.associate { Pair(it.first.lowercase(Locale.US), it.second.lowercase(Locale.US)) }
       ?: emptyMap()
-  private val htmlAttributesDebug = htmlAttributes.entries.joinToString { "${it.key}=${it.value}" }
+  private val htmlAttributesDebug = htmlAttributesForLog(htmlAttributes)
   private val htmlInputType = htmlAttributes["type"]
   private val htmlName = htmlAttributes["name"] ?: ""
   private val htmlMaxLength = htmlAttributes["maxlength"]?.toIntOrNull()
@@ -292,3 +292,10 @@ internal class FormField(
     return autofillId.hashCode()
   }
 }
+
+/** The [attributes] that describe a field: `value` and the like can hold what the user typed. */
+internal fun htmlAttributesForLog(attributes: Map<String, String>): String =
+  attributes
+    .filterKeys { it in setOf("id", "name", "type", "autocomplete", "maxlength") }
+    .entries
+    .joinToString { "${it.key}=${it.value}" }

@@ -179,7 +179,7 @@ private suspend fun BaseGitActivity.moveFile(source: File, destination: File): B
       }
     }
   if (!moved) {
-    logcat(ERROR) { "Something went wrong while moving $source to $destination." }
+    logcat(ERROR) { "Something went wrong while moving a file." }
     prompts.ask(
       title = getString(R.string.password_move_error_title),
       message = getString(R.string.password_move_error_message, source, destination),

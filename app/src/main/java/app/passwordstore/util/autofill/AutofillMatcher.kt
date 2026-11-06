@@ -194,7 +194,7 @@ class AutofillMatcher {
               .minus(oldNewPathMap.values)
               .map { match ->
                 val newPath = oldNewPathMap[match] ?: return@map match
-                logcat { "Updating match for $key: $match --> $newPath" }
+                logcat { "Updating match for $key" }
                 newPath
               }
               .toSet()

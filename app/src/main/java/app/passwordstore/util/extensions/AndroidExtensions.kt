@@ -71,7 +71,7 @@ suspend fun FragmentActivity.commitChange(message: String): Result<Unit, Throwab
         )
 
       override suspend fun preExecute(): Boolean {
-        logcat { "Committing with message: '$message'" }
+        logcat { "Committing" }
         return true
       }
     }
