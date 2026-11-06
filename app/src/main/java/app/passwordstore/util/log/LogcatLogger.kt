@@ -31,6 +31,8 @@ class LogcatLogger(name: String) : AbstractLogger(name) {
   override fun t(message: String, t: Throwable?, vararg args: Any?) = Unit
 
   override fun d(message: String, t: Throwable?, vararg args: Any?) {
+    // JGit's FileSnapshot writes thousands of lines per sync, pushing the rest out of the buffer.
+    if (name.endsWith(".FileSnapshot")) return
     logcat(name) { message.fix().format(*args) + (t?.asLog() ?: "") }
   }
 
