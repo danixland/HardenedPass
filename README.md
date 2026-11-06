@@ -48,6 +48,9 @@ Report bugs and feature requests on the
 
 ## Support
 
+HardenedPass will always be free, but maintaining a software can be costly, so if you found this piece of software useful, you can buy me a coffee.
+All donations will help me maintain HardenedPass in the future.
+
 [![Support on Ko-fi](media/kofi-button.png)](https://ko-fi.com/K6Y520C9I6)
 
 ## License
