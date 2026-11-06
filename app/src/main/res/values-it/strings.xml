@@ -288,6 +288,10 @@
   <string name="pref_rebase_on_pull_title">Rebase al pull</string>
   <string name="pref_rebase_on_pull_summary">Durante pull o sincronizzazione, crea un merge commit con le modifiche del remote</string>
   <string name="pref_rebase_on_pull_summary_on">Durante pull o sincronizzazione, esegui il rebase dei commit che non sono sul remote</string>
+  <string name="pref_export_log_title">Esporta log</string>
+  <string name="pref_export_log_summary">Salva in un file i log di questa app. Possono mostrare nomi delle voci, siti, app e il tuo server git: leggi il file prima di condividerlo</string>
+  <string name="log_exported">Log salvato</string>
+  <string name="log_export_failed">Impossibile salvare il log</string>
   <string name="pref_push_after_commit_title">Push dopo ogni modifica</string>
   <string name="pref_push_after_commit_summary">Esegui il push sul repository remoto dopo aver salvato, spostato o eliminato nell\'app</string>
   <string name="git_push_after_commit_failed">Salvato sul dispositivo, ma push non riuscito. Sincronizza per riprovare</string>

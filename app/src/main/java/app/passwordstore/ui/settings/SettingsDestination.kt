@@ -38,6 +38,7 @@ import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.lifecycleScope
 import app.passwordstore.BuildConfig
 import app.passwordstore.R
 import app.passwordstore.ui.compose.theme.SpacingLarge
@@ -52,6 +53,7 @@ import app.passwordstore.util.services.PasswordExportService
 import app.passwordstore.util.settings.PreferenceKeys
 import com.github.androidpasswordstore.autofillparser.BrowserAutofillSupportLevel
 import com.github.androidpasswordstore.autofillparser.getInstalledBrowsersWithAutofillSupportLevel
+import kotlinx.coroutines.launch
 
 private enum class SettingsDialog {
   Autofill,
@@ -123,6 +125,16 @@ fun SettingsSectionDestination(
             .setAction(PasswordExportService.ACTION_EXPORT_PASSWORD)
             .putExtra("uri", uri)
         )
+    }
+
+  val exportLog =
+    rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { uri ->
+      if (uri != null)
+        activity.lifecycleScope.launch {
+          val message =
+            if (viewModel.exportLog(uri)) R.string.log_exported else R.string.log_export_failed
+          activity.snackbar(message = activity.getString(message))
+        }
     }
 
   // One screen lock prompt at a time: a double tap must not open two. A recreation resets it
@@ -206,6 +218,7 @@ fun SettingsSectionDestination(
             SettingsAction.ClearSecret -> dialog = SettingsDialog.ClearSecret
             SettingsAction.DeleteRepository -> dialog = SettingsDialog.DeleteRepository
             SettingsAction.Export -> export.launch(null)
+            SettingsAction.ExportLog -> exportLog.launch("hardenedpass-log.txt")
             else -> onOpen(action)
           }
       },

@@ -7,10 +7,10 @@ body:
     attributes:
       value: |
         Thanks for taking the time to file this issue! Here are a few things to check before clicking the submit button :)
-        1. Make sure you're on the latest version of the app. The current release can be found here: https://github.com/android-password-store/android-password-store/releases/latest.
-        2. Search through **both** open and closed issues for your bug: https://github.com/android-password-store/Android-Password-Store/issues?q=is%3Aissue+sort%3Aupdated-desc+.
+        1. Make sure you're on the latest version of the app. The current release can be found here: https://github.com/danixland/HardenedPass/releases/latest.
+        2. Search through **both** open and closed issues for your bug: https://github.com/danixland/HardenedPass/issues?q=is%3Aissue+sort%3Aupdated-desc+.
         3. ALWAYS fill this template. If you fail to do so, your issue will be immediately closed with no response. Maintaining open source projects for free is hard work, and we expect users to respect that time and effort by putting in a little bit of their own. That helps us fix these problems faster and in return you get a better app — everybody wins.
-        4. Please record a device log, and attach it to the issue. You can follow the steps here for it: https://docs.passwordstore.app/docs/users/reporting-bugs
+        4. Please attach a log: turn on Settings > Misc > Debug logging, restart the app, reproduce the bug, then use Settings > Misc > Export log. Read the file first and remove anything you do not want public: it can show entry names, websites, apps and your git server.
 
   - type: textarea
     id: bug-description
@@ -58,7 +58,7 @@ body:
       value: |
         - Device: [e.g. Google Pixel 2]
         - OS: [e.g. Android R]
-        - App version: [e.g. 1.13.5]
+        - App version: [e.g. 0.3.2]
     validations:
       required: true
 

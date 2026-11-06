@@ -8,6 +8,8 @@ package app.passwordstore.ui.settings
 import android.app.Application
 import android.content.SharedPreferences
 import android.content.pm.ShortcutManager
+import android.net.Uri
+import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +18,7 @@ import androidx.core.content.edit
 import androidx.core.content.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import app.passwordstore.BuildConfig
 import app.passwordstore.R
 import app.passwordstore.data.crypto.PGPPassphraseCache
 import app.passwordstore.data.repo.PasswordRepository
@@ -31,12 +34,16 @@ import app.passwordstore.util.settings.GitSettings
 import app.passwordstore.util.settings.PasswordSortOrder
 import app.passwordstore.util.settings.PreferenceKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.LinkOption
 import javax.inject.Inject
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import logcat.LogPriority.ERROR
+import logcat.asLog
+import logcat.logcat
 
 /** What the settings sections show: stored values, and the state rows depend on. */
 data class SettingsState(
@@ -110,6 +117,27 @@ constructor(
   fun refresh() {
     state = read()
   }
+
+  /** Saves the app's log to [uri]; false when that failed. */
+  suspend fun exportLog(uri: Uri): Boolean =
+    withContext(dispatcherProvider.io()) {
+      val header =
+        "HardenedPass ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}), " +
+          "Android ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT}), ${Build.MODEL}\n\n"
+      try {
+        val out =
+          getApplication<Application>().contentResolver.openOutputStream(uri)
+            ?: throw IOException("No stream for the chosen file")
+        out.use { writeAppLog(header, it) }
+        true
+      } catch (e: IOException) {
+        logcat(ERROR) { e.asLog() }
+        false
+      } catch (e: SecurityException) {
+        logcat(ERROR) { e.asLog() }
+        false
+      }
+    }
 
   fun putBoolean(key: String, value: Boolean) {
     prefs.edit { putBoolean(key, value) }

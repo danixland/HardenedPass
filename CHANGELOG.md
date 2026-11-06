@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 -   A "Push after each change" setting, off by default, pushes after saving, moving or deleting in the app; autofill saves stay local until the next push or sync
+-   Settings, Misc: "Export log" saves the app's logs to a file you choose, to attach to a bug report
+
+### Changed
+
+-   Debug logs no longer show entry names from commits and autofill matches, or form fields' HTML attributes other than id, name, type, autocomplete and maxlength
 
 ### Fixed
 

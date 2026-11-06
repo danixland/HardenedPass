@@ -70,7 +70,8 @@ fun NavGraphBuilder.settingsGraph(activity: MainActivity, nav: NavHostController
             // Handled by the destination itself.
             SettingsAction.ClearSecret,
             SettingsAction.DeleteRepository,
-            SettingsAction.Export -> Unit
+            SettingsAction.Export,
+            SettingsAction.ExportLog -> Unit
           }
       },
       onDeleted = {

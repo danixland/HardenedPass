@@ -9,6 +9,7 @@ import app.passwordstore.util.extensions.hash
 import app.passwordstore.util.extensions.time
 import app.passwordstore.util.git.GitCommit
 import java.io.IOException
+import java.io.OutputStream
 import logcat.LogPriority.ERROR
 import logcat.asLog
 import logcat.logcat
@@ -76,4 +77,18 @@ fun gitLog(repo: Repository?): List<GitCommit> {
     logcat(TAG, ERROR) { e.asLog() }
     emptyList()
   }
+}
+
+/**
+ * Writes [header], then what logcat holds for this app: Android shows an app only its own lines,
+ * and those of its earlier runs and crashes until the buffer rotates.
+ */
+fun writeAppLog(header: String, out: OutputStream) {
+  out.write(header.toByteArray())
+  val logcat =
+    ProcessBuilder("logcat", "-d", "-b", "main,crash", "-v", "threadtime")
+      .redirectErrorStream(true)
+      .start()
+  logcat.inputStream.use { it.copyTo(out) }
+  logcat.waitFor()
 }

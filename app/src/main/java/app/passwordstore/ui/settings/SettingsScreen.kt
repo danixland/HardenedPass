@@ -63,6 +63,7 @@ enum class SettingsAction {
   ClearSecret,
   DeleteRepository,
   Export,
+  ExportLog,
 }
 
 /** Top bar with [title] and back, then [content] in one grouped surface, scrolling. */
@@ -324,6 +325,11 @@ fun SettingsSectionScreen(
             onCheckedChange = { onBoolean(PreferenceKeys.ENABLE_DEBUG_LOGGING, it) },
             summary = stringResource(R.string.pref_debug_logging_summary),
           )
+        PreferenceAction(
+          title = stringResource(R.string.pref_export_log_title),
+          summary = stringResource(R.string.pref_export_log_summary),
+          onClick = { onAction(SettingsAction.ExportLog) },
+        )
       }
       SettingsSection.Pgp -> {
         PreferenceAction(
