@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
--   Release builds made by CI no longer run with debug logging and the strict VM policy on
+-   Release builds made by CI no longer run with debug logging and the strict VM policy on. In 0.3.2 and earlier, debug lines went to the system log whatever the Debug logging setting said, including entry names and autofill sites. Other apps cannot read them: that takes adb or system access
 
 ## [0.3.2] - 2026-11-05
 
