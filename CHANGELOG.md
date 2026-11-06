@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+-   Release builds made by CI no longer run with debug logging and the strict VM policy on
+
 ## [0.3.2] - 2026-11-05
 
 ### Changed

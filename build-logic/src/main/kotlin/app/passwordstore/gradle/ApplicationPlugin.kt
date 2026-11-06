@@ -48,7 +48,7 @@ class ApplicationPlugin : Plugin<Project> {
               "proguard-rules-missing-classes.pro",
             )
           )
-          buildConfigField("boolean", "ENABLE_DEBUG_FEATURES", "${project.isSnapshot()}")
+          buildConfigField("boolean", "ENABLE_DEBUG_FEATURES", "false")
           buildConfigField("String", "GIT_COMMIT", "\"\"")
         }
         named("debug") {
@@ -61,14 +61,6 @@ class ApplicationPlugin : Plugin<Project> {
       }
 
       project.configureBuildSigning()
-    }
-  }
-
-  private fun Project.isSnapshot(): Boolean {
-    with(providers) {
-      val workflow = environmentVariable("GITHUB_WORKFLOW")
-      val snapshot = environmentVariable("SNAPSHOT")
-      return workflow.isPresent || snapshot.isPresent
     }
   }
 }
