@@ -16,6 +16,16 @@ Android Password Store authors.
 
 How to install, set up and use the app: <https://danix.xyz/hardenedpass/>.
 
+New to `pass`? "Your own password store" is a beginner tutorial series, also available in
+[Italian](https://danix.xyz/it/articles/your-own-password-store-part-1/):
+
+1. [Create the store](https://danix.xyz/articles/your-own-password-store-part-1/) with `pass`,
+   GPG and git.
+2. [Choose a git host](https://danix.xyz/articles/your-own-password-store-part-2/), or do it all
+   from the phone with Termux.
+3. [Install HardenedPass](https://danix.xyz/articles/your-own-password-store-part-3/), connect it
+   to the store, and cover daily use and recovery.
+
 ## Changes from upstream
 
 - Decrypts messages GnuPG 2.3+ writes by default (OCB / LibrePGP AEAD), which upstream rejected
