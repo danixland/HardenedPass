@@ -25,6 +25,8 @@
     <ignore path="src/main/res/drawable/ic_miscellaneous_services_24px.xml" />
     <ignore path="src/main/res/drawable/ic_miscellaneous_services_24px.xml" />
   </issue>
+  <!-- The app is a Credential Manager provider (Android 14+), not a client: no Play Services. -->
+  <issue id="CredentialDependency" severity="ignore" />
   <issue id="GradleDependency" severity="ignore" />
   <issue id="ReportShortcutUsage" severity="ignore" />
   <issue id="MissingTranslation" severity="ignore" />

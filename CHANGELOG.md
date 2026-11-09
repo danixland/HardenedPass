@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+-   Credential Manager provider on Android 14 and later: apps that save or ask for a password through Android's password manager (e.g. Signal's backup key) can use HardenedPass, with the same matches and entry search as autofill
+
 ## [0.3.3] - 2026-11-06
 
 ### Added

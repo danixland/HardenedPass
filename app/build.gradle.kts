@@ -60,6 +60,7 @@ dependencies {
   implementation(libs.androidx.autofill)
   implementation(libs.androidx.biometricKtx)
   implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.credentials)
   implementation(libs.androidx.documentfile)
   // FragmentActivity, which BiometricPrompt needs.
   implementation(libs.androidx.fragment.ktx)

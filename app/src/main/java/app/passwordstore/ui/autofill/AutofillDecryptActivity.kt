@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import android.view.autofill.AutofillManager
@@ -23,6 +24,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.edit
+import androidx.credentials.GetCredentialResponse
+import androidx.credentials.PasswordCredential
+import androidx.credentials.provider.PendingIntentHandler
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import app.passwordstore.Application.Companion.screenWasOff
@@ -81,7 +85,8 @@ class AutofillDecryptActivity : FragmentActivity() {
 
   private lateinit var directoryStructure: DirectoryStructure
   private lateinit var filePath: String
-  private lateinit var clientState: Bundle
+  /** The autofill request's state; null when Credential Manager asked. */
+  private var clientState: Bundle? = null
   private lateinit var action: AutofillAction
   private var clearCache = true
 
@@ -124,13 +129,15 @@ class AutofillDecryptActivity : FragmentActivity() {
           finish()
           return
         }
-    clientState =
-      intent?.getBundleExtra(AutofillManager.EXTRA_CLIENT_STATE)
-        ?: run {
-          logcat(ERROR) { "AutofillDecryptActivity started without EXTRA_CLIENT_STATE" }
-          finish()
-          return
-        }
+    val fromCredentialManager =
+      Build.VERSION.SDK_INT >= 34 &&
+        PendingIntentHandler.retrieveProviderGetCredentialRequest(intent) != null
+    clientState = intent?.getBundleExtra(AutofillManager.EXTRA_CLIENT_STATE)
+    if (clientState == null && !fromCredentialManager) {
+      logcat(ERROR) { "AutofillDecryptActivity started without EXTRA_CLIENT_STATE" }
+      finish()
+      return
+    }
     val isSearchAction = intent.getBooleanExtra(EXTRA_SEARCH_ACTION, true)
     action = if (isSearchAction) AutofillAction.Search else AutofillAction.Match
     directoryStructure = AutofillPreferences.directoryStructure(this)
@@ -278,24 +285,32 @@ class AutofillDecryptActivity : FragmentActivity() {
       askPassphrase(identifiers, wrong = true)
       return
     }
-    if (credentials == null) {
-      setResult(RESULT_CANCELED)
-    } else {
-      val fillInDataset =
-        AutofillResponseBuilder.makeFillInDataset(
-          this@AutofillDecryptActivity,
-          credentials,
-          clientState,
-          action,
-        )
-      withContext(dispatcherProvider.main()) {
-        setResult(
-          RESULT_OK,
-          Intent().apply { putExtra(AutofillManager.EXTRA_AUTHENTICATION_RESULT, fillInDataset) },
-        )
-      }
+    val result = credentials?.let(::resultIntent)
+    withContext(dispatcherProvider.main()) {
+      if (result == null) setResult(RESULT_CANCELED) else setResult(RESULT_OK, result)
     }
     withContext(dispatcherProvider.main()) { finish() }
+  }
+
+  /** The fill dataset, or the password for Credential Manager; null for an entry without one. */
+  private fun resultIntent(credentials: Credentials): Intent? {
+    val state = clientState
+    if (state != null) {
+      val fillInDataset =
+        AutofillResponseBuilder.makeFillInDataset(this, credentials, state, action)
+      return Intent().putExtra(AutofillManager.EXTRA_AUTHENTICATION_RESULT, fillInDataset)
+    }
+    if (Build.VERSION.SDK_INT < 34) return null
+    val password = credentials.password?.takeUnless { it.isEmpty() } ?: return null
+    // PasswordCredential rejects an empty id: fall back to the entry's name.
+    val id =
+      credentials.username?.takeUnless { it.isEmpty() } ?: File(filePath).nameWithoutExtension
+    return Intent().also {
+      PendingIntentHandler.setGetCredentialResponse(
+        it,
+        GetCredentialResponse(PasswordCredential(id, password)),
+      )
+    }
   }
 
   private suspend fun decryptCredential(
@@ -356,6 +371,12 @@ class AutofillDecryptActivity : FragmentActivity() {
         putExtra(EXTRA_FILE_PATH, file.absolutePath)
       }
     }
+
+    /** Decrypts [file] for a Credential Manager request, which the system adds to the intent. */
+    fun makeCredentialIntent(file: File, context: Context): Intent =
+      Intent(context, AutofillDecryptActivity::class.java)
+        .putExtra(EXTRA_SEARCH_ACTION, false)
+        .putExtra(EXTRA_FILE_PATH, file.absolutePath)
 
     fun makeDecryptFileIntentSender(file: File, context: Context): IntentSender {
       val intent =

@@ -8,11 +8,15 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import android.view.autofill.AutofillManager
 import androidx.activity.compose.setContent
 import androidx.core.os.bundleOf
+import androidx.credentials.CreatePasswordRequest
+import androidx.credentials.CreatePasswordResponse
+import androidx.credentials.provider.PendingIntentHandler
 import androidx.fragment.app.FragmentActivity
 import app.passwordstore.data.passfile.PasswordEntry
 import app.passwordstore.ui.compose.theme.APSTheme
@@ -60,6 +64,24 @@ class AutofillSaveActivity : FragmentActivity() {
       credentials: Credentials?,
       formOrigin: FormOrigin,
     ): IntentSender {
+      val intent =
+        Intent(context, AutofillSaveActivity::class.java)
+          .putExtras(saveExtras(context, credentials, formOrigin))
+      return PendingIntent.getActivity(
+          context,
+          saveRequestCode++,
+          intent,
+          PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        .intentSender
+    }
+
+    /** The editor's prefill: folder and name from [formOrigin] and the username. */
+    private fun saveExtras(
+      context: Context,
+      credentials: Credentials?,
+      formOrigin: FormOrigin,
+    ): Bundle {
       val identifier = formOrigin.getPrettyIdentifier(context, untrusted = false)
       // Prevent directory traversals
       val sanitizedIdentifier =
@@ -76,28 +98,14 @@ class AutofillSaveActivity : FragmentActivity() {
           username = credentials?.username,
           identifier = identifier,
         )
-      val intent =
-        Intent(context, AutofillSaveActivity::class.java).apply {
-          putExtras(
-            bundleOf(
-              EXTRA_FOLDER_NAME to folderName,
-              EXTRA_NAME to fileName,
-              EXTRA_PASSWORD to credentials?.password,
-              EXTRA_SHOULD_MATCH_APP to
-                formOrigin.identifier.takeIf { formOrigin is FormOrigin.App },
-              EXTRA_SHOULD_MATCH_WEB to
-                formOrigin.identifier.takeIf { formOrigin is FormOrigin.Web },
-              EXTRA_GENERATE_PASSWORD to (credentials == null),
-            )
-          )
-        }
-      return PendingIntent.getActivity(
-          context,
-          saveRequestCode++,
-          intent,
-          PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
-        .intentSender
+      return bundleOf(
+        EXTRA_FOLDER_NAME to folderName,
+        EXTRA_NAME to fileName,
+        EXTRA_PASSWORD to credentials?.password,
+        EXTRA_SHOULD_MATCH_APP to formOrigin.identifier.takeIf { formOrigin is FormOrigin.App },
+        EXTRA_SHOULD_MATCH_WEB to formOrigin.identifier.takeIf { formOrigin is FormOrigin.Web },
+        EXTRA_GENERATE_PASSWORD to (credentials == null),
+      )
     }
   }
 
@@ -117,8 +125,29 @@ class AutofillSaveActivity : FragmentActivity() {
 
   @Inject lateinit var passwordEntryFactory: PasswordEntry.Factory
 
+  /** Set when Credential Manager asked to save a password, which then answers it. */
+  private var fromCredentialManager = false
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    if (Build.VERSION.SDK_INT >= 34) {
+      PendingIntentHandler.retrieveProviderCreateCredentialRequest(intent)?.let { request ->
+        val create =
+          request.callingRequest as? CreatePasswordRequest
+            ?: run {
+              finish()
+              return
+            }
+        fromCredentialManager = true
+        intent.putExtras(
+          saveExtras(
+            this,
+            Credentials(create.id, create.password, null),
+            FormOrigin.App(request.callingAppInfo.packageName),
+          )
+        )
+      }
+    }
     // The whole window is the editor: keep it out of screenshots and recents.
     window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
     val initial =
@@ -149,7 +178,11 @@ class AutofillSaveActivity : FragmentActivity() {
   private fun finishSaved(saved: SaveResult.Saved) {
     formOrigin?.let { AutofillMatcher.addMatchFor(this, it, saved.file) }
     val resultIntent =
-      if (generate) {
+      if (fromCredentialManager && Build.VERSION.SDK_INT >= 34) {
+        Intent().also {
+          PendingIntentHandler.setCreateCredentialResponse(it, CreatePasswordResponse())
+        }
+      } else if (generate) {
         val clientState =
           intent?.getBundleExtra(AutofillManager.EXTRA_CLIENT_STATE)
             ?: run {

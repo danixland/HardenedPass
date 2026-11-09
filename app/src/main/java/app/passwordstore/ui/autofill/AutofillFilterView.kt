@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.os.Build
 import android.os.Bundle
 import android.view.autofill.AutofillManager
 import androidx.activity.compose.setContent
@@ -19,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.credentials.provider.PendingIntentHandler
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.passwordstore.R
@@ -57,6 +59,11 @@ class AutofillFilterView : FragmentActivity() {
     private const val EXTRA_FORM_ORIGIN_APP =
       "app.passwordstore.autofill.oreo.ui.EXTRA_FORM_ORIGIN_APP"
     private var matchAndDecryptFileRequestCode = 1
+
+    /** The picker for a Credential Manager request, which the system adds to the intent. */
+    fun makeCredentialIntent(context: Context, formOrigin: FormOrigin.App): Intent =
+      Intent(context, AutofillFilterView::class.java)
+        .putExtra(EXTRA_FORM_ORIGIN_APP, formOrigin.identifier)
 
     fun makeMatchAndDecryptFileIntentSender(
       context: Context,
@@ -107,7 +114,10 @@ class AutofillFilterView : FragmentActivity() {
     params.width = (WIDTH_PERCENTAGE * resources.displayMetrics.widthPixels).toInt()
     window.attributes = params
 
-    if (intent?.hasExtra(AutofillManager.EXTRA_CLIENT_STATE) != true) {
+    val fromCredentialManager =
+      Build.VERSION.SDK_INT >= 34 &&
+        PendingIntentHandler.retrieveProviderGetCredentialRequest(intent) != null
+    if (intent?.hasExtra(AutofillManager.EXTRA_CLIENT_STATE) != true && !fromCredentialManager) {
       logcat(ERROR) { "AutofillFilterActivity started without EXTRA_CLIENT_STATE" }
       finish()
       return
