@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+-   About: "Report a security issue" links to the security policy, with the maintainer's OpenPGP key for private reports
+
 ## [0.3.4] - 2026-11-09
 
 ### Added

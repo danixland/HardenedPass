@@ -152,6 +152,9 @@ private fun AboutScreen(
     LinkRow(stringResource(R.string.about_changelog)) { onOpen(changelog) }
     LinkRow(stringResource(R.string.about_source)) { onOpen(REPOSITORY) }
     LinkRow(stringResource(R.string.about_issues)) { onOpen("$REPOSITORY/issues") }
+    LinkRow(stringResource(R.string.about_security)) {
+      onOpen("$REPOSITORY/blob/master/SECURITY.md")
+    }
     // White in both themes: the logo's dark outline disappears on a dark background, and Ko-fi
     // asks that the logo itself stays as it is.
     Button(

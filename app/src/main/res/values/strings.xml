@@ -427,6 +427,7 @@
   <string name="about_changelog">What\'s new</string>
   <string name="about_source">Source code</string>
   <string name="about_issues">Report a problem</string>
+  <string name="about_security">Report a security issue</string>
   <string name="about_support">Support on Ko-fi</string>
   <string name="about_privacy_title">Privacy</string>
   <string name="about_privacy">No telemetry, no analytics, no Google services. HardenedPass connects only to your git server, through your proxy if you set one.</string>

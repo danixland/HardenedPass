@@ -393,6 +393,7 @@
   <string name="about_changelog">Novità</string>
   <string name="about_source">Codice sorgente</string>
   <string name="about_issues">Segnala un problema</string>
+  <string name="about_security">Segnala un problema di sicurezza</string>
   <string name="about_support">Sostieni su Ko-fi</string>
   <string name="about_privacy_title">Privacy</string>
   <string name="about_privacy">Nessuna telemetria, nessuna analisi, nessun servizio Google. HardenedPass si collega solo al tuo server git, tramite il tuo proxy se ne imposti uno.</string>
