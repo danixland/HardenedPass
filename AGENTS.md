@@ -204,7 +204,7 @@ manual because bot commits on the GitHub mirror would diverge from the main repo
     ./gradlew :autofill-parser:test -PslimTests
     git commit -am "autofill-parser: update public suffix list" && git push
 
-Last run: 2026-11-06.
+Last run: 2026-11-09.
 
 ## Releases
 
