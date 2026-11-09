@@ -1,59 +1,101 @@
 # Contribution Guidelines
 
-:tada: First off, thanks for taking the time to contribute! :tada:
-
-This document should be treated as suggestions, and not rules, on how to contribute to Android Password Store. All positive contribution is welcome, so please do not hesitate in pitching forth any ideas you have!
+Thanks for taking the time to contribute! This document is a set of suggestions, not rules,
+on how to contribute to HardenedPass. Ideas of any size are welcome.
 
 ## Table of contents
 
-- [Things to do before you start writing code](#things-to-do-before-you-start-writing-code)
+- [Before you start writing code](#before-you-start-writing-code)
 - [Navigating the source code](#navigating-the-source-code)
 - [Building the project](#building-the-project)
+- [Checks before pushing](#checks-before-pushing)
+- [Sending changes](#sending-changes)
 
-# Things to do before you start writing code
+## Before you start writing code
 
-If you're trying to fix a bug that already has an open issue, it's a good idea to drop a comment mentioning that you're working on a fix. If no open issue exists, please file one with the full details of what the bug is and how you intend to resolve it, and only start implementation once a maintainer has triaged the issue and has signed off on your approach. This allows maintainers to be able to review your pull request faster when it arrives, and saves you redundant effort of having to make potentially large changes in response to code review.
+If you want to fix a bug that already has an open
+[issue](https://github.com/danixland/HardenedPass/issues), comment there to say you are
+working on it. If there is no issue yet, open one with the details of the bug and how you
+intend to fix it, and wait for the maintainer to agree on the approach before you start. That
+makes review faster and saves you from large rework.
 
-If you want to add a new feature, please file an issue first to gauge maintainer and community interest. Sometimes the feature might need adjustments before it is accepted, or it might not be something we want to add to APS at all. Proposing the feature in detail before working on it ensures that you build exactly what is necessary and not waste time and effort on aspects that would get rejected during review.
+For a new feature, open an issue first too. It might need adjustments, or it might not fit the
+project's goal: a `pass` client that works flawlessly on GrapheneOS, with no Google Play
+Services and no telemetry. Agreeing on the details first means you build only what will be
+accepted.
+
+Security issues are the exception: do not open a public issue, follow
+[SECURITY.md](SECURITY.md) instead.
 
 ## Navigating the source code
 
-The source code is split across 12 modules and 1 subproject.
+The source code is split across 9 modules, plus the `build-logic` included build.
 
-- `build-logic` and its modules host the Gradle build logic for the project.
-- `autofill-parser` is the aptly named parser for Android's Autofill structures that also deals with trust and feature detection for browsers. 
-- `coroutine-utils` is a helper libraries that allow for effective usage and testing of [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html).
-- `crypto/common` is the foundation of our new, extensible cryptography APIs that adds the ability to introduce new cryptographic backends to APS with minimal effort.
-- `crypto/pgpainless` is the first of our new backends that implements the APIs defined in `crypto-common` to offer PGP cryptography through the [PGPainless](https://gh.pgpainless.org/) library.
-- `format/common` handles parsing the `pass` file format.
-- `passgen/diceware` is our new password generator that implements the [Diceware](https://theworld.com/~reinhold/diceware.html) algorithm.
+- `build-logic` hosts the Gradle build logic for the project.
+- `autofill-parser` parses Android's Autofill structures, and deals with trust and feature
+  detection for browsers.
+- `coroutine-utils` helps use and test
+  [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html).
+- `crypto/common` defines the cryptography APIs that backends implement.
+- `crypto/pgpainless` implements them with the [PGPainless](https://pgpainless.org/) library.
+- `format/common` parses the `pass` file format.
+- `passgen/diceware` is a password generator implementing the
+  [Diceware](https://theworld.com/~reinhold/diceware.html) algorithm.
 - `passgen/random` contains the default password generator.
-- `ui/compose` has the theming code for building UI components in [Jetpack Compose](https://developer.android.com/jetpack/compose).
-- `app` is everything else that constitutes APS.
+- `ui/compose` has the theme and shared components for
+  [Jetpack Compose](https://developer.android.com/jetpack/compose).
+- `app` is everything else: the UI, git sync, the autofill service and the Credential Manager
+  provider.
 
-In most scenarios, the `app` directory is where you'd be contributing changes to. While most of the code has been rewritten and documented, there are still gnarly "legacy" parts that might be challenging to understand at a glance. Please get in touch via the [Discussions](https://github.com/android-password-store/Android-Password-Store/discussions) page with any questions you have, and we'd love to explain and improve things.
+Most changes land in `app`. Some older parts are hard to follow at a glance: ask on the
+[issue tracker](https://github.com/danixland/HardenedPass/issues) and they will be explained,
+and improved where possible.
 
-We bundle a [`ignore-revs-file`](https://git-scm.com/docs/git-blame#Documentation/git-blame.txt---ignore-revs-fileltfilegt) to ensure `git blame` is not affected by noisy changes. To make use of this, run `git config blame.ignoreRevsFile .git-blame-ignore-revs` from inside this repository. GitHub will automatically use this file for the blames it renders on the website.
+A [`ignore-revs-file`](https://git-scm.com/docs/git-blame#Documentation/git-blame.txt---ignore-revs-fileltfilegt)
+keeps `git blame` clear of noisy changes. To use it, run
+`git config blame.ignoreRevsFile .git-blame-ignore-revs` inside this repository. GitHub uses it
+automatically.
 
 ## Source code conventions
 
-- Unless you're absolutely sure what you're doing, always prefer the [`unsafeLazy`](https://github.com/android-password-store/Android-Password-Store/blob/f870dd49138d63d9803783458abf1356176851db/app/src/main/java/app/passwordstore/util/extensions/Extensions.kt#L68) method over Kotlin's inbuilt `lazy` for lazily evaluated properties.
-- The UI is Jetpack Compose (Material 3): screens are stateless composables driven by a ViewModel. Do not add XML layouts, Fragments or view binding.
+- Unless you are sure of what you are doing, prefer the `unsafeLazy` function in
+  `app/src/main/java/app/passwordstore/util/extensions/Extensions.kt` over Kotlin's `lazy` for
+  lazily evaluated properties.
+- The UI is Jetpack Compose (Material 3): screens are stateless composables driven by a
+  ViewModel. Do not add XML layouts, Fragments or view binding.
+- The Kotlin package stays `app.passwordstore`, while the application ID is
+  `xyz.danix.hardenedpass`. Do not rename the package.
+- No proprietary dependencies, no Google Play Services, no analytics or crash reporting.
 
 ## Building the project
 
-### Building with Gradle
+You need JDK 17 and the Android SDK. Set `sdk.dir` in `local.properties`, or use
+[Android Studio](https://developer.android.com/studio), which does it for you.
 
-This document assumes that you already have an Android development environment ready. If not, refer to Google's documentation on [installing Android Studio](https://developer.android.com/studio/preview). APS will build with all editions of Android Studio, but development typically happens with the Canary channel.
-
-Run the following command to generate a debug APK.
+Build a debug APK with:
 
 ```shell
-./gradlew collectDebugApks
+./gradlew :app:assembleDebug
 ```
 
-You can find the generated APK at `app/outputs`.
+You can find it in `app/build/outputs/apk/debug/`. It installs as "HardenedPass Debug", next to
+the release app.
 
-## Pre-push checks
+## Checks before pushing
 
-The project enforces code style conventions and library API stability by virtue of a carefully curated Gradle build. To setup a Git pre-push hook to run them automatically, run `./gradlew installGitHooks`.
+CI runs these, with `CI=1` turning Kotlin warnings into errors. Run the same before you push:
+
+```shell
+CI=1 ./gradlew spotlessCheck test -PslimTests :app:assembleDebug :app:assembleRelease \
+  lint metalavaCheckCompatibilityRelease
+```
+
+`./gradlew spotlessApply` fixes the formatting. To run most of these checks automatically on
+every push, install a Git pre-push hook with `./gradlew installGitHooks` (it has no effect if
+you set `core.hooksPath`).
+
+## Sending changes
+
+Open a pull request on [GitHub](https://github.com/danixland/HardenedPass/pulls). GitHub is a
+mirror of the main repository, so the maintainer applies accepted changes there, with your
+authorship kept, and closes the pull request instead of merging it.
