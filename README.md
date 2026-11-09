@@ -55,6 +55,8 @@ Services.
 
 Report bugs and feature requests on the
 [issue tracker](https://github.com/danixland/HardenedPass/issues).
+Report security issues privately by email instead, as described in
+[SECURITY.md](SECURITY.md).
 
 ## Support
 
