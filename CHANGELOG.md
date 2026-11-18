@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 -   About: "Report a security issue" links to the security policy, with the maintainer's OpenPGP key for private reports
 
+### Fixed
+
+-   Autofill in Vanadium: fill was never offered, because Vanadium's native autofill labels every field with its page origin, which the single-origin check rejected. Vanadium now uses per-field origins (an iframe's form gets the iframe's origin) and offers to save new logins
+
 ## [0.3.4] - 2026-11-09
 
 ### Added

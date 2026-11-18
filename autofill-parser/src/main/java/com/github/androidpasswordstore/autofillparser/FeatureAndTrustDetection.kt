@@ -130,6 +130,7 @@ private val BROWSER_MULTI_ORIGIN_METHOD =
     "org.mozilla.klar" to BrowserMultiOriginMethod.Field,
     "org.torproject.torbrowser" to BrowserMultiOriginMethod.WebView,
     "us.spotco.fennec_dos" to BrowserMultiOriginMethod.Field,
+    "app.vanadium.browser" to BrowserMultiOriginMethod.Field,
   )
 
 private fun getBrowserMultiOriginMethod(appPackage: String): BrowserMultiOriginMethod =
@@ -155,6 +156,7 @@ private val BROWSER_SAVE_FLAG =
     "com.opera.mini.native" to 0,
     "com.opera.mini.native.beta" to 0,
     "com.opera.touch" to 0,
+    "app.vanadium.browser" to 0,
   )
 
 private val BROWSER_SAVE_FLAG_IF_NO_ACCESSIBILITY =
